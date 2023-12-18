@@ -1,0 +1,25 @@
+{
+  "generator-jhipster": {
+    "baseName": "frontend",
+    "clientFramework": "angular",
+    "clientTestFrameworks": [],
+    "clientTheme": "none",
+    "creationTimestamp": 1702592737442,
+    "databaseType": "sql",
+    "devDatabaseType": "postgresql",
+    "devServerPort": 4200,
+    "enableTranslation": true,
+    "entities": [],
+    "jhipsterVersion": "8.1.0",
+    "languages": ["ru"],
+    "microfrontend": null,
+    "microfrontends": [],
+    "monorepository": true,
+    "nativeLanguage": "ru",
+    "prodDatabaseType": "postgresql",
+    "skipCommitHook": true,
+    "skipServer": true,
+    "testFrameworks": [],
+    "withAdminUi": true
+  }
+}

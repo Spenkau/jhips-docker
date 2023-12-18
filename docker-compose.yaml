@@ -1,0 +1,100 @@
+version: '3.8'
+services:
+  db:
+    container_name: "postgresql"
+    image: postgres
+    environment:
+      POSTGRES_DB: test
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5432:5432"
+  backend:
+    container_name: "backend"
+    build: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/test
+      - SPRING_DATASOURCE_USERNAME=test
+      - SPRING_DATASOURCE_PASSWORD=12345
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - db
+  frontend:
+    container_name: "frontend"
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+  nginx:
+    container_name: "nginx"
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#version: '3.8'
+#
+#services:
+#  nginx:
+#    image: "nginx:stable-alpine"
+#    ports:
+#      - "80:80"
+#    volumes:
+#      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+#    depends_on:
+#      - db
+#      - backend
+#  backend:
+#    build: ./backend
+#    container_name: backend
+#    ports:
+#      - "8080:8080"
+#    links:
+#      - db
+#  frontend:
+#    build: ./frontend
+#    container_name: frontend
+#    ports:
+#      - "9000:9000"
+#    links:
+#      - backend
+#  db:
+#    image: postgres:9-alpine
+#    container_name: db
+#    ports:
+#      - "5432:5432"
+#    environment:
+#      - POSTGRES_DB=user
+#      - POSTGRES_USER=user
+#      - POSTGRES_PASSWORD=user
