@@ -9,6 +9,8 @@ services:
       POSTGRES_PASSWORD: 12345
     ports:
       - "5432:5432"
+    networks:
+      - test-network
   backend:
     container_name: "backend"
     build: ./backend
@@ -19,8 +21,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=test
       - SPRING_DATASOURCE_PASSWORD=12345
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-    depends_on:
-      - db
+    networks:
+      - test-network
   frontend:
     container_name: "frontend"
     build:
@@ -28,6 +30,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "9000:9000"
+    networks:
+      - test-network
   nginx:
     container_name: "nginx"
     build:
@@ -35,8 +39,15 @@ services:
       dockerfile: Dockerfile
     ports:
       - "80:80"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - test-network
 
-
+networks:
+  test-network:
+    driver: bridge
 
 
 
