@@ -1,0 +1,56 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "Задача 1",
+      "content": "Содержание задачи 1",
+      "category_id": 1,
+      "priority_id": 1,
+      "status": 1,
+      "parent_id": null,
+      "started_at": "2024-01-01T00:00:00Z",
+      "finished_at": "2024-01-02T00:00:00Z",
+      "children": [],
+      "tag_ids": [1, 2]
+    },
+    {
+      "id": 2,
+      "title": "Задача 2",
+      "content": "Содержание задачи 2",
+      "category_id": 1,
+      "priority_id": 1,
+      "status": 1,
+      "parent_id": null,
+      "started_at": "2024-01-01T00:00:00Z",
+      "finished_at": "2024-01-02T00:00:00Z",
+      "children": [],
+      "tag_ids": [1, 2]
+    },
+    {
+      "id": 3,
+      "title": "Задача 3",
+      "content": "Содержание задачи 3",
+      "category_id": 1,
+      "priority_id": 1,
+      "status": 1,
+      "parent_id": null,
+      "started_at": "2024-01-01T00:00:00Z",
+      "finished_at": "2024-01-02T00:00:00Z",
+      "children": [],
+      "tag_ids": [1, 2]
+    },
+    {
+      "id": 4,
+      "title": "Задача 4",
+      "content": "Содержание задачи 4",
+      "category_id": 1,
+      "priority_id": 1,
+      "status": 1,
+      "parent_id": null,
+      "started_at": "2024-01-01T00:00:00Z",
+      "finished_at": "2024-01-02T00:00:00Z",
+      "children": [],
+      "tag_ids": [1, 2]
+    }
+  ]
+}
