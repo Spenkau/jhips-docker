@@ -14,13 +14,15 @@ import { ProfileService } from 'app/layouts/profiles/profile.service';
 import { EntityNavbarItems } from 'app/entities/entity-navbar-items';
 import ActiveMenuDirective from './active-menu.directive';
 import NavbarItem from './navbar-item.model';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import TranslateDirective from '../../shared/language/translate.directive';
 
 @Component({
   standalone: true,
   selector: 'jhi-navbar',
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
-  imports: [RouterModule, SharedModule, HasAnyAuthorityDirective, ActiveMenuDirective],
+  imports: [RouterModule, SharedModule, HasAnyAuthorityDirective, ActiveMenuDirective, FaIconComponent, TranslateDirective]
 })
 export default class NavbarComponent implements OnInit {
   inProduction?: boolean;

@@ -7,6 +7,7 @@ import { errorRoute } from './layouts/error/error.route';
 import HomeComponent from './home/home.component';
 import NavbarComponent from './layouts/navbar/navbar.component';
 import LoginComponent from './login/login.component';
+import TaskManagerComponent from './task-manager/task-manager.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,12 @@ const routes: Routes = [
     path: '',
     component: NavbarComponent,
     outlet: 'navbar',
+  },
+  {
+    path: 'tasks',
+    component: TaskManagerComponent,
+    title: 'Your task manager',
+    loadChildren: () => import('./task-manager/task-manager.routes'),
   },
   {
     path: 'admin',
