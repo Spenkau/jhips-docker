@@ -29,6 +29,14 @@
         </li>
         <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
         @if (account !== null) {
+          <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link" routerLink="/tasks">
+            <span>
+              <fa-icon icon="th-list"></fa-icon>
+              <span>Таск-менеджер</span>
+            </span>
+            </a>
+          </li>
           <li
             ngbDropdown
             class="nav-item dropdown pointer"
