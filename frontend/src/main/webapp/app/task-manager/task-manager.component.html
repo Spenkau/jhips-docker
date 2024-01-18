@@ -1,0 +1,50 @@
+<div class="header-panel d-flex justify-content-between">
+  <div class="sidebar-btn">[OPEN SIDEBAR]</div>
+  <button type="button" class="btn btn-primary" (click)="showNewTaskModal()">Новая задача</button>
+  <div class="user-panel relative">
+    <div class="d-flex gap-2">
+      <span>
+        Хорошего дня,
+        <a routerLink="/user-page">[user]</a>
+      </span>
+      <button
+        type="button"
+        class="btn btn-info"
+        (click)="isUserSettingsCollapsed = !isUserSettingsCollapsed"
+      >
+        \/
+        <fa-icon icon="arrow-alt-down"></fa-icon>
+      </button>
+    </div>
+    <ul class="position-absolute list-unstyled" *ngIf="isUserSettingsCollapsed">
+      <li><a href="#">Личное</a></li>
+      <li><a href="#">Выйти</a></li>
+    </ul>
+  </div>
+</div>
+<div class="main-panel">
+  <div class="tasks-container">
+    <h3>Активные задачи</h3>
+    <div class="tasks-list">
+      <div class="task-card ">
+        <div class="task-header d-flex justify-content-between">
+          <span>[datetime]</span>
+          <p>[category_name]</p>
+          <ul class="reactions-list list-unstyled d-flex">
+            <li>:)</li>
+            <li>:/</li>
+            <li>:(</li>
+          </ul>
+        </div>
+        <div class="task-body d-flex justify-content-between">
+          <h3>[task title]</h3>
+          <span>[task truncated content]</span>
+        </div>
+        <div class="task-footer">
+          <button class="btn">Удалить задачу</button>
+          <button class="btn">Отложить задачу</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
