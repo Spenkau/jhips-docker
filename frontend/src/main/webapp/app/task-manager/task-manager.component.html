@@ -1,6 +1,6 @@
 <div class="header-panel d-flex justify-content-between">
   <div class="sidebar-btn">[OPEN SIDEBAR]</div>
-  <button type="button" class="btn btn-primary" (click)="showNewTaskModal()">Новая задача</button>
+  <button type="button" class="btn btn-primary" (click)="openModal()">Новая задача</button>
   <div class="user-panel relative">
     <div class="d-flex gap-2">
       <span>
@@ -48,3 +48,13 @@
     </div>
   </div>
 </div>
+
+
+<dialog type="modal" id="dialog" class="jhi-modal" #dialog>
+    <jhi-new-task-modal>
+<!--      [data]="(chosenDataForChosenPoint$ | async) ?? undefined"-->
+<!--      (closeDrawerEmitter)="closeDrawer()"-->
+
+
+    </jhi-new-task-modal>
+</dialog>

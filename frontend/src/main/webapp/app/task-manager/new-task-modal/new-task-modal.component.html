@@ -1,0 +1,49 @@
+<form role="form" [formGroup]="newTaskForm">
+  <h1>Создать задачу</h1>
+  <div class="form-control">
+    <label class="form-label" for="title">Название задачи</label>
+    <input
+      type="text"
+      id="title"
+      name="title"
+    >
+  </div>
+  <div class="form-control">
+    <label class="form-label" for="content">Описание задачи</label>
+    <input
+      type="text"
+      id="content"
+      name="content"
+    >
+  </div>
+  <div class="form-control">
+    <label class="form-label" for="priority_id">Приоритет</label>
+    <select
+      id="priority_id"
+      name="priority_id"
+    >
+      <option value="1">Низкий</option>
+      <option value="2">Обычный</option>
+      <option value="3">Высокий</option>
+    </select>
+  </div>
+  <div class="form-control">
+    <label class="form-label" for="status">Статус</label>
+    <input
+      type="text"
+      id="status"
+      name="status"
+    >
+  </div>
+  <div class="form-control">
+    <label class="form-label" for="category_id">Категория</label>
+    <select
+      id="category_id"
+      name="category_id"
+    >
+      <option value="1">Низкий</option>
+      <option value="2">Обычный</option>
+      <option value="3">Высокий</option>
+    </select>
+  </div>
+</form>
