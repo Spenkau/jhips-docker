@@ -1,6 +1,6 @@
 <div class="header-panel d-flex justify-content-between">
   <div class="sidebar-btn">[OPEN SIDEBAR]</div>
-  <button type="button" class="btn btn-primary" (click)="openModal()">Новая задача</button>
+  <button type="button" class="btn btn-primary" (click)="openModal(false)">Новая задача</button>
   <div class="user-panel relative">
     <div class="d-flex gap-2">
       <span>
@@ -22,11 +22,11 @@
     </ul>
   </div>
 </div>
-<div class="main-panel">
-  <div class="tasks-container">
+<div class="main-panel d-flex">
+  <div class="tasks-container w-50">
     <h3>Активные задачи</h3>
     <div class="tasks-list">
-      <div class="task-card ">
+      <div class="task-card">
         <div class="task-header d-flex justify-content-between">
           <span>[datetime]</span>
           <p>[category_name]</p>
@@ -43,18 +43,15 @@
         <div class="task-footer">
           <button class="btn">Удалить задачу</button>
           <button class="btn">Отложить задачу</button>
+          <button class="btn" (click)="openModal(true)">Создать подзадачу</button>
         </div>
       </div>
     </div>
   </div>
+  <div class="d-flex justify-center align-content-center container w-50">
+    <jhi-clock></jhi-clock>
+  </div>
 </div>
 
 
-<dialog type="modal" id="dialog" class="jhi-modal" #dialog>
-    <jhi-new-task-modal>
-<!--      [data]="(chosenDataForChosenPoint$ | async) ?? undefined"-->
-<!--      (closeDrawerEmitter)="closeDrawer()"-->
-
-
-    </jhi-new-task-modal>
-</dialog>
+<jhi-task-modal-wrapper #modalWrapper></jhi-task-modal-wrapper>
