@@ -1,0 +1,57 @@
+{
+  "annotations": {
+    "changelogDate": "20231214211545"
+  },
+  "applications": "*",
+  "entityTableName": "task",
+  "fields": [
+    {
+      "fieldName": "title",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "content",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "priorityId",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "statusId",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "startedAt",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "finishedAt",
+      "fieldType": "LocalDate"
+    }
+  ],
+  "name": "Task",
+  "relationships": [
+    {
+      "otherEntityName": "user",
+      "relationshipName": "owner",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipWithBuiltInEntity": true
+    },
+    {
+      "otherEntityName": "category",
+      "relationshipName": "category",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "tag",
+      "otherEntityRelationshipName": "tasks",
+      "relationshipName": "tags",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "searchEngine": "no"
+}
