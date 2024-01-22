@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {JsonPipe} from "@angular/common";
-import {ICategory} from "../../task-manager.model";
+import {ICategory} from "../../../task-manager.model";
 import {Observable} from "rxjs";
 import {FaIconLibrary, FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {faPlusCircle} from "@fortawesome/free-solid-svg-icons";
@@ -36,6 +36,7 @@ export class NewTaskModalComponent {
 
   onSubmit(): void {
     console.log(this.newTaskForm.getRawValue())
+
   }
 
 }

@@ -7,7 +7,7 @@ import { createRequestOption } from 'app/core/request/request-util';
 
 @Injectable({ providedIn: 'root' })
 export class TaskService {
-  private resourceUrl = this.applicationConfigService.getEndpointFor('api/task');
+  private resourceUrl = this.applicationConfigService.getEndpointFor('api/tasks');
 
   constructor(
     private http: HttpClient,

@@ -5,7 +5,6 @@ export interface ITask {
   category_id: number
   priority_id: number
   status: number
-  parent_id: number | null
   started_at: string
   finished_at: string
   children: ITask[]
@@ -20,7 +19,6 @@ export class Task implements ITask {
     public category_id: number,
     public priority_id: number,
     public status: number,
-    public parent_id: number | null,
     public started_at: string,
     public finished_at: string,
     public children: ITask[],
