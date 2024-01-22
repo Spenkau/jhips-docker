@@ -1,0 +1,37 @@
+entity Task {
+	title String
+    content String
+    priorityId Integer
+    statusId Integer
+    startedAt LocalDate
+    finishedAt LocalDate
+}
+
+entity Category {
+	name String
+}
+
+entity Tag {
+	name String
+}
+
+entity Comment {
+	content String
+    createdAt LocalDate
+}
+
+relationship ManyToOne {
+	Task{owner} to User with builtInEntity
+    Category{owner} to User with builtInEntity
+
+    Task{category} to Category
+
+    Tag{owner} to User with builtInEntity
+
+    Comment{task} to Task
+    Comment{owner} to User with builtInEntity
+}
+
+relationship ManyToMany {
+	Task{tags} to Tag{tasks}
+}
