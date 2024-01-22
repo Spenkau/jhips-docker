@@ -1,4 +1,4 @@
 <div class="clock-container border-1 border-dark">
   <p>На часах <span class="bg-danger text-white p-1">{{ time | async | date: 'hh:mm:ss' }}</span></p>
-  <p>А на календаре <span class="bg-yellow text-white p-1">{{ currentDate | date:'dd MMMM':'':'ru' }}</span></p>
+  <p>А на календаре <span class="text-white p-1" style="background-color: #ffc107">{{ currentDate | date:'dd MMMM':'':'ru' }}</span></p>
 </div>

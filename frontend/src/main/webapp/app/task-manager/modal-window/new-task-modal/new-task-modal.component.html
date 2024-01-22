@@ -1,5 +1,7 @@
 <form role="form" [formGroup]="newTaskForm" (ngSubmit)="onSubmit()">
-  <ng-content></ng-content>
+  <div class="card-header">
+    <ng-content></ng-content>
+  </div>
   <div class="form-control">
     <label class="form-label" for="title">Название задачи</label>
     <input

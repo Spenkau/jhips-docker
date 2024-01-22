@@ -1,5 +1,5 @@
-<div class="header-panel d-flex justify-content-between">
-  <div class="sidebar-btn">[OPEN SIDEBAR]</div>
+<div class="header-panel d-flex justify-content-between mb-3">
+  <button class="btn" (click)="showSidebar = !showSidebar">Открыть сайдбар</button>
   <button type="button" class="btn btn-primary" (click)="openModal(false)">Новая задача</button>
   <div class="user-panel relative">
     <div class="d-flex gap-2">
@@ -53,5 +53,13 @@
   </div>
 </div>
 
-
-<jhi-task-modal-wrapper #modalWrapper></jhi-task-modal-wrapper>
+<jhi-sidebar *ngIf="showSidebar"></jhi-sidebar>
+<jhi-task-modal-wrapper #modalWrapper>
+  <jhi-new-task-modal>
+    <ng-container *ngIf="subtask">
+      <h3>Создать подзадачу от задачи</h3>
+      <p>[task.title...]</p>
+    </ng-container>
+    <h3 *ngIf="!subtask">Создать задачу</h3>
+  </jhi-new-task-modal>
+</jhi-task-modal-wrapper>

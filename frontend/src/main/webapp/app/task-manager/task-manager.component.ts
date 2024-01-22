@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import {NewTaskModalComponent} from "./modal-window/new-task-modal/new-task-modal.component";
 import {ClockComponent} from "./clock/clock.component";
 import {TaskModalWrapperComponent} from "./modal-window/task-modal-wrapper/task-modal-wrapper.component";
+import {SidebarComponent} from "./sidebar/sidebar.component";
 
 @Component({
   selector: 'jhi-task-manager',
@@ -15,7 +16,8 @@ import {TaskModalWrapperComponent} from "./modal-window/task-modal-wrapper/task-
     RouterLink,
     NewTaskModalComponent,
     ClockComponent,
-    TaskModalWrapperComponent
+    TaskModalWrapperComponent,
+    SidebarComponent
   ],
   templateUrl: './task-manager.component.html',
   styleUrl: './task-manager.component.scss'
@@ -23,9 +25,13 @@ import {TaskModalWrapperComponent} from "./modal-window/task-modal-wrapper/task-
 export default class TaskManagerComponent {
   @ViewChild('modalWrapper') modalWrapper!: TaskModalWrapperComponent
   isUserSettingsCollapsed = false;
+  subtask = false;
+  showSidebar = false;
+
 
   openModal(subtask: boolean): void {
-    this.modalWrapper.openModal(subtask);
+    this.subtask = subtask;
+    this.modalWrapper.openModal();
   }
 
 }
