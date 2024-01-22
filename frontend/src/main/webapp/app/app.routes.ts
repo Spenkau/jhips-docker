@@ -4,10 +4,10 @@ import { Authority } from 'app/config/authority.constants';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 import { errorRoute } from './layouts/error/error.route';
 
-import HomeComponent from './home/home.component';
 import NavbarComponent from './layouts/navbar/navbar.component';
 import LoginComponent from './login/login.component';
-import TaskManagerComponent from './task-manager/task-manager.component';
+import HomeComponent from "./home/home.component";
+import TmHomeComponent from "./task-manager/tm-home-page/tm-home.component";
 
 const routes: Routes = [
   {
@@ -22,7 +22,7 @@ const routes: Routes = [
   },
   {
     path: 'tasks',
-    component: TaskManagerComponent,
+    component: TmHomeComponent,
     title: 'Your task manager',
     loadChildren: () => import('./task-manager/task-manager.routes'),
   },

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Output, signal} from '@angular/core';
 import {NgForOf} from "@angular/common";
 
 @Component({
@@ -11,5 +11,11 @@ import {NgForOf} from "@angular/common";
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
+
+  @Output() showSidebar = new EventEmitter();
+
+  closeSidebar(): void {
+    this.showSidebar.emit(false);
+  }
 
 }

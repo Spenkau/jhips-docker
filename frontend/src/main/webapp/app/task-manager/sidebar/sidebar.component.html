@@ -1,8 +1,9 @@
 <div class="sidebar-container h-100 bg-white position-fixed" style="left: 0; top: 0">
   <div>LOGO</div>
-
-  <h2>Категории</h2>
-
+  <div class="d-flex justify-content-between">
+    <h2>Категории</h2>
+    <button class="btn text-lg-center" (click)="closeSidebar()">x</button>
+  </div>
   <div class="category-list">
     <div class="category" *ngFor="let i of [1,2,3,4,5]; let ind = index">
       <button class="btn">{{ ind }} [category_name]</button>

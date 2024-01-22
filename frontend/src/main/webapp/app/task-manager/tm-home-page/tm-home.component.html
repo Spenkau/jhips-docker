@@ -12,8 +12,7 @@
         class="btn btn-info"
         (click)="isUserSettingsCollapsed = !isUserSettingsCollapsed"
       >
-        \/
-        <fa-icon icon="arrow-alt-down"></fa-icon>
+        <fa-icon icon="arrow-alt-circle-down" style="transform: rotate(180deg)"></fa-icon>
       </button>
     </div>
     <ul class="position-absolute list-unstyled" *ngIf="isUserSettingsCollapsed">
@@ -24,9 +23,9 @@
 </div>
 <div class="main-panel d-flex">
   <div class="tasks-container w-50">
-    <h3>Активные задачи</h3>
+    <h3>Ваши задачи</h3>
     <div class="tasks-list">
-      <div class="task-card">
+      <div class="task-card p-3" style="border: 3px solid #2b2f32;">
         <div class="task-header d-flex justify-content-between">
           <span>[datetime]</span>
           <p>[category_name]</p>
@@ -53,7 +52,7 @@
   </div>
 </div>
 
-<jhi-sidebar *ngIf="showSidebar"></jhi-sidebar>
+<jhi-sidebar *ngIf="showSidebar" (showSidebar)="closeSidebar($event)"></jhi-sidebar>
 <jhi-task-modal-wrapper #modalWrapper>
   <jhi-new-task-modal>
     <ng-container *ngIf="subtask">
