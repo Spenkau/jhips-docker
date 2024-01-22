@@ -4,28 +4,43 @@ import { Observable } from 'rxjs';
 
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
-import { Pagination } from 'app/core/request/request.model';
-import { ITask } from './task-manager.model';
 
 @Injectable({ providedIn: 'root' })
-export class UserManagementService {
-  private resourceUrl = this.applicationConfigService.getEndpointFor('api/admin/users');
+export class TaskService {
+  private resourceUrl = this.applicationConfigService.getEndpointFor('api/task');
 
   constructor(
     private http: HttpClient,
     private applicationConfigService: ApplicationConfigService,
   ) {}
 
-  create(user: ITask): Observable<ITask> {
-    return this.http.post<ITask>(this.resourceUrl, user);
+  tasks(): Observable<ITask[]> {
+    return this.http.get<ITask[]>(this.resourceUrl);
   }
 
-  update(user: ITask): Observable<ITask> {
-    return this.http.put<ITask>(this.resourceUrl, user);
+  tasksByTag(): Observable<ITask[]> {
+    return this.http.get<ITask[]>(this.resourceUrl);
   }
 
-  find(login: string): Observable<ITask> {
-    return this.http.get<ITask>(`${this.resourceUrl}/${login}`);
+  tasksByCategory(): Observable<ITask[]> {
+    return this.http.get<ITask[]>(this.resourceUrl);
+  }
+
+
+  // nestedTasks(): Observable<ITask[]> {
+  //   return this.http.get<ITask[]>(this.resourceUrl);
+  // }
+
+  create(task: ITask): Observable<ITask> {
+    return this.http.post<ITask>(this.resourceUrl, task);
+  }
+
+  update(task: ITask): Observable<ITask> {
+    return this.http.put<ITask>(this.resourceUrl, task);
+  }
+
+  find(id: string): Observable<ITask> {
+    return this.http.get<ITask>(`${this.resourceUrl}/${id}`);
   }
 
   query(req?: Pagination): Observable<HttpResponse<ITask[]>> {
@@ -41,3 +56,6 @@ export class UserManagementService {
     return this.http.get<string[]>(this.applicationConfigService.getEndpointFor('api/authorities'));
   }
 }
+import { Pagination } from 'app/core/request/request.model';
+
+import {ICategory, ITask} from '../task-manager.model';
