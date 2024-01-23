@@ -48,8 +48,8 @@ export class TaskService {
     return this.http.get<ITask[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
-  delete(login: string): Observable<{}> {
-    return this.http.delete(`${this.resourceUrl}/${login}`);
+  delete(id: string): Observable<{}> {
+    return this.http.delete(`${this.resourceUrl}/${id}`);
   }
 
   authorities(): Observable<string[]> {

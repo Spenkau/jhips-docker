@@ -3,6 +3,7 @@ entity Task {
     content String
     priorityId Integer
     statusId Integer
+    categoryId Integer
     startedAt LocalDate
     finishedAt LocalDate
 }
