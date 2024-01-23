@@ -6,15 +6,15 @@ import {ApplicationConfigService} from "../../core/config/application-config.ser
 
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
-  private resourceUrl = this.applicationConfigService.getEndpointFor('api/category');
+  private resourceUrl = this.applicationConfigService.getEndpointFor('api/categories');
 
   constructor(
     private http: HttpClient,
     private applicationConfigService: ApplicationConfigService,
   ) {}
 
-  categories(type: string): Observable<ICategory[]> {
-    return this.http.get<ICategory[]>(this.resourceUrl + `/${type}`);
+  categories(): Observable<ICategory[]> {
+    return this.http.get<ICategory[]>(this.resourceUrl);
   }
 
   create(category: ICategory): Observable<ICategory> {

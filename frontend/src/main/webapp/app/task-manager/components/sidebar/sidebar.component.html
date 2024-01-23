@@ -5,9 +5,12 @@
     <button class="btn text-lg-center" (click)="closeSidebar()">x</button>
   </div>
   <div class="category-list">
-    <div class="category" *ngFor="let i of [1,2,3,4,5]; let ind = index">
-      <button class="btn">{{ ind }} [category_name]</button>
-      <button class="btn">+ (add child category)</button>
+    <div class="category" *ngFor="let category of categoriesList | async">
+      <button class="btn">
+<!--        {{ category.id }}-->
+        {{ category.name }}
+      </button>
+<!--      <button class="btn">+ (add child category)</button>-->
     </div>
   </div>
 </div>
