@@ -1,0 +1,24 @@
+<div  class="task-card p-3" style="border: 3px solid #2b2f32;">
+  <div class="task-header d-flex justify-content-between">
+    @if (task.started_at || task.finished_at) {
+      <span>с {{ task.started_at  }} по {{ task.finished_at }}</span>
+    } @else {
+      <small>Дата не указана</small>
+    }
+    <p>[category_name]</p>
+    <ul class="reactions-list list-unstyled d-flex gap-2">
+      <li><button class="btn" style="background-color: #28a745">:)</button></li>
+      <li><button class="btn btn-info" style="background-color: #ffc107">:/</button></li>
+      <li><button class="btn btn-info" style="background-color: #dc3545">:(</button></li>
+    </ul>
+  </div>
+  <div class="task-body justify-content-between">
+    <h3>{{ task.title }}</h3>
+    <p>{{ task.content.length > 20 ? task.content.substring(0 ,20) + '...' : task.content }}</p>
+  </div>
+  <div class="task-footer">
+    <button class="btn">Удалить задачу</button>
+    <button class="btn">Отложить задачу</button>
+    <!--          <button class="btn" (click)="openModal(true)">Создать подзадачу</button>-->
+  </div>
+</div>
