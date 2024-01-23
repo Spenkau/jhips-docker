@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import TmHomeComponent from './tm-home.component';
+import TmHomePageComponent from './tm-home-page.component';
 
 describe('TaskManagerComponent', () => {
-  let component: TmHomeComponent;
-  let fixture: ComponentFixture<TmHomeComponent>;
+  let component: TmHomePageComponent;
+  let fixture: ComponentFixture<TmHomePageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TmHomeComponent]
+      imports: [TmHomePageComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TmHomeComponent);
+    fixture = TestBed.createComponent(TmHomePageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

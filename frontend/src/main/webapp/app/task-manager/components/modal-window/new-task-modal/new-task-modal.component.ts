@@ -16,7 +16,7 @@ import {faPlusCircle} from "@fortawesome/free-solid-svg-icons";
     JsonPipe
   ],
   templateUrl: './new-task-modal.component.html',
-  styleUrl: './new-task-modal.component.scss'
+  styleUrls: ['./new-task-modal.component.scss']
 })
 export class NewTaskModalComponent {
   // categories: Observable<string[]> = ['fasdf','fsdaf'];

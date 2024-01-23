@@ -10,6 +10,8 @@ import {faArrowAltCircleDown} from "@fortawesome/free-solid-svg-icons";
 import {TaskService} from "../services/task.service";
 import {ITask} from "../task-manager.model";
 import {Observable} from "rxjs";
+import {TaskCardComponent} from "../components/task-card/task-card.component";
+import {AccountService} from "../../core/auth/account.service";
 
 
 @Component({
@@ -25,28 +27,35 @@ import {Observable} from "rxjs";
     SidebarComponent,
     NgStyle,
     AsyncPipe,
-    NgForOf
+    NgForOf,
+    TaskCardComponent
   ],
-  templateUrl: './tm-home.component.html',
-  styleUrl: './tm-home.component.scss'
+  templateUrl: './tm-home-page.component.html',
+  styleUrls: ['./tm-home-page.component.scss']
 })
 
-export default class TmHomeComponent implements OnInit {
+export default class TmHomePageComponent implements OnInit {
   @ViewChild('modalWrapper') modalWrapper!: TaskModalWrapperComponent
   isUserSettingsCollapsed = false;
   subtask = false;
   showSidebar = false;
   taskList!: Observable<ITask[]>;
+  userName: string | undefined = '';
 
   constructor(
     private taskService: TaskService,
+    private accountService: AccountService,
     private library: FaIconLibrary
   ) {
     library.addIcons(faArrowAltCircleDown)
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.taskList = this.taskService.tasks();
+    console.log("ACCOUNT")
+    this.accountService.identity().subscribe(account => {
+      this.userName = account?.login
+    })
   }
 
 

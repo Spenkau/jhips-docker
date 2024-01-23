@@ -11,7 +11,7 @@ import { Account } from 'app/core/auth/account.model';
   standalone: true,
   selector: 'jhi-home',
   templateUrl: './home.component.html',
-  styleUrl: './tm-home.component.scss',
+  styleUrl: './tm-home-page.component.scss',
   imports: [SharedModule, RouterModule],
 })
 export default class HomeComponent implements OnInit, OnDestroy {
