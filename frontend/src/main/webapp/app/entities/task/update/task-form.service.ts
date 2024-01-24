@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {Injectable} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 
-import { ITask, NewTask } from '../task.model';
+import {ITask, NewTask} from '../task.model';
 
 /**
  * A partial Type with required key is used as form input.
@@ -32,16 +32,16 @@ type TaskFormGroupContent = {
 
 export type TaskFormGroup = FormGroup<TaskFormGroupContent>;
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class TaskFormService {
-  createTaskFormGroup(task: TaskFormGroupInput = { id: null }): TaskFormGroup {
+  createTaskFormGroup(task: TaskFormGroupInput = {id: null}): TaskFormGroup {
     const taskRawValue = {
       ...this.getFormDefaults(),
       ...task,
     };
     return new FormGroup<TaskFormGroupContent>({
       id: new FormControl(
-        { value: taskRawValue.id, disabled: true },
+        {value: taskRawValue.id, disabled: true},
         {
           nonNullable: true,
           validators: [Validators.required],
@@ -65,11 +65,11 @@ export class TaskFormService {
   }
 
   resetForm(form: TaskFormGroup, task: TaskFormGroupInput): void {
-    const taskRawValue = { ...this.getFormDefaults(), ...task };
+    const taskRawValue = {...this.getFormDefaults(), ...task};
     form.reset(
       {
         ...taskRawValue,
-        id: { value: taskRawValue.id, disabled: true },
+        id: {value: taskRawValue.id, disabled: true},
       } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */,
     );
   }

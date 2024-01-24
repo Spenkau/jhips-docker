@@ -24,93 +24,93 @@
 
   <jhi-alert></jhi-alert>
 
-<!--  @if (tasks?.length === 0) {-->
-<!--    <div class="alert alert-warning" id="no-result">-->
-<!--      <span jhiTranslate="jhipsTestApp.task.home.notFound">Tasks не найдено</span>-->
-<!--    </div>-->
-<!--  }-->
+  <!--  @if (tasks?.length === 0) {-->
+  <!--    <div class="alert alert-warning" id="no-result">-->
+  <!--      <span jhiTranslate="jhipsTestApp.task.home.notFound">Tasks не найдено</span>-->
+  <!--    </div>-->
+  <!--  }-->
 
   @if (tasks && tasks.length > 0) {
     <div class="table-responsive table-entities" id="entities">
       <table class="table table-striped" aria-describedby="page-heading">
         <thead>
-          <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
-            <th scope="col" jhiSortBy="id">
-              <div class="d-flex">
-                <span jhiTranslate="global.field.id">ID</span>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span jhiTranslate="global.field.id">ID</span>
 
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="title">
-              <div class="d-flex">
-                <span jhiTranslate="jhipsTestApp.task.title">Title</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="title">
+            <div class="d-flex">
+              <span jhiTranslate="jhipsTestApp.task.title">Title</span>
 
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="content">
-              <div class="d-flex">
-                <span jhiTranslate="jhipsTestApp.task.content">Content</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="content">
+            <div class="d-flex">
+              <span jhiTranslate="jhipsTestApp.task.content">Content</span>
 
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="priorityId">
-              <div class="d-flex">
-                <span jhiTranslate="jhipsTestApp.task.priorityId">Priority Id</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="priorityId">
+            <div class="d-flex">
+              <span jhiTranslate="jhipsTestApp.task.priorityId">Priority Id</span>
 
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="statusId">
-              <div class="d-flex">
-                <span jhiTranslate="jhipsTestApp.task.statusId">Status Id</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="statusId">
+            <div class="d-flex">
+              <span jhiTranslate="jhipsTestApp.task.statusId">Status Id</span>
 
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="categoryId">
-              <div class="d-flex">
-                <span jhiTranslate="jhipsTestApp.task.categoryId">Category Id</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="categoryId">
+            <div class="d-flex">
+              <span jhiTranslate="jhipsTestApp.task.categoryId">Category Id</span>
 
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="startedAt">
-              <div class="d-flex">
-                <span jhiTranslate="jhipsTestApp.task.startedAt">Started At</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="startedAt">
+            <div class="d-flex">
+              <span jhiTranslate="jhipsTestApp.task.startedAt">Started At</span>
 
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="finishedAt">
-              <div class="d-flex">
-                <span jhiTranslate="jhipsTestApp.task.finishedAt">Finished At</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="finishedAt">
+            <div class="d-flex">
+              <span jhiTranslate="jhipsTestApp.task.finishedAt">Finished At</span>
 
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="owner.id">
-              <div class="d-flex">
-                <span jhiTranslate="jhipsTestApp.task.owner">Owner</span>
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="category.id">
-              <div class="d-flex">
-                <span jhiTranslate="jhipsTestApp.task.category">Category</span>
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="tags.id">
-              <div class="d-flex">
-                <span jhiTranslate="jhipsTestApp.task.tags">Tags</span>
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col"></th>
-          </tr>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="owner.id">
+            <div class="d-flex">
+              <span jhiTranslate="jhipsTestApp.task.owner">Owner</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="category.id">
+            <div class="d-flex">
+              <span jhiTranslate="jhipsTestApp.task.category">Category</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="tags.id">
+            <div class="d-flex">
+              <span jhiTranslate="jhipsTestApp.task.tags">Tags</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
         </thead>
         <tbody>
           @for (task of tasks; track trackId) {
@@ -145,17 +145,20 @@
               </td>
               <td class="text-end">
                 <div class="btn-group">
-                  <a [routerLink]="['/task', task.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                  <a [routerLink]="['/task', task.id, 'view']" class="btn btn-info btn-sm"
+                     data-cy="entityDetailsButton">
                     <fa-icon icon="eye"></fa-icon>
                     <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Просмотр</span>
                   </a>
 
-                  <a [routerLink]="['/task', task.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                  <a [routerLink]="['/task', task.id, 'edit']" class="btn btn-primary btn-sm"
+                     data-cy="entityEditButton">
                     <fa-icon icon="pencil-alt"></fa-icon>
                     <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Изменить</span>
                   </a>
 
-                  <button type="submit" (click)="delete(task)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                  <button type="submit" (click)="delete(task)" class="btn btn-danger btn-sm"
+                          data-cy="entityDeleteButton">
                     <fa-icon icon="times"></fa-icon>
                     <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Удалить</span>
                   </button>
@@ -200,11 +203,11 @@
       </div>
     }
 
-   @if (tasks && tasks.length > 0) {
-     <h3>Ваши задачи</h3>
-     <div class="tasks-list d-flex flex-column gap-3">
-       <div *ngFor="let task of tasks" class="task-card p-3" style="border: 3px solid #2b2f32;">
-         <div class="task-header d-flex justify-content-between">
+    @if (tasks && tasks.length > 0) {
+      <h3>Ваши задачи</h3>
+      <div class="tasks-list d-flex flex-column gap-3">
+        <div *ngFor="let task of tasks" class="task-card p-3" style="border: 3px solid #2b2f32;">
+          <div class="task-header d-flex justify-content-between">
             <span>
               @if (task.startedAt) {
                 с {{ task.startedAt | formatMediumDate }}
@@ -213,33 +216,52 @@
                 по {{ task.finishedAt | formatMediumDate }}
               }
             </span>
-           <p>{{ task.categoryId }}</p>
-           <ul class="reactions-list list-unstyled d-flex gap-2">
-             <li><button class="btn" style="background-color: #28a745">:)</button></li>
-             <li><button class="btn btn-info" style="background-color: #ffc107">:/</button></li>
-             <li><button class="btn btn-info" style="background-color: #dc3545">:(</button></li>
-           </ul>
-         </div>
-         <div class="d-flex justify-content-between">
-           <div class="task-body justify-content-between">
-             <a routerLink="" class="text-lg-center">{{ task.title }}</a>
-             @if (task.content) {
-               <p>{{ task.content.length > 20 ? task.content?.substring(0 ,20) + '...' : task.content }}</p>
-             }
-           </div>
-           <ul class="list-unstyled">
-             <li>Приоритет: {{ task.priorityId ? PriorityEnum[task?.priorityId!] : 'неопределен' }}</li>
-             <li>Статус: {{ task.statusId }}</li>
-           </ul>
-         </div>
-         <div class="task-footer">
-           <button class="btn">Удалить задачу</button>
-           <button class="btn">Отложить задачу</button>
-           <!--          <button class="btn" (click)="openModal(true)">Создать подзадачу</button>-->
-         </div>
-       </div>
-     </div>
-   }
+            <p>{{ task.categoryId }}</p>
+            <ul class="reactions-list list-unstyled d-flex gap-2">
+              <li>
+                <button class="btn" style="background-color: #28a745">:)</button>
+              </li>
+              <li>
+                <button class="btn btn-info" style="background-color: #ffc107">:/</button>
+              </li>
+              <li>
+                <button class="btn btn-info" style="background-color: #dc3545">:(</button>
+              </li>
+            </ul>
+          </div>
+          <div class="d-flex justify-content-between">
+            <div class="task-body justify-content-between">
+              <a [routerLink]="['/task', task.id, 'view']" class="text-lg-center">{{ task.title }}</a>
+              @if (task.content) {
+                <p>{{ task.content.length > 20 ? task.content?.substring(0, 20) + '...' : task.content }}</p>
+              }
+            </div>
+            <ul class="list-unstyled">
+              <li>Приоритет:
+                {{
+                  (task.priorityId! >= 0) ? PriorityEnum[task.priorityId!]
+                    :
+                    'неопределен'
+                }}
+              </li>
+              <li>
+                Статус:
+                {{
+                  (task.statusId! >= 0) ? PriorityEnum[task.statusId!]
+                    :
+                    'неопределен'
+                }}
+              </li>
+            </ul>
+          </div>
+          <div class="task-footer">
+            <button class="btn">Удалить задачу</button>
+            <button class="btn">Отложить задачу</button>
+            <!--          <button class="btn" (click)="openModal(true)">Создать подзадачу</button>-->
+          </div>
+        </div>
+      </div>
+    }
   </div>
 
 

@@ -90,7 +90,7 @@
 
         <div class="mb-3">
           <label class="form-label" jhiTranslate="jhipsTestApp.task.owner" for="field_owner">Owner</label>
-          <select class="form-control" id="field_owner" data-cy="owner" name="owner" formControlName="owner" [compareWith]="compareUser">
+          <select class="form-control" id="field_owner" data-cy="ownerId" name="ownerId" formControlName="ownerId" [compareWith]="compareUser">
             <option [ngValue]="null"></option>
             @for (userOption of usersSharedCollection; track $index) {
               <option [ngValue]="userOption">{{ userOption.id }}</option>
