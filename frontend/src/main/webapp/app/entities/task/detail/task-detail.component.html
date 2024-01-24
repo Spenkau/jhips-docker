@@ -1,0 +1,79 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (task) {
+      <div>
+        <h2 data-cy="taskDetailsHeading"><span jhiTranslate="jhipsTestApp.task.detail.title">Task</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ task.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhipsTestApp.task.title">Title</span></dt>
+          <dd>
+            <span>{{ task.title }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhipsTestApp.task.content">Content</span></dt>
+          <dd>
+            <span>{{ task.content }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhipsTestApp.task.priorityId">Priority Id</span></dt>
+          <dd>
+            <span>{{ task.priorityId }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhipsTestApp.task.statusId">Status Id</span></dt>
+          <dd>
+            <span>{{ task.statusId }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhipsTestApp.task.categoryId">Category Id</span></dt>
+          <dd>
+            <span>{{ task.categoryId }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhipsTestApp.task.startedAt">Started At</span></dt>
+          <dd>
+            <span>{{ task.startedAt | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhipsTestApp.task.finishedAt">Finished At</span></dt>
+          <dd>
+            <span>{{ task.finishedAt | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhipsTestApp.task.owner">Owner</span></dt>
+          <dd>
+            <span>{{ task.owner?.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhipsTestApp.task.category">Category</span></dt>
+          <dd>
+            @if (task.category) {
+              <div>
+                <a [routerLink]="['/category', task.category.id, 'view']">{{ task.category.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="jhipsTestApp.task.tags">Tags</span></dt>
+          <dd>
+            @for (tags of task.tags; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/tag', tags.id, 'view']">{{ tags.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Назад</span>
+        </button>
+
+        <button type="button" [routerLink]="['/task', task.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Изменить</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

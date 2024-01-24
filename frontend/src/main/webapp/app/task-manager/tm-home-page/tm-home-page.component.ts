@@ -36,8 +36,8 @@ import {AccountService} from "../../core/auth/account.service";
 
 export default class TmHomePageComponent implements OnInit {
   @ViewChild('modalWrapper') modalWrapper!: TaskModalWrapperComponent
-  isUserSettingsCollapsed = false;
   subtask = false;
+  isUserSettingsCollapsed = false;
   showSidebar = false;
   taskList!: Observable<ITask[]>;
   userName: string | undefined = '';

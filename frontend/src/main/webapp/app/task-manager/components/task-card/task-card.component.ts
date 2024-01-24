@@ -1,11 +1,14 @@
 import {Component, Input, Output} from '@angular/core';
-import {ITask} from "../../task-manager.model";
+import { DurationPipe, FormatMediumDatetimePipe, FormatMediumDatePipe } from 'app/shared/date';
 import {TaskService} from "../../services/task.service";
+import {ITask} from "../../../entities/task/task.model";
 
 @Component({
   selector: 'jhi-task-card',
   standalone: true,
-  imports: [],
+  imports: [
+    FormatMediumDatePipe
+  ],
   templateUrl: './task-card.component.html',
   styleUrl: './task-card.component.scss'
 })

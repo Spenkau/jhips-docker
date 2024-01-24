@@ -1,0 +1,78 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-comment-heading" data-cy="CommentCreateUpdateHeading" jhiTranslate="jhipsTestApp.comment.home.createOrEditLabel">
+        Создать или отредактировать Comment
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="jhipsTestApp.comment.content" for="field_content">Content</label>
+          <input type="text" class="form-control" name="content" id="field_content" data-cy="content" formControlName="content" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="jhipsTestApp.comment.createdAt" for="field_createdAt">Created At</label>
+          <div class="input-group">
+            <input
+              id="field_createdAt"
+              data-cy="createdAt"
+              type="text"
+              class="form-control"
+              name="createdAt"
+              ngbDatepicker
+              #createdAtDp="ngbDatepicker"
+              formControlName="createdAt"
+            />
+            <button type="button" class="btn btn-secondary" (click)="createdAtDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="jhipsTestApp.comment.task" for="field_task">Task</label>
+          <select class="form-control" id="field_task" data-cy="task" name="task" formControlName="task" [compareWith]="compareTask">
+            <option [ngValue]="null"></option>
+            @for (taskOption of tasksSharedCollection; track $index) {
+              <option [ngValue]="taskOption">{{ taskOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="jhipsTestApp.comment.owner" for="field_owner">Owner</label>
+          <select class="form-control" id="field_owner" data-cy="owner" name="owner" formControlName="owner" [compareWith]="compareUser">
+            <option [ngValue]="null"></option>
+            @for (userOption of usersSharedCollection; track $index) {
+              <option [ngValue]="userOption">{{ userOption.id }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Отмена</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Сохранить</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

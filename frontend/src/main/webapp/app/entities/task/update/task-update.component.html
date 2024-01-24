@@ -1,0 +1,153 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-task-heading" data-cy="TaskCreateUpdateHeading" jhiTranslate="jhipsTestApp.task.home.createOrEditLabel">
+        Создать или отредактировать Task
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="jhipsTestApp.task.title" for="field_title">Title</label>
+          <input type="text" class="form-control" name="title" id="field_title" data-cy="title" formControlName="title" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="jhipsTestApp.task.content" for="field_content">Content</label>
+          <input type="text" class="form-control" name="content" id="field_content" data-cy="content" formControlName="content" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="jhipsTestApp.task.priorityId" for="field_priorityId">Priority Id</label>
+          <input
+            type="number"
+            class="form-control"
+            name="priorityId"
+            id="field_priorityId"
+            data-cy="priorityId"
+            formControlName="priorityId"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="jhipsTestApp.task.statusId" for="field_statusId">Status Id</label>
+          <input type="number" class="form-control" name="statusId" id="field_statusId" data-cy="statusId" formControlName="statusId" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="jhipsTestApp.task.categoryId" for="field_categoryId">Category Id</label>
+          <input
+            type="number"
+            class="form-control"
+            name="categoryId"
+            id="field_categoryId"
+            data-cy="categoryId"
+            formControlName="categoryId"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="jhipsTestApp.task.startedAt" for="field_startedAt">Started At</label>
+          <div class="input-group">
+            <input
+              id="field_startedAt"
+              data-cy="startedAt"
+              type="text"
+              class="form-control"
+              name="startedAt"
+              ngbDatepicker
+              #startedAtDp="ngbDatepicker"
+              formControlName="startedAt"
+            />
+            <button type="button" class="btn btn-secondary" (click)="startedAtDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="jhipsTestApp.task.finishedAt" for="field_finishedAt">Finished At</label>
+          <div class="input-group">
+            <input
+              id="field_finishedAt"
+              data-cy="finishedAt"
+              type="text"
+              class="form-control"
+              name="finishedAt"
+              ngbDatepicker
+              #finishedAtDp="ngbDatepicker"
+              formControlName="finishedAt"
+            />
+            <button type="button" class="btn btn-secondary" (click)="finishedAtDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="jhipsTestApp.task.owner" for="field_owner">Owner</label>
+          <select class="form-control" id="field_owner" data-cy="owner" name="owner" formControlName="owner" [compareWith]="compareUser">
+            <option [ngValue]="null"></option>
+            @for (userOption of usersSharedCollection; track $index) {
+              <option [ngValue]="userOption">{{ userOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="jhipsTestApp.task.category" for="field_category">Category</label>
+          <select
+            class="form-control"
+            id="field_category"
+            data-cy="category"
+            name="category"
+            formControlName="category"
+            [compareWith]="compareCategory"
+          >
+            <option [ngValue]="null"></option>
+            @for (categoryOption of categoriesSharedCollection; track $index) {
+              <option [ngValue]="categoryOption">{{ categoryOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label jhiTranslate="jhipsTestApp.task.tags" for="field_tags">Tags</label>
+          <select
+            class="form-control"
+            id="field_tags"
+            data-cy="tags"
+            multiple
+            name="tags"
+            formControlName="tags"
+            [compareWith]="compareTag"
+          >
+            @for (tagOption of tagsSharedCollection; track $index) {
+              <option [ngValue]="tagOption">{{ tagOption.id }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Отмена</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Сохранить</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
