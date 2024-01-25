@@ -27,6 +27,7 @@ import {AccountService} from "../../../core/auth/account.service";
 import {PriorityEnum} from "../task.enums";
 import {TaskCreateDialogComponent} from "../create/task-create-dialog.component";
 import {CategoryService} from "../../category/service/category.service";
+import {TaskPostponeDialogComponent} from "../postpone/task-postpone-dialog.component";
 
 @Component({
   standalone: true,
@@ -97,6 +98,14 @@ export class TaskComponent implements OnInit {
         })
       }
     )
+  }
+
+  postpone(): void {
+    const modalRef = this.modalService.open(TaskPostponeDialogComponent, {size: 'lg'});
+
+    modalRef.closed.subscribe(() => {
+
+    })
   }
 
   delete(task: ITask): void {

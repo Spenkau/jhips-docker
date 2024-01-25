@@ -1,0 +1,52 @@
+<div class="d-flex justify-content-center p-3">
+  <div class="col-8">
+    <form (ngSubmit)="save()" [formGroup]="editForm" name="editForm" novalidate role="form">
+      <h2 data-cy="TaskCreateUpdateHeading" id="jhi-task-heading" jhiTranslate="jhipsTestApp.task.home.create">
+        Новая задача
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_startedAt" jhiTranslate="jhipsTestApp.task.startedAt">Started At</label>
+          <div class="input-group">
+            <input
+              #startedAtDp="ngbDatepicker"
+              class="form-control"
+              data-cy="startedAt"
+              formControlName="startedAt"
+              id="field_startedAt"
+              name="startedAt"
+              ngbDatepicker
+              type="text"
+            />
+            <button (click)="startedAtDp.toggle()" class="btn btn-secondary" type="button">
+              <fa-icon icon="calendar-alt"></fa-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_finishedAt" jhiTranslate="jhipsTestApp.task.finishedAt">Finished
+            At</label>
+          <div class="input-group">
+            <input
+              #finishedAtDp="ngbDatepicker"
+              class="form-control"
+              data-cy="finishedAt"
+              formControlName="finishedAt"
+              id="field_finishedAt"
+              name="finishedAt"
+              ngbDatepicker
+              type="text"
+            />
+            <button (click)="finishedAtDp.toggle()" class="btn btn-secondary" type="button">
+              <fa-icon icon="calendar-alt"></fa-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

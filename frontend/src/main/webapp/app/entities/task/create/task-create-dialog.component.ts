@@ -72,6 +72,10 @@ export class TaskCreateDialogComponent {
     this.isSaving = false;
   }
 
+  protected onSaveError(): void {
+    console.log("Failed to create task")
+  }
+
   confirmCreate(task: NewTask): void {
     this.taskService.create(task)
       .subscribe((res) => {
@@ -85,10 +89,6 @@ export class TaskCreateDialogComponent {
           }
         },
       );
-  }
-
-  protected onSaveError(): void {
-    console.log("Failed to create task")
   }
 
   protected readonly StatusEnum = StatusEnum;
