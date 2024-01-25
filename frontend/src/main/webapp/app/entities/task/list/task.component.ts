@@ -1,24 +1,17 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import { ActivatedRoute, Data, ParamMap, Router, RouterModule } from '@angular/router';
-import { combineLatest, filter, Observable, switchMap, tap } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {ActivatedRoute, Data, ParamMap, Router, RouterModule} from '@angular/router';
+import {combineLatest, filter, Observable, switchMap, tap} from 'rxjs';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 import SharedModule from 'app/shared/shared.module';
-import { SortDirective, SortByDirective } from 'app/shared/sort';
-import { DurationPipe, FormatMediumDatetimePipe, FormatMediumDatePipe } from 'app/shared/date';
-import { FormsModule } from '@angular/forms';
-import {
-  ASC,
-  DESC,
-  SORT,
-  ITEM_DELETED_EVENT,
-  DEFAULT_SORT_DATA,
-  ITEM_CREATED_EVENT
-} from 'app/config/navigation.constants';
-import { SortService } from 'app/shared/sort/sort.service';
-import { ITask } from '../task.model';
-import { EntityArrayResponseType, TaskService } from '../service/task.service';
-import { TaskDeleteDialogComponent } from '../delete/task-delete-dialog.component';
+import {SortByDirective, SortDirective} from 'app/shared/sort';
+import {DurationPipe, FormatMediumDatePipe, FormatMediumDatetimePipe} from 'app/shared/date';
+import {FormsModule} from '@angular/forms';
+import {ASC, DEFAULT_SORT_DATA, DESC, ITEM_DELETED_EVENT, SORT} from 'app/config/navigation.constants';
+import {SortService} from 'app/shared/sort/sort.service';
+import {ITask} from '../task.model';
+import {EntityArrayResponseType, TaskService} from '../service/task.service';
+import {TaskDeleteDialogComponent} from '../delete/task-delete-dialog.component';
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {ClockComponent} from "../../../task-manager/components/clock/clock.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
@@ -33,7 +26,6 @@ import {
 import {AccountService} from "../../../core/auth/account.service";
 import {PriorityEnum} from "../task.enums";
 import {TaskCreateDialogComponent} from "../create/task-create-dialog.component";
-import {ICategory} from "../../category/category.model";
 import {CategoryService} from "../../category/service/category.service";
 
 @Component({
@@ -94,26 +86,17 @@ export class TaskComponent implements OnInit {
     this.accountService.identity().subscribe(account => {
       this.userName = account?.login
     })
-
-   this.queryBackend2(this.predicate, this.ascending).subscribe(res => {
-     console.log(res.body);
-   });
   }
 
   create(): void {
-    const modalRef = this.modalService.open(TaskCreateDialogComponent, { size: 'xl'});
-    // modalRef.componentInstance.task = task;
+    const modalRef = this.modalService.open(TaskCreateDialogComponent, {size: 'xl'});
 
-    modalRef.closed
-      .pipe(
-        filter(reason => reason === ITEM_CREATED_EVENT),
-        switchMap(() => this.loadFromBackendWithRouteInformations()),
-      )
-      .subscribe({
-        next: (res: EntityArrayResponseType) => {
-          this.onResponseSuccess(res);
-        },
-      });
+    modalRef.closed.subscribe(() => {
+        modalRef.componentInstance.task.subscribe((task: ITask) => {
+          this.tasks?.push(task)
+        })
+      }
+    )
   }
 
   delete(task: ITask): void {
