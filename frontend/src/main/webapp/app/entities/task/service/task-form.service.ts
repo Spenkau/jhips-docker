@@ -22,10 +22,10 @@ type TaskFormGroupContent = {
   content: FormControl<ITask['content']>;
   priorityId: FormControl<ITask['priorityId']>;
   statusId: FormControl<ITask['statusId']>;
-  categoryId: FormControl<ITask['categoryId']>;
+  // categoryId: FormControl<ITask['categoryId']>;
   startedAt: FormControl<ITask['startedAt']>;
   finishedAt: FormControl<ITask['finishedAt']>;
-  owner: FormControl<ITask['owner']>;
+  // owner: FormControl<ITask['owner']>;
   category: FormControl<ITask['category']>;
   tags: FormControl<ITask['tags']>;
 };
@@ -51,10 +51,10 @@ export class TaskFormService {
       content: new FormControl(taskRawValue.content),
       priorityId: new FormControl(taskRawValue.priorityId),
       statusId: new FormControl(taskRawValue.statusId),
-      categoryId: new FormControl(taskRawValue.categoryId),
+      // categoryId: new FormControl(taskRawValue.categoryId),
       startedAt: new FormControl(taskRawValue.startedAt),
       finishedAt: new FormControl(taskRawValue.finishedAt),
-      owner: new FormControl(taskRawValue.owner),
+      // owner: new FormControl(taskRawValue.owner),
       category: new FormControl(taskRawValue.category),
       tags: new FormControl(taskRawValue.tags ?? []),
     });
