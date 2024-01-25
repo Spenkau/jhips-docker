@@ -14,7 +14,7 @@ import { ITag } from 'app/entities/tag/tag.model';
 import { TagService } from 'app/entities/tag/service/tag.service';
 import { ITask } from '../task.model';
 import { TaskService } from '../service/task.service';
-import { TaskFormService } from './task-form.service';
+import { TaskFormService } from '../service/task-form.service';
 
 import { TaskUpdateComponent } from './task-update.component';
 

@@ -9,7 +9,7 @@ export interface ITask {
   content?: string | null;
   priorityId?: number | null;
   statusId?: number | null;
-  categoryId?: number | null;
+  // categoryId?: number | null;
   startedAt?: dayjs.Dayjs | null;
   finishedAt?: dayjs.Dayjs | null;
   owner?: Pick<IUser, 'id'> | null;

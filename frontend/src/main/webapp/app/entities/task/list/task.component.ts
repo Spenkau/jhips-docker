@@ -7,7 +7,14 @@ import SharedModule from 'app/shared/shared.module';
 import { SortDirective, SortByDirective } from 'app/shared/sort';
 import { DurationPipe, FormatMediumDatetimePipe, FormatMediumDatePipe } from 'app/shared/date';
 import { FormsModule } from '@angular/forms';
-import { ASC, DESC, SORT, ITEM_DELETED_EVENT, DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
+import {
+  ASC,
+  DESC,
+  SORT,
+  ITEM_DELETED_EVENT,
+  DEFAULT_SORT_DATA,
+  ITEM_CREATED_EVENT
+} from 'app/config/navigation.constants';
 import { SortService } from 'app/shared/sort/sort.service';
 import { ITask } from '../task.model';
 import { EntityArrayResponseType, TaskService } from '../service/task.service';
@@ -25,6 +32,9 @@ import {
 } from "../../../task-manager/components/modal-window/task-modal-wrapper/task-modal-wrapper.component";
 import {AccountService} from "../../../core/auth/account.service";
 import {PriorityEnum} from "../task.enums";
+import {TaskCreateDialogComponent} from "../create/task-create-dialog.component";
+import {ICategory} from "../../category/category.model";
+import {CategoryService} from "../../category/service/category.service";
 
 @Component({
   standalone: true,
@@ -52,10 +62,12 @@ import {PriorityEnum} from "../task.enums";
   ],
 })
 export class TaskComponent implements OnInit {
+  protected readonly PriorityEnum = PriorityEnum;
   @ViewChild('modalWrapper') modalWrapper!: TaskModalWrapperComponent
   subtask = false;
 
   tasks?: ITask[];
+  categories?: Observable<EntityArrayResponseType>;
   isLoading = false;
   isUserSettingsCollapsed = false;
   userName: string | undefined = '';
@@ -66,6 +78,7 @@ export class TaskComponent implements OnInit {
 
   constructor(
     protected taskService: TaskService,
+    protected categoryService: CategoryService,
     protected activatedRoute: ActivatedRoute,
     public router: Router,
     protected sortService: SortService,
@@ -81,6 +94,26 @@ export class TaskComponent implements OnInit {
     this.accountService.identity().subscribe(account => {
       this.userName = account?.login
     })
+
+   this.queryBackend2(this.predicate, this.ascending).subscribe(res => {
+     console.log(res.body);
+   });
+  }
+
+  create(): void {
+    const modalRef = this.modalService.open(TaskCreateDialogComponent, { size: 'xl'});
+    // modalRef.componentInstance.task = task;
+
+    modalRef.closed
+      .pipe(
+        filter(reason => reason === ITEM_CREATED_EVENT),
+        switchMap(() => this.loadFromBackendWithRouteInformations()),
+      )
+      .subscribe({
+        next: (res: EntityArrayResponseType) => {
+          this.onResponseSuccess(res);
+        },
+      });
   }
 
   delete(task: ITask): void {
@@ -101,6 +134,7 @@ export class TaskComponent implements OnInit {
 
   load(): void {
     this.loadFromBackendWithRouteInformations().subscribe({
+
       next: (res: EntityArrayResponseType) => {
         this.onResponseSuccess(res);
       },
@@ -145,6 +179,14 @@ export class TaskComponent implements OnInit {
     };
     return this.taskService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
   }
+  protected queryBackend2(predicate?: string, ascending?: boolean): Observable<EntityArrayResponseType> {
+    this.isLoading = true;
+    const queryObject: any = {
+      eagerload: true,
+      sort: this.getSortQueryParam(predicate, ascending),
+    };
+    return this.categoryService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
+  }
 
   protected handleNavigation(predicate?: string, ascending?: boolean): void {
     const queryParamsObj = {
@@ -166,14 +208,8 @@ export class TaskComponent implements OnInit {
     }
   }
 
-  openModal(subtask: boolean): void {
-    this.subtask = subtask;
-    this.modalWrapper.openModal();
-  }
-
   closeSidebar(value: boolean): void {
     this.showSidebar = value;
   }
 
-  protected readonly PriorityEnum = PriorityEnum;
 }
