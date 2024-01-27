@@ -2,6 +2,9 @@ package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.domain.Category;
 import com.mycompany.myapp.repository.CategoryRepository;
+import com.mycompany.myapp.service.CategoryQueryService;
+import com.mycompany.myapp.service.CategoryService;
+import com.mycompany.myapp.service.criteria.CategoryCriteria;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -12,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -22,7 +24,6 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api/categories")
-@Transactional
 public class CategoryResource {
 
     private final Logger log = LoggerFactory.getLogger(CategoryResource.class);
@@ -32,10 +33,20 @@ public class CategoryResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final CategoryService categoryService;
+
     private final CategoryRepository categoryRepository;
 
-    public CategoryResource(CategoryRepository categoryRepository) {
+    private final CategoryQueryService categoryQueryService;
+
+    public CategoryResource(
+        CategoryService categoryService,
+        CategoryRepository categoryRepository,
+        CategoryQueryService categoryQueryService
+    ) {
+        this.categoryService = categoryService;
         this.categoryRepository = categoryRepository;
+        this.categoryQueryService = categoryQueryService;
     }
 
     /**
@@ -51,7 +62,7 @@ public class CategoryResource {
         if (category.getId() != null) {
             throw new BadRequestAlertException("A new category cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Category result = categoryRepository.save(category);
+        Category result = categoryService.save(category);
         return ResponseEntity
             .created(new URI("/api/categories/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -85,7 +96,7 @@ public class CategoryResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Category result = categoryRepository.save(category);
+        Category result = categoryService.update(category);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, category.getId().toString()))
@@ -120,16 +131,7 @@ public class CategoryResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<Category> result = categoryRepository
-            .findById(category.getId())
-            .map(existingCategory -> {
-                if (category.getName() != null) {
-                    existingCategory.setName(category.getName());
-                }
-
-                return existingCategory;
-            })
-            .map(categoryRepository::save);
+        Optional<Category> result = categoryService.partialUpdate(category);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -140,12 +142,27 @@ public class CategoryResource {
     /**
      * {@code GET  /categories} : get all the categories.
      *
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of categories in body.
      */
     @GetMapping("")
-    public List<Category> getAllCategories() {
-        log.debug("REST request to get all Categories");
-        return categoryRepository.findAll();
+    public ResponseEntity<List<Category>> getAllCategories(CategoryCriteria criteria) {
+        log.debug("REST request to get Categories by criteria: {}", criteria);
+
+        List<Category> entityList = categoryQueryService.findByCriteria(criteria);
+        return ResponseEntity.ok().body(entityList);
+    }
+
+    /**
+     * {@code GET  /categories/count} : count all the categories.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/count")
+    public ResponseEntity<Long> countCategories(CategoryCriteria criteria) {
+        log.debug("REST request to count Categories by criteria: {}", criteria);
+        return ResponseEntity.ok().body(categoryQueryService.countByCriteria(criteria));
     }
 
     /**
@@ -157,7 +174,7 @@ public class CategoryResource {
     @GetMapping("/{id}")
     public ResponseEntity<Category> getCategory(@PathVariable("id") Long id) {
         log.debug("REST request to get Category : {}", id);
-        Optional<Category> category = categoryRepository.findById(id);
+        Optional<Category> category = categoryService.findOne(id);
         return ResponseUtil.wrapOrNotFound(category);
     }
 
@@ -170,7 +187,7 @@ public class CategoryResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable("id") Long id) {
         log.debug("REST request to delete Category : {}", id);
-        categoryRepository.deleteById(id);
+        categoryService.delete(id);
         return ResponseEntity
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

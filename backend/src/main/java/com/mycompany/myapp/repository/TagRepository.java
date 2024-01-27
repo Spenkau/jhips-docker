@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface TagRepository extends JpaRepository<Tag, Long> {
+public interface TagRepository extends JpaRepository<Tag, Long>, JpaSpecificationExecutor<Tag> {
     @Query("select tag from Tag tag where tag.owner.login = ?#{authentication.name}")
     List<Tag> findByOwnerIsCurrentUser();
 }

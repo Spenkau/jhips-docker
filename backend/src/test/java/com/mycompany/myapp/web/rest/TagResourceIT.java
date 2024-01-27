@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.mycompany.myapp.IntegrationTest;
 import com.mycompany.myapp.domain.Tag;
+import com.mycompany.myapp.domain.Task;
+import com.mycompany.myapp.domain.User;
 import com.mycompany.myapp.repository.TagRepository;
 import jakarta.persistence.EntityManager;
 import java.util.List;
@@ -138,6 +140,171 @@ class TagResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(tag.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME));
+    }
+
+    @Test
+    @Transactional
+    void getTagsByIdFiltering() throws Exception {
+        // Initialize the database
+        tagRepository.saveAndFlush(tag);
+
+        Long id = tag.getId();
+
+        defaultTagShouldBeFound("id.equals=" + id);
+        defaultTagShouldNotBeFound("id.notEquals=" + id);
+
+        defaultTagShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultTagShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultTagShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultTagShouldNotBeFound("id.lessThan=" + id);
+    }
+
+    @Test
+    @Transactional
+    void getAllTagsByNameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        tagRepository.saveAndFlush(tag);
+
+        // Get all the tagList where name equals to DEFAULT_NAME
+        defaultTagShouldBeFound("name.equals=" + DEFAULT_NAME);
+
+        // Get all the tagList where name equals to UPDATED_NAME
+        defaultTagShouldNotBeFound("name.equals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllTagsByNameIsInShouldWork() throws Exception {
+        // Initialize the database
+        tagRepository.saveAndFlush(tag);
+
+        // Get all the tagList where name in DEFAULT_NAME or UPDATED_NAME
+        defaultTagShouldBeFound("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME);
+
+        // Get all the tagList where name equals to UPDATED_NAME
+        defaultTagShouldNotBeFound("name.in=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllTagsByNameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        tagRepository.saveAndFlush(tag);
+
+        // Get all the tagList where name is not null
+        defaultTagShouldBeFound("name.specified=true");
+
+        // Get all the tagList where name is null
+        defaultTagShouldNotBeFound("name.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllTagsByNameContainsSomething() throws Exception {
+        // Initialize the database
+        tagRepository.saveAndFlush(tag);
+
+        // Get all the tagList where name contains DEFAULT_NAME
+        defaultTagShouldBeFound("name.contains=" + DEFAULT_NAME);
+
+        // Get all the tagList where name contains UPDATED_NAME
+        defaultTagShouldNotBeFound("name.contains=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllTagsByNameNotContainsSomething() throws Exception {
+        // Initialize the database
+        tagRepository.saveAndFlush(tag);
+
+        // Get all the tagList where name does not contain DEFAULT_NAME
+        defaultTagShouldNotBeFound("name.doesNotContain=" + DEFAULT_NAME);
+
+        // Get all the tagList where name does not contain UPDATED_NAME
+        defaultTagShouldBeFound("name.doesNotContain=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllTagsByOwnerIsEqualToSomething() throws Exception {
+        User owner;
+        if (TestUtil.findAll(em, User.class).isEmpty()) {
+            tagRepository.saveAndFlush(tag);
+            owner = UserResourceIT.createEntity(em);
+        } else {
+            owner = TestUtil.findAll(em, User.class).get(0);
+        }
+        em.persist(owner);
+        em.flush();
+        tag.setOwner(owner);
+        tagRepository.saveAndFlush(tag);
+        Long ownerId = owner.getId();
+        // Get all the tagList where owner equals to ownerId
+        defaultTagShouldBeFound("ownerId.equals=" + ownerId);
+
+        // Get all the tagList where owner equals to (ownerId + 1)
+        defaultTagShouldNotBeFound("ownerId.equals=" + (ownerId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllTagsByTasksIsEqualToSomething() throws Exception {
+        Task tasks;
+        if (TestUtil.findAll(em, Task.class).isEmpty()) {
+            tagRepository.saveAndFlush(tag);
+            tasks = TaskResourceIT.createEntity(em);
+        } else {
+            tasks = TestUtil.findAll(em, Task.class).get(0);
+        }
+        em.persist(tasks);
+        em.flush();
+        tag.addTasks(tasks);
+        tagRepository.saveAndFlush(tag);
+        Long tasksId = tasks.getId();
+        // Get all the tagList where tasks equals to tasksId
+        defaultTagShouldBeFound("tasksId.equals=" + tasksId);
+
+        // Get all the tagList where tasks equals to (tasksId + 1)
+        defaultTagShouldNotBeFound("tasksId.equals=" + (tasksId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned.
+     */
+    private void defaultTagShouldBeFound(String filter) throws Exception {
+        restTagMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(tag.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)));
+
+        // Check, that the count call also returns 1
+        restTagMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned.
+     */
+    private void defaultTagShouldNotBeFound(String filter) throws Exception {
+        restTagMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restTagMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("0"));
     }
 
     @Test

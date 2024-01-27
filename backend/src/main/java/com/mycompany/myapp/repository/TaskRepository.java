@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
  * For more information refer to https://github.com/jhipster/generator-jhipster/issues/17990.
  */
 @Repository
-public interface TaskRepository extends TaskRepositoryWithBagRelationships, JpaRepository<Task, Long> {
+public interface TaskRepository extends TaskRepositoryWithBagRelationships, JpaRepository<Task, Long>, JpaSpecificationExecutor<Task> {
     @Query("select task from Task task where task.owner.login = ?#{authentication.name}")
     List<Task> findByOwnerIsCurrentUser();
 

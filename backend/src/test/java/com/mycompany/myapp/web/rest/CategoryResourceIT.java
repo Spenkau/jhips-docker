@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.mycompany.myapp.IntegrationTest;
 import com.mycompany.myapp.domain.Category;
+import com.mycompany.myapp.domain.User;
 import com.mycompany.myapp.repository.CategoryRepository;
 import jakarta.persistence.EntityManager;
 import java.util.List;
@@ -138,6 +139,149 @@ class CategoryResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(category.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME));
+    }
+
+    @Test
+    @Transactional
+    void getCategoriesByIdFiltering() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        Long id = category.getId();
+
+        defaultCategoryShouldBeFound("id.equals=" + id);
+        defaultCategoryShouldNotBeFound("id.notEquals=" + id);
+
+        defaultCategoryShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultCategoryShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultCategoryShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultCategoryShouldNotBeFound("id.lessThan=" + id);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByNameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where name equals to DEFAULT_NAME
+        defaultCategoryShouldBeFound("name.equals=" + DEFAULT_NAME);
+
+        // Get all the categoryList where name equals to UPDATED_NAME
+        defaultCategoryShouldNotBeFound("name.equals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByNameIsInShouldWork() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where name in DEFAULT_NAME or UPDATED_NAME
+        defaultCategoryShouldBeFound("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME);
+
+        // Get all the categoryList where name equals to UPDATED_NAME
+        defaultCategoryShouldNotBeFound("name.in=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByNameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where name is not null
+        defaultCategoryShouldBeFound("name.specified=true");
+
+        // Get all the categoryList where name is null
+        defaultCategoryShouldNotBeFound("name.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByNameContainsSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where name contains DEFAULT_NAME
+        defaultCategoryShouldBeFound("name.contains=" + DEFAULT_NAME);
+
+        // Get all the categoryList where name contains UPDATED_NAME
+        defaultCategoryShouldNotBeFound("name.contains=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByNameNotContainsSomething() throws Exception {
+        // Initialize the database
+        categoryRepository.saveAndFlush(category);
+
+        // Get all the categoryList where name does not contain DEFAULT_NAME
+        defaultCategoryShouldNotBeFound("name.doesNotContain=" + DEFAULT_NAME);
+
+        // Get all the categoryList where name does not contain UPDATED_NAME
+        defaultCategoryShouldBeFound("name.doesNotContain=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllCategoriesByOwnerIsEqualToSomething() throws Exception {
+        User owner;
+        if (TestUtil.findAll(em, User.class).isEmpty()) {
+            categoryRepository.saveAndFlush(category);
+            owner = UserResourceIT.createEntity(em);
+        } else {
+            owner = TestUtil.findAll(em, User.class).get(0);
+        }
+        em.persist(owner);
+        em.flush();
+        category.setOwner(owner);
+        categoryRepository.saveAndFlush(category);
+        Long ownerId = owner.getId();
+        // Get all the categoryList where owner equals to ownerId
+        defaultCategoryShouldBeFound("ownerId.equals=" + ownerId);
+
+        // Get all the categoryList where owner equals to (ownerId + 1)
+        defaultCategoryShouldNotBeFound("ownerId.equals=" + (ownerId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned.
+     */
+    private void defaultCategoryShouldBeFound(String filter) throws Exception {
+        restCategoryMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(category.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)));
+
+        // Check, that the count call also returns 1
+        restCategoryMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned.
+     */
+    private void defaultCategoryShouldNotBeFound(String filter) throws Exception {
+        restCategoryMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restCategoryMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("0"));
     }
 
     @Test

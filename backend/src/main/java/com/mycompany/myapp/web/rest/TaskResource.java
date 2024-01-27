@@ -2,6 +2,9 @@ package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.domain.Task;
 import com.mycompany.myapp.repository.TaskRepository;
+import com.mycompany.myapp.service.TaskQueryService;
+import com.mycompany.myapp.service.TaskService;
+import com.mycompany.myapp.service.criteria.TaskCriteria;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -12,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -22,7 +24,6 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api/tasks")
-@Transactional
 public class TaskResource {
 
     private final Logger log = LoggerFactory.getLogger(TaskResource.class);
@@ -32,10 +33,16 @@ public class TaskResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final TaskService taskService;
+
     private final TaskRepository taskRepository;
 
-    public TaskResource(TaskRepository taskRepository) {
+    private final TaskQueryService taskQueryService;
+
+    public TaskResource(TaskService taskService, TaskRepository taskRepository, TaskQueryService taskQueryService) {
+        this.taskService = taskService;
         this.taskRepository = taskRepository;
+        this.taskQueryService = taskQueryService;
     }
 
     /**
@@ -51,7 +58,7 @@ public class TaskResource {
         if (task.getId() != null) {
             throw new BadRequestAlertException("A new task cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Task result = taskRepository.save(task);
+        Task result = taskService.save(task);
         return ResponseEntity
             .created(new URI("/api/tasks/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -83,7 +90,7 @@ public class TaskResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Task result = taskRepository.save(task);
+        Task result = taskService.update(task);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, task.getId().toString()))
@@ -116,31 +123,7 @@ public class TaskResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<Task> result = taskRepository
-            .findById(task.getId())
-            .map(existingTask -> {
-                if (task.getTitle() != null) {
-                    existingTask.setTitle(task.getTitle());
-                }
-                if (task.getContent() != null) {
-                    existingTask.setContent(task.getContent());
-                }
-                if (task.getPriorityId() != null) {
-                    existingTask.setPriorityId(task.getPriorityId());
-                }
-                if (task.getStatusId() != null) {
-                    existingTask.setStatusId(task.getStatusId());
-                }
-                if (task.getStartedAt() != null) {
-                    existingTask.setStartedAt(task.getStartedAt());
-                }
-                if (task.getFinishedAt() != null) {
-                    existingTask.setFinishedAt(task.getFinishedAt());
-                }
-
-                return existingTask;
-            })
-            .map(taskRepository::save);
+        Optional<Task> result = taskService.partialUpdate(task);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -151,17 +134,27 @@ public class TaskResource {
     /**
      * {@code GET  /tasks} : get all the tasks.
      *
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tasks in body.
      */
     @GetMapping("")
-    public List<Task> getAllTasks(@RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload) {
-        log.debug("REST request to get all Tasks");
-        if (eagerload) {
-            return taskRepository.findAllWithEagerRelationships();
-        } else {
-            return taskRepository.findAll();
-        }
+    public ResponseEntity<List<Task>> getAllTasks(TaskCriteria criteria) {
+        log.debug("REST request to get Tasks by criteria: {}", criteria);
+
+        List<Task> entityList = taskQueryService.findByCriteria(criteria);
+        return ResponseEntity.ok().body(entityList);
+    }
+
+    /**
+     * {@code GET  /tasks/count} : count all the tasks.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/count")
+    public ResponseEntity<Long> countTasks(TaskCriteria criteria) {
+        log.debug("REST request to count Tasks by criteria: {}", criteria);
+        return ResponseEntity.ok().body(taskQueryService.countByCriteria(criteria));
     }
 
     /**
@@ -173,7 +166,7 @@ public class TaskResource {
     @GetMapping("/{id}")
     public ResponseEntity<Task> getTask(@PathVariable("id") Long id) {
         log.debug("REST request to get Task : {}", id);
-        Optional<Task> task = taskRepository.findOneWithEagerRelationships(id);
+        Optional<Task> task = taskService.findOne(id);
         return ResponseUtil.wrapOrNotFound(task);
     }
 
@@ -186,7 +179,7 @@ public class TaskResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable("id") Long id) {
         log.debug("REST request to delete Task : {}", id);
-        taskRepository.deleteById(id);
+        taskService.delete(id);
         return ResponseEntity
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
