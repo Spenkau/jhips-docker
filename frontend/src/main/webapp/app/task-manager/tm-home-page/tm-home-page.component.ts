@@ -1,7 +1,7 @@
-import {Component, ElementRef, OnInit, signal, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FaIconLibrary, FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {AsyncPipe, NgForOf, NgIf, NgStyle} from '@angular/common';
-import { RouterLink } from '@angular/router';
+import {RouterLink} from '@angular/router';
 import {NewTaskModalComponent} from "../components/modal-window/new-task-modal/new-task-modal.component";
 import {ClockComponent} from "../components/clock/clock.component";
 import {TaskModalWrapperComponent} from "../components/modal-window/task-modal-wrapper/task-modal-wrapper.component";
@@ -31,7 +31,6 @@ import {AccountService} from "../../core/auth/account.service";
     TaskCardComponent
   ],
   templateUrl: './tm-home-page.component.html',
-  styleUrls: ['./tm-home-page.component.scss']
 })
 
 export default class TmHomePageComponent implements OnInit {
