@@ -30,6 +30,7 @@
       "fieldType": "LocalDate"
     }
   ],
+  "jpaMetamodelFiltering": true,
   "name": "Task",
   "relationships": [
     {
@@ -53,5 +54,6 @@
       "relationshipType": "many-to-many"
     }
   ],
-  "searchEngine": "no"
+  "searchEngine": "no",
+  "service": "serviceClass"
 }
