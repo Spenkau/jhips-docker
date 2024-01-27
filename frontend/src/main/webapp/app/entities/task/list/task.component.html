@@ -186,7 +186,7 @@
         class="btn btn-info"
         (click)="isUserSettingsCollapsed = !isUserSettingsCollapsed"
       >
-        <fa-icon icon="arrow-alt-circle-down" style="transform: rotate(180deg)"></fa-icon>
+        <fa-icon icon="arrow-alt-down" style="transform: rotate(180deg)"></fa-icon>
       </button>
     </div>
     <ul class="position-absolute list-unstyled" *ngIf="isUserSettingsCollapsed">
@@ -204,7 +204,13 @@
     }
 
     @if (tasks && tasks.length > 0) {
-      <h3>Ваши задачи</h3>
+      <div class="d-flex justify-content-between">
+        <h3>Ваши задачи</h3>
+        <div class="d-flex">
+          <button class="btn">Фильтровать по \/</button>
+          <button class="btn">Сортировать по \/</button>
+        </div>
+      </div>
       <div class="tasks-list d-flex flex-column gap-3">
         <div *ngFor="let task of tasks" class="task-card p-3" style="border: 3px solid #2b2f32;">
           <div class="task-header d-flex justify-content-between">
@@ -247,7 +253,7 @@
               <li>
                 Статус:
                 {{
-                  (task.statusId! >= 0) ? PriorityEnum[task.statusId!]
+                  (task.statusId! >= 0) ? StatusEnum[task.statusId!]
                     :
                     'неопределен'
                 }}

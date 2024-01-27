@@ -24,7 +24,7 @@ import {
   TaskModalWrapperComponent
 } from "../../../task-manager/components/modal-window/task-modal-wrapper/task-modal-wrapper.component";
 import {AccountService} from "../../../core/auth/account.service";
-import {PriorityEnum} from "../task.enums";
+import {PriorityEnum, StatusEnum} from "../task.enums";
 import {TaskCreateDialogComponent} from "../create/task-create-dialog.component";
 import {CategoryService} from "../../category/service/category.service";
 import {TaskPostponeDialogComponent} from "../postpone/task-postpone-dialog.component";
@@ -79,17 +79,7 @@ export class TaskComponent implements OnInit {
   predicate = 'id';
   ascending = true;
 
-  constructor(
-    protected taskService: TaskService,
-    protected userService: UserService,
-    protected categoryService: CategoryService,
-    protected tagService: TagService,
-    protected activatedRoute: ActivatedRoute,
-    public router: Router,
-    protected sortService: SortService,
-    protected modalService: NgbModal,
-    private accountService: AccountService
-  ) {}
+  protected readonly StatusEnum = StatusEnum;
 
   trackId = (_index: number, item: ITask): number => this.taskService.getTaskIdentifier(item);
 
@@ -105,15 +95,17 @@ export class TaskComponent implements OnInit {
     this.loadRelationshipsOptions();
   }
 
-  create(): void {
-    const modalRef = this.modalService.open(TaskCreateDialogComponent, {size: 'xl'});
-
-    modalRef.closed.subscribe(() => {
-        modalRef.componentInstance.task.subscribe((task: ITask) => {
-          this.tasks?.push(task)
-        })
-      }
-    )
+  constructor(
+    protected taskService: TaskService,
+    protected userService: UserService,
+    protected categoryService: CategoryService,
+    protected tagService: TagService,
+    protected activatedRoute: ActivatedRoute,
+    public router: Router,
+    protected sortService: SortService,
+    protected modalService: NgbModal,
+    private accountService: AccountService
+  ) {
   }
 
   postpone(task: ITask): void {
@@ -122,25 +114,19 @@ export class TaskComponent implements OnInit {
 
     modalRef.closed.subscribe(() => {
       const updatedTask = modalRef.componentInstance.task;
-      console.log(updatedTask)
       this.tasks = this.tasks?.map(task => task.id === updatedTask.id ? updatedTask : task)
     })
   }
 
-  delete(task: ITask): void {
-    const modalRef = this.modalService.open(TaskDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
-    modalRef.componentInstance.task = task;
-    // unsubscribe not needed because closed completes on modal close
-    modalRef.closed
-      .pipe(
-        filter(reason => reason === ITEM_DELETED_EVENT),
-        switchMap(() => this.loadFromBackendWithRouteInformations()),
-      )
-      .subscribe({
-        next: (res: EntityArrayResponseType) => {
-          this.onResponseSuccess(res);
-        },
-      });
+  create(): void {
+    const modalRef = this.modalService.open(TaskCreateDialogComponent, {size: 'xl'});
+
+    modalRef.closed.subscribe(() => {
+      const newTask = modalRef.componentInstance.task;
+
+      this.tasks?.push(newTask)
+      }
+    )
   }
 
   load(): void {
@@ -215,25 +201,41 @@ export class TaskComponent implements OnInit {
     this.showSidebar = value;
   }
 
+  delete(task: ITask): void {
+    const modalRef = this.modalService.open(TaskDeleteDialogComponent, {size: 'lg', backdrop: 'static'});
+    modalRef.componentInstance.task = task;
+    // unsubscribe not needed because closed completes on modal close
+    modalRef.closed
+      .pipe(
+        filter(reason => reason === ITEM_DELETED_EVENT),
+        switchMap(() => this.loadFromBackendWithRouteInformations()),
+      )
+      .subscribe({
+        next: (res: EntityArrayResponseType) => {
+          this.onResponseSuccess(res);
+        },
+      });
+  }
+
   protected loadRelationshipsOptions(): void {
-    // this.userService
-    //   .query()
-    //   .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
-    //   .pipe(map((users: IUser[]) => this.userService.addUserToCollectionIfMissing<IUser>(users, this.task?.owner)))
-    //   .subscribe((users: IUser[]) => (this.usersSharedCollection = users));
+    //   this.userService
+    //     .query()
+    //     .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
+    //     .pipe(map((users: IUser[]) => this.userService.addUserToCollectionIfMissing<IUser>(users, this.task?.owner)))
+    //     .subscribe((users: IUser[]) => (this.usersSharedCollection = users));
     //
-    // this.categoryService
-    //   .query()
-    //   .pipe(map((res: HttpResponse<ICategory[]>) => res.body ?? []))
-    //   .pipe(
-    //     map((categories: ICategory[]) => this.categoryService.addCategoryToCollectionIfMissing<ICategory>(categories, this.task?.category)),
-    //   )
-    //   .subscribe((categories: ICategory[]) => (this.categoriesSharedCollection = categories));
+    //   this.categoryService
+    //     .query()
+    //     .pipe(map((res: HttpResponse<ICategory[]>) => res.body ?? []))
+    //     .pipe(
+    //       map((categories: ICategory[]) => this.categoryService.addCategoryToCollectionIfMissing<ICategory>(categories, this.task?.category)),
+    //     )
+    //     .subscribe((categories: ICategory[]) => (this.categoriesSharedCollection = categories));
     //
-    // this.tagService
-    //   .query()
-    //   .pipe(map((res: HttpResponse<ITag[]>) => res.body ?? []))
-    //   .pipe(map((tags: ITag[]) => this.tagService.addTagToCollectionIfMissing<ITag>(tags, ...(this.task?.tags ?? []))))
-    //   .subscribe((tags: ITag[]) => (this.tagsSharedCollection = tags));
+    //   this.tagService
+    //     .query()
+    //     .pipe(map((res: HttpResponse<ITag[]>) => res.body ?? []))
+    //     .pipe(map((tags: ITag[]) => this.tagService.addTagToCollectionIfMissing<ITag>(tags, ...(this.task?.tags ?? []))))
+    //     .subscribe((tags: ITag[]) => (this.tagsSharedCollection = tags));
   }
 }

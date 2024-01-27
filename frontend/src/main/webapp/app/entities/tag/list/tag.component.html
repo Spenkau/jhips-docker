@@ -34,29 +34,29 @@
     <div class="table-responsive table-entities" id="entities">
       <table class="table table-striped" aria-describedby="page-heading">
         <thead>
-          <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
-            <th scope="col" jhiSortBy="id">
-              <div class="d-flex">
-                <span jhiTranslate="global.field.id">ID</span>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span jhiTranslate="global.field.id">ID</span>
 
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="name">
-              <div class="d-flex">
-                <span jhiTranslate="jhipsTestApp.tag.name">Name</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="name">
+            <div class="d-flex">
+              <span jhiTranslate="jhipsTestApp.tag.name">Name</span>
 
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="owner.id">
-              <div class="d-flex">
-                <span jhiTranslate="jhipsTestApp.tag.owner">Owner</span>
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col"></th>
-          </tr>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="owner.id">
+            <div class="d-flex">
+              <span jhiTranslate="jhipsTestApp.tag.owner">Owner</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
         </thead>
         <tbody>
           @for (tag of tags; track trackId) {
@@ -80,7 +80,8 @@
                     <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Изменить</span>
                   </a>
 
-                  <button type="submit" (click)="delete(tag)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                  <button type="submit" (click)="delete(tag)" class="btn btn-danger btn-sm"
+                          data-cy="entityDeleteButton">
                     <fa-icon icon="times"></fa-icon>
                     <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Удалить</span>
                   </button>
@@ -92,4 +93,17 @@
       </table>
     </div>
   }
+</div>
+
+<div>
+  <div class="mb-3">
+    <input class="form-control" placeholder="Поиск..." type="text">
+  </div>
+  <ul class="tag-list d-flex list-unstyled">
+    @for (tag of tags; track trackId) {
+      <li>
+        <button class="btn">{{ tag.name }}</button>
+      </li>
+    }
+  </ul>
 </div>

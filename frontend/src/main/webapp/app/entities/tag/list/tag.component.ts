@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Data, ParamMap, Router, RouterModule } from '@angular/router';
-import { combineLatest, filter, Observable, switchMap, tap } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Data, ParamMap, Router, RouterModule} from '@angular/router';
+import {combineLatest, filter, Observable, switchMap, tap} from 'rxjs';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 import SharedModule from 'app/shared/shared.module';
-import { SortDirective, SortByDirective } from 'app/shared/sort';
-import { DurationPipe, FormatMediumDatetimePipe, FormatMediumDatePipe } from 'app/shared/date';
-import { FormsModule } from '@angular/forms';
-import { ASC, DESC, SORT, ITEM_DELETED_EVENT, DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
-import { SortService } from 'app/shared/sort/sort.service';
-import { ITag } from '../tag.model';
-import { EntityArrayResponseType, TagService } from '../service/tag.service';
-import { TagDeleteDialogComponent } from '../delete/tag-delete-dialog.component';
+import {SortByDirective, SortDirective} from 'app/shared/sort';
+import {DurationPipe, FormatMediumDatePipe, FormatMediumDatetimePipe} from 'app/shared/date';
+import {FormsModule} from '@angular/forms';
+import {ASC, DEFAULT_SORT_DATA, DESC, ITEM_DELETED_EVENT, SORT} from 'app/config/navigation.constants';
+import {SortService} from 'app/shared/sort/sort.service';
+import {ITag} from '../tag.model';
+import {EntityArrayResponseType, TagService} from '../service/tag.service';
+import {TagDeleteDialogComponent} from '../delete/tag-delete-dialog.component';
+import {ITask} from "../../task/task.model";
 
 @Component({
   standalone: true,
@@ -29,6 +30,7 @@ import { TagDeleteDialogComponent } from '../delete/tag-delete-dialog.component'
   ],
 })
 export class TagComponent implements OnInit {
+  tasks?: ITask[]
   tags?: ITag[];
   isLoading = false;
 
@@ -47,6 +49,12 @@ export class TagComponent implements OnInit {
 
   ngOnInit(): void {
     this.load();
+
+    this.tagService.query({
+      'name.equals': 'dwi'
+    }).subscribe((res) => {
+      console.log(res.body)
+    })
   }
 
   delete(tag: ITag): void {

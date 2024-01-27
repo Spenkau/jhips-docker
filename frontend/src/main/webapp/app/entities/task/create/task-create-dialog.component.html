@@ -32,13 +32,6 @@
             <option [ngValue]="PriorityEnum.HIGH">Высокий</option>
           </select>
         </div>
-
-        <!--        <input-->
-        <!--          type="hidden"-->
-        <!--          name="statusId"-->
-        <!--          formControlName="statusId"-->
-        <!--          [value]="[1]"-->
-        <!--        >-->
         <div class="mb-3">
           <label class="form-label" jhiTranslate="jhipsTestApp.task.startedAt" for="field_startedAt">Started At</label>
           <div class="input-group">
@@ -85,7 +78,7 @@
           >
             <option [ngValue]="null"></option>
             @for (categoryOption of categoriesSharedCollection; track $index) {
-              <option [ngValue]="categoryOption">{{ categoryOption.id }}</option>
+              <option [ngValue]="categoryOption">{{ categoryOption.name }}</option>
             }
           </select>
         </div>
@@ -102,7 +95,7 @@
             [compareWith]="compareTag"
           >
             @for (tagOption of tagsSharedCollection; track $index) {
-              <option [ngValue]="tagOption">{{ tagOption.id }}</option>
+              <option [ngValue]="tagOption">{{ tagOption.name }}</option>
             }
           </select>
         </div>

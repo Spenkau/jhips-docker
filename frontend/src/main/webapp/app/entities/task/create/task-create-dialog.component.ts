@@ -11,8 +11,9 @@ import {UserService} from "../../user/user.service";
 import {CategoryService} from "../../category/service/category.service";
 import {TagService} from "../../tag/service/tag.service";
 import {PriorityEnum, StatusEnum} from "../task.enums";
-import {Observable, of} from "rxjs";
 import SharedModule from "../../../shared/shared.module";
+import {map} from "rxjs/operators";
+import {HttpResponse} from "@angular/common/http";
 
 @Component({
   selector: 'jhi-create',
@@ -29,7 +30,7 @@ export class TaskCreateDialogComponent {
   protected readonly StatusEnum = StatusEnum;
   protected readonly PriorityEnum = PriorityEnum;
   isSaving = false;
-  task!: Observable<ITask>;
+  task?: ITask | null = null;
 
   usersSharedCollection: IUser[] = [];
   categoriesSharedCollection: ICategory[] = [];
@@ -53,6 +54,9 @@ export class TaskCreateDialogComponent {
 
   compareTag = (o1: ITag | null, o2: ITag | null): boolean => this.tagService.compareTag(o1, o2);
 
+  ngOnInit(): void {
+    this.loadRelationshipsOptions();
+  }
 
   save(): void {
     this.isSaving = true;
@@ -83,7 +87,7 @@ export class TaskCreateDialogComponent {
     this.taskService.create(task)
       .subscribe((res: EntityResponseType): void => {
           if (res.body) {
-            this.task = of(res.body);
+            this.task = res.body;
 
             this.onSaveFinalize();
             this.onSaveSuccess();
@@ -92,5 +96,27 @@ export class TaskCreateDialogComponent {
           }
         },
       );
+  }
+
+  protected loadRelationshipsOptions(): void {
+    this.userService
+      .query()
+      .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
+      .pipe(map((users: IUser[]) => this.userService.addUserToCollectionIfMissing<IUser>(users, this.task?.owner)))
+      .subscribe((users: IUser[]) => (this.usersSharedCollection = users));
+
+    this.categoryService
+      .query()
+      .pipe(map((res: HttpResponse<ICategory[]>) => res.body ?? []))
+      .pipe(
+        map((categories: ICategory[]) => this.categoryService.addCategoryToCollectionIfMissing<ICategory>(categories, this.task?.category)),
+      )
+      .subscribe((categories: ICategory[]) => (this.categoriesSharedCollection = categories));
+
+    this.tagService
+      .query()
+      .pipe(map((res: HttpResponse<ITag[]>) => res.body ?? []))
+      .pipe(map((tags: ITag[]) => this.tagService.addTagToCollectionIfMissing<ITag>(tags, ...(this.task?.tags ?? []))))
+      .subscribe((tags: ITag[]) => (this.tagsSharedCollection = tags));
   }
 }
