@@ -4,24 +4,26 @@
       "home": {
         "title": "Задачи от Java Hipster!",
         "refreshListLabel": "Обновить список",
-        "createLabel": "Создать задачу"
+        "createLabel": "Создать задачу",
+        "notFound": "Задачи не найдены"
       },
       "title": "Заголовок",
       "content": "Контент",
       "priorityId": "ID приоритета",
       "statusId": "ID статуса",
       "categoryId": "ID категории",
-      "startedAt": "Начата",
-      "finishedAt": "Завершена",
+      "startedAt": "Дата начала",
+      "finishedAt": "Дата завершения",
       "owner": "Владелец",
-      "category": "Категории",
+      "category": "Категория",
       "tags": "Теги"
     },
     "category": {
       "home": {
         "title": "Категории от Java Hipster!",
         "refreshListLabel": "Обновить список",
-        "createLabel": "Создать категорию"
+        "createLabel": "Создать категорию",
+        "notFound": "Категории не найдены"
       },
       "name": "Категории",
       "owner": "Владелец"
@@ -30,7 +32,8 @@
       "home": {
         "title": "Теги от Java Hipster!",
         "refreshListLabel": "Обновить список",
-        "createLabel": "Создать тег"
+        "createLabel": "Создать тег",
+        "notFound": "Теги не найдены"
       },
       "name": "Теги",
       "owner": "Владелец"
@@ -39,7 +42,8 @@
       "home": {
         "title": "Комментарии от Java Hipster!",
         "refreshListLabel": "Обновить список",
-        "createLabel": "Создать комментарий"
+        "createLabel": "Создать комментарий",
+        "notFound": "Комментарии не найдены"
       },
       "content": "Контент",
       "createdAt": "Создана",
