@@ -3,7 +3,6 @@ entity Task {
     content String
     priorityId Integer
     statusId Integer
-    categoryId Integer
     startedAt LocalDate
     finishedAt LocalDate
 }
@@ -36,3 +35,5 @@ relationship ManyToOne {
 relationship ManyToMany {
 	Task{tags} to Tag{tasks}
 }
+
+filter * except Comment
