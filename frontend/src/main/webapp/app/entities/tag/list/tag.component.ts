@@ -51,7 +51,7 @@ export class TagComponent implements OnInit {
     this.load();
 
     this.tagService.query({
-      'name.equals': 'dwi'
+      '.contains': 'd'
     }).subscribe((res) => {
       console.log(res.body)
     })

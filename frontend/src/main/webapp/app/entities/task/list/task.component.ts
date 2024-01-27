@@ -90,6 +90,10 @@ export class TaskComponent implements OnInit {
       this.userName = account?.login
     });
 
+    this.taskService.query({}).subscribe((res) => {
+      console.log(res.body)
+    })
+
     // TODO сделать подгрузку связей, чтобы отображалась в задаче категория
 
     this.loadRelationshipsOptions();
