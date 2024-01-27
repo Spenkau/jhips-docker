@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
-import {TaskService} from "../service/task.service";
+import {EntityResponseType, TaskService} from "../service/task.service";
 import {ITask, NewTask} from "../task.model";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {IUser} from "../../user/user.model";
@@ -26,6 +26,8 @@ import SharedModule from "../../../shared/shared.module";
   styleUrl: './task-create-dialog.component.scss'
 })
 export class TaskCreateDialogComponent {
+  protected readonly StatusEnum = StatusEnum;
+  protected readonly PriorityEnum = PriorityEnum;
   isSaving = false;
   task!: Observable<ITask>;
 
@@ -77,8 +79,9 @@ export class TaskCreateDialogComponent {
   }
 
   confirmCreate(task: NewTask): void {
+    console.log(task)
     this.taskService.create(task)
-      .subscribe((res) => {
+      .subscribe((res: EntityResponseType): void => {
           if (res.body) {
             this.task = of(res.body);
 
@@ -90,7 +93,4 @@ export class TaskCreateDialogComponent {
         },
       );
   }
-
-  protected readonly StatusEnum = StatusEnum;
-  protected readonly PriorityEnum = PriorityEnum;
 }

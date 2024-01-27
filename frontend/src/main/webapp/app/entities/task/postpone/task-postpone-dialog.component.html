@@ -1,6 +1,7 @@
 <div class="d-flex justify-content-center p-3">
+
   <div class="col-8">
-    <form (ngSubmit)="save()" [formGroup]="editForm" name="editForm" novalidate role="form">
+    <form (ngSubmit)="confirmPostpone()" [formGroup]="editForm" name="editForm" novalidate role="form">
       <h2 data-cy="TaskCreateUpdateHeading" id="jhi-task-heading" jhiTranslate="jhipsTestApp.task.home.create">
         Новая задача
       </h2>
@@ -8,8 +9,11 @@
       <div>
         <jhi-alert-error></jhi-alert-error>
 
+        <h2>Изменить календарь задачи</h2>
+
         <div class="mb-3">
-          <label class="form-label" for="field_startedAt" jhiTranslate="jhipsTestApp.task.startedAt">Started At</label>
+          <label class="form-label" for="field_startedAt" jhiTranslate="jhipsTestApp.task.startedAt">Started
+            At</label>
           <div class="input-group">
             <input
               #startedAtDp="ngbDatepicker"
@@ -45,6 +49,22 @@
               <fa-icon icon="calendar-alt"></fa-icon>
             </button>
           </div>
+        </div>
+        <div>
+          <button (click)="cancel()" class="btn btn-secondary" data-cy="entityCreateCancelButton" id="cancel-save"
+                  type="button">
+            <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Отмена</span>
+          </button>
+
+          <button
+            [disabled]="editForm.invalid || isSaving"
+            class="btn btn-primary"
+            data-cy="entityCreateSaveButton"
+            id="save-entity"
+            type="submit"
+          >
+            <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Сохранить</span>
+          </button>
         </div>
       </div>
     </form>

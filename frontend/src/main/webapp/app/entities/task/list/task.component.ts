@@ -28,6 +28,11 @@ import {PriorityEnum} from "../task.enums";
 import {TaskCreateDialogComponent} from "../create/task-create-dialog.component";
 import {CategoryService} from "../../category/service/category.service";
 import {TaskPostponeDialogComponent} from "../postpone/task-postpone-dialog.component";
+import {IUser} from "../../user/user.model";
+import {ICategory} from "../../category/category.model";
+import {ITag} from "../../tag/tag.model";
+import {UserService} from "../../user/user.service";
+import {TagService} from "../../tag/service/tag.service";
 
 @Component({
   standalone: true,
@@ -60,6 +65,11 @@ export class TaskComponent implements OnInit {
   subtask = false;
 
   tasks?: ITask[];
+
+  usersSharedCollection: IUser[] = [];
+  categoriesSharedCollection: ICategory[] = [];
+  tagsSharedCollection: ITag[] = [];
+
   categories?: Observable<EntityArrayResponseType>;
   isLoading = false;
   isUserSettingsCollapsed = false;
@@ -71,7 +81,9 @@ export class TaskComponent implements OnInit {
 
   constructor(
     protected taskService: TaskService,
+    protected userService: UserService,
     protected categoryService: CategoryService,
+    protected tagService: TagService,
     protected activatedRoute: ActivatedRoute,
     public router: Router,
     protected sortService: SortService,
@@ -86,7 +98,11 @@ export class TaskComponent implements OnInit {
 
     this.accountService.identity().subscribe(account => {
       this.userName = account?.login
-    })
+    });
+
+    // TODO сделать подгрузку связей, чтобы отображалась в задаче категория
+
+    this.loadRelationshipsOptions();
   }
 
   create(): void {
@@ -100,11 +116,14 @@ export class TaskComponent implements OnInit {
     )
   }
 
-  postpone(): void {
+  postpone(task: ITask): void {
     const modalRef = this.modalService.open(TaskPostponeDialogComponent, {size: 'lg'});
+    modalRef.componentInstance.task = task;
 
     modalRef.closed.subscribe(() => {
-
+      const updatedTask = modalRef.componentInstance.task;
+      console.log(updatedTask)
+      this.tasks = this.tasks?.map(task => task.id === updatedTask.id ? updatedTask : task)
     })
   }
 
@@ -171,14 +190,6 @@ export class TaskComponent implements OnInit {
     };
     return this.taskService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
   }
-  protected queryBackend2(predicate?: string, ascending?: boolean): Observable<EntityArrayResponseType> {
-    this.isLoading = true;
-    const queryObject: any = {
-      eagerload: true,
-      sort: this.getSortQueryParam(predicate, ascending),
-    };
-    return this.categoryService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
-  }
 
   protected handleNavigation(predicate?: string, ascending?: boolean): void {
     const queryParamsObj = {
@@ -204,4 +215,25 @@ export class TaskComponent implements OnInit {
     this.showSidebar = value;
   }
 
+  protected loadRelationshipsOptions(): void {
+    // this.userService
+    //   .query()
+    //   .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
+    //   .pipe(map((users: IUser[]) => this.userService.addUserToCollectionIfMissing<IUser>(users, this.task?.owner)))
+    //   .subscribe((users: IUser[]) => (this.usersSharedCollection = users));
+    //
+    // this.categoryService
+    //   .query()
+    //   .pipe(map((res: HttpResponse<ICategory[]>) => res.body ?? []))
+    //   .pipe(
+    //     map((categories: ICategory[]) => this.categoryService.addCategoryToCollectionIfMissing<ICategory>(categories, this.task?.category)),
+    //   )
+    //   .subscribe((categories: ICategory[]) => (this.categoriesSharedCollection = categories));
+    //
+    // this.tagService
+    //   .query()
+    //   .pipe(map((res: HttpResponse<ITag[]>) => res.body ?? []))
+    //   .pipe(map((tags: ITag[]) => this.tagService.addTagToCollectionIfMissing<ITag>(tags, ...(this.task?.tags ?? []))))
+    //   .subscribe((tags: ITag[]) => (this.tagsSharedCollection = tags));
+  }
 }
