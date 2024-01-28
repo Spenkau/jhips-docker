@@ -13,6 +13,7 @@ import {ITag} from '../tag.model';
 import {EntityArrayResponseType, TagService} from '../service/tag.service';
 import {TagDeleteDialogComponent} from '../delete/tag-delete-dialog.component';
 import {ITask} from "../../task/task.model";
+import {TaskService} from "../../task/service/task.service";
 
 @Component({
   standalone: true,
@@ -30,9 +31,11 @@ import {ITask} from "../../task/task.model";
   ],
 })
 export class TagComponent implements OnInit {
-  tasks?: ITask[]
+  tasks?: ITask[] | null
   tags?: ITag[];
+  isEditEnabled = false;
   isLoading = false;
+  isDeleteEnabled = false;
 
   predicate = 'id';
   ascending = true;
@@ -40,6 +43,7 @@ export class TagComponent implements OnInit {
   constructor(
     protected tagService: TagService,
     protected activatedRoute: ActivatedRoute,
+    protected taskService: TaskService,
     public router: Router,
     protected sortService: SortService,
     protected modalService: NgbModal,
@@ -54,6 +58,13 @@ export class TagComponent implements OnInit {
       '.contains': 'd'
     }).subscribe((res) => {
       console.log(res.body)
+    })
+  }
+
+  showTasksByTag(tagId: number): void {
+    this.taskService.query({field: 'tagId.equals', value: tagId}).subscribe(res => {
+      this.tasks = res.body;
+      console.log(this.tasks);
     })
   }
 

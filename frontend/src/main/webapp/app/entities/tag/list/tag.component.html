@@ -96,14 +96,29 @@
 </div>
 
 <div>
-  <div class="mb-3">
-    <input class="form-control" placeholder="Поиск..." type="text">
+  <div class="d-flex align-items-center gap-3 mb-3">
+    <div class="d-flex w-25 form-control">
+      <input class="w-100" placeholder="Поиск..." style="border: none; outline: none" type="text">
+      <button class="btn btn-primary">Искать</button>
+    </div>
+    <button (click)="isEditEnabled = !isEditEnabled; isDeleteEnabled = false" [ngClass]="isEditEnabled ? 'btn-secondary' : 'btn-primary'"
+            class="btn">Edit
+    </button>
+    <button (click)="isEditEnabled = false; isDeleteEnabled = !isDeleteEnabled" [ngClass]="isDeleteEnabled ? 'btn-secondary' : 'btn-danger'"
+            class="btn">Delete
+    </button>
   </div>
-  <ul class="tag-list d-flex list-unstyled">
-    @for (tag of tags; track trackId) {
-      <li>
-        <button class="btn">{{ tag.name }}</button>
-      </li>
-    }
+  <ul class="list-group list-group-horizontal flex-wrap">
+    <li *ngFor="let tag of tags" class="list-group-item">
+      <button (click)="showTasksByTag(tag.id)" class="btn">{{ tag.name }}</button>
+      <a *ngIf="isEditEnabled" [routerLink]="['/tag', tag.id, 'edit']" class="btn btn-primary btn-sm">
+        <fa-icon icon="pencil-alt"></fa-icon>
+      </a>
+      <button (click)="delete(tag)"
+              *ngIf="isDeleteEnabled"
+              class="btn btn-danger btn-sm">
+        <fa-icon icon="times"></fa-icon>
+      </button>
+    </li>
   </ul>
 </div>
