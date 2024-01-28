@@ -1,7 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AsyncPipe, NgForOf} from "@angular/common";
 import {ICategory} from "../../task-manager.model";
-import {Observable} from "rxjs";
 import {CategoryService} from "../../services/category.service";
 
 @Component({
@@ -16,15 +15,22 @@ import {CategoryService} from "../../services/category.service";
 })
 export class SidebarComponent implements OnInit {
 
+  @Output() filters: EventEmitter<{ filterName: string, value: string }> = new EventEmitter();
   @Output() showSidebar = new EventEmitter();
-  categoriesList!: Observable<ICategory[]>;
+  categoriesList!: ICategory[];
 
   constructor(private categoryService: CategoryService) {
   }
 
   ngOnInit(): void {
-    this.categoriesList = this.categoryService.categories();
+    this.categoryService.categories().subscribe(res => {
+      this.categoriesList = res;
+    });
+  }
 
+  applyCategoryFilter(id: number): void {
+    this.closeSidebar();
+    this.filters.emit({filterName: 'categoryId.equals', value: id.toString()})
   }
 
   closeSidebar(): void {
