@@ -2,7 +2,6 @@ package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.domain.Task;
 import com.mycompany.myapp.repository.TaskRepository;
-import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,12 +86,13 @@ public class TaskService {
     /**
      * Get all the tasks.
      *
+     * @param pageable the pagination information.
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<Task> findAll() {
+    public Page<Task> findAll(Pageable pageable) {
         log.debug("Request to get all Tasks");
-        return taskRepository.findAll();
+        return taskRepository.findAll(pageable);
     }
 
     /**
