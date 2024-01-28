@@ -1,21 +1,33 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpResponse} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
-import { ApplicationConfigService } from 'app/core/config/application-config.service';
-import { createRequestOption } from 'app/core/request/request-util';
-import { isPresent } from 'app/core/util/operators';
-import { Pagination } from 'app/core/request/request.model';
-import { IUser, getUserIdentifier } from './user.model';
+import {ApplicationConfigService} from 'app/core/config/application-config.service';
+import {createRequestOption} from 'app/core/request/request-util';
+import {isPresent} from 'app/core/util/operators';
+import {Pagination} from 'app/core/request/request.model';
+import {getUserIdentifier, IUser} from './user.model';
+import {AccountService} from "../../core/auth/account.service";
+import {map} from "rxjs/operators";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private resourceUrl = this.applicationConfigService.getEndpointFor('api/users');
+  owner: Observable<IUser>;
 
   constructor(
     private http: HttpClient,
     private applicationConfigService: ApplicationConfigService,
-  ) {}
+    private accountService: AccountService,
+  ) {
+    this.owner = this.accountService.getAuthenticationState().pipe(
+      map((account: any): IUser => ({
+        id: account.id,
+        login: account.login
+      }))
+    );
+  }
+
 
   query(req?: Pagination): Observable<HttpResponse<IUser[]>> {
     const options = createRequestOption(req);
