@@ -28,11 +28,16 @@ import {PriorityEnum, StatusEnum} from "../task.enums";
 import {TaskCreateDialogComponent} from "../create/task-create-dialog.component";
 import {CategoryService} from "../../category/service/category.service";
 import {TaskPostponeDialogComponent} from "../postpone/task-postpone-dialog.component";
-import {IUser} from "../../user/user.model";
 import {ICategory} from "../../category/category.model";
 import {ITag} from "../../tag/tag.model";
 import {UserService} from "../../user/user.service";
 import {TagService} from "../../tag/service/tag.service";
+import {HttpHeaders, HttpResponse} from "@angular/common/http";
+import {map} from "rxjs/operators";
+import FilterComponent from "../../../shared/filter/filter.component";
+import ItemCountComponent from "../../../shared/pagination/item-count.component";
+import {FilterOptions, IFilterOption, IFilterOptions} from "../../../shared/filter";
+import {ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER} from "../../../config/pagination.constants";
 
 @Component({
   standalone: true,
@@ -57,16 +62,17 @@ import {TagService} from "../../tag/service/tag.service";
     SidebarComponent,
     TaskCardComponent,
     TaskModalWrapperComponent,
+    FilterComponent,
+    ItemCountComponent,
   ],
 })
 export class TaskComponent implements OnInit {
   protected readonly PriorityEnum = PriorityEnum;
-  @ViewChild('modalWrapper') modalWrapper!: TaskModalWrapperComponent
-  subtask = false;
+  showFilters = false;
 
+  @ViewChild('modalWrapper') modalWrapper!: TaskModalWrapperComponent
   tasks?: ITask[];
 
-  usersSharedCollection: IUser[] = [];
   categoriesSharedCollection: ICategory[] = [];
   tagsSharedCollection: ITag[] = [];
 
@@ -75,11 +81,16 @@ export class TaskComponent implements OnInit {
   isUserSettingsCollapsed = false;
   userName: string | undefined = '';
   showSidebar = false;
+  showSorting = false;
+  filters: IFilterOptions = new FilterOptions();
 
   predicate = 'id';
   ascending = true;
-
+  itemsPerPage = ITEMS_PER_PAGE;
+  totalItems = 0;
+  page = 1;
   protected readonly StatusEnum = StatusEnum;
+
 
   trackId = (_index: number, item: ITask): number => this.taskService.getTaskIdentifier(item);
 
@@ -90,9 +101,8 @@ export class TaskComponent implements OnInit {
       this.userName = account?.login
     });
 
-    this.taskService.query({}).subscribe((res) => {
-      console.log(res.body)
-    })
+    this.filters.filterChanges.subscribe(filterOptions => this.handleNavigation(1, this.predicate, this.ascending, filterOptions));
+
 
     // TODO сделать подгрузку связей, чтобы отображалась в задаче категория
 
@@ -135,33 +145,44 @@ export class TaskComponent implements OnInit {
 
   load(): void {
     this.loadFromBackendWithRouteInformations().subscribe({
-
       next: (res: EntityArrayResponseType) => {
         this.onResponseSuccess(res);
       },
     });
   }
 
+  applyFilter(filter: { filterName: string, value: string }): void {
+    this.filters.addFilter(filter.filterName, filter.value);
+  }
+
   navigateToWithComponentValues(): void {
-    this.handleNavigation(this.predicate, this.ascending);
+    this.handleNavigation(this.page, this.predicate, this.ascending, this.filters.filterOptions);
+  }
+
+  navigateToPage(page = this.page): void {
+    this.handleNavigation(page, this.predicate, this.ascending, this.filters.filterOptions);
   }
 
   protected loadFromBackendWithRouteInformations(): Observable<EntityArrayResponseType> {
     return combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data]).pipe(
       tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
-      switchMap(() => this.queryBackend(this.predicate, this.ascending)),
+      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending, this.filters.filterOptions)),
     );
   }
 
   protected fillComponentAttributeFromRoute(params: ParamMap, data: Data): void {
+    const page = params.get(PAGE_HEADER);
+    this.page = +(page ?? 1);
     const sort = (params.get(SORT) ?? data[DEFAULT_SORT_DATA]).split(',');
     this.predicate = sort[0];
     this.ascending = sort[1] === ASC;
+    this.filters.initializeFromParams(params);
   }
 
   protected onResponseSuccess(response: EntityArrayResponseType): void {
+    this.fillComponentAttributesFromResponseHeader(response.headers);
     const dataFromBody = this.fillComponentAttributesFromResponseBody(response.body);
-    this.tasks = this.refineData(dataFromBody);
+    this.tasks = dataFromBody;
   }
 
   protected refineData(data: ITask[]): ITask[] {
@@ -172,19 +193,41 @@ export class TaskComponent implements OnInit {
     return data ?? [];
   }
 
-  protected queryBackend(predicate?: string, ascending?: boolean): Observable<EntityArrayResponseType> {
+  protected fillComponentAttributesFromResponseHeader(headers: HttpHeaders): void {
+    this.totalItems = Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER));
+  }
+
+  protected queryBackend(
+    page?: number,
+    predicate?: string,
+    ascending?: boolean,
+    filterOptions?: IFilterOption[],
+  ): Observable<EntityArrayResponseType> {
     this.isLoading = true;
+    const pageToLoad: number = page ?? 1;
     const queryObject: any = {
+      page: pageToLoad - 1,
+      size: this.itemsPerPage,
       eagerload: true,
       sort: this.getSortQueryParam(predicate, ascending),
     };
+    filterOptions?.forEach(filterOption => {
+      queryObject[filterOption.name] = filterOption.values;
+    });
     return this.taskService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
   }
 
-  protected handleNavigation(predicate?: string, ascending?: boolean): void {
-    const queryParamsObj = {
+  protected handleNavigation(page = this.page, predicate?: string, ascending?: boolean, filterOptions?: IFilterOption[]): void {
+    const queryParamsObj: any = {
+      page,
+      size: this.itemsPerPage,
       sort: this.getSortQueryParam(predicate, ascending),
     };
+
+    filterOptions?.forEach(filterOption => {
+      console.log(filterOption)
+      queryParamsObj[filterOption.nameAsQueryParam()] = filterOption.values;
+    });
 
     this.router.navigate(['./'], {
       relativeTo: this.activatedRoute,
@@ -222,24 +265,21 @@ export class TaskComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
-    //   this.userService
-    //     .query()
-    //     .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
-    //     .pipe(map((users: IUser[]) => this.userService.addUserToCollectionIfMissing<IUser>(users, this.task?.owner)))
-    //     .subscribe((users: IUser[]) => (this.usersSharedCollection = users));
-    //
-    //   this.categoryService
-    //     .query()
-    //     .pipe(map((res: HttpResponse<ICategory[]>) => res.body ?? []))
-    //     .pipe(
-    //       map((categories: ICategory[]) => this.categoryService.addCategoryToCollectionIfMissing<ICategory>(categories, this.task?.category)),
-    //     )
-    //     .subscribe((categories: ICategory[]) => (this.categoriesSharedCollection = categories));
-    //
-    //   this.tagService
-    //     .query()
-    //     .pipe(map((res: HttpResponse<ITag[]>) => res.body ?? []))
-    //     .pipe(map((tags: ITag[]) => this.tagService.addTagToCollectionIfMissing<ITag>(tags, ...(this.task?.tags ?? []))))
-    //     .subscribe((tags: ITag[]) => (this.tagsSharedCollection = tags));
+    this.tasks?.map((task: ITask) => {
+      this.categoryService
+        .query()
+        .pipe(map((res: HttpResponse<ICategory[]>) => res.body ?? []))
+        .pipe(
+          map((categories: ICategory[]) => this.categoryService.addCategoryToCollectionIfMissing<ICategory>(categories, task?.category)),
+        )
+        .subscribe((categories: ICategory[]) => (this.categoriesSharedCollection = categories));
+
+      this.tagService
+        .query()
+        .pipe(map((res: HttpResponse<ITag[]>) => res.body ?? []))
+        .pipe(map((tags: ITag[]) => this.tagService.addTagToCollectionIfMissing<ITag>(tags, ...(task?.tags ?? []))))
+        .subscribe((tags: ITag[]) => (this.tagsSharedCollection = tags));
+      console.log('cat', task.category, '\n', 'tags', task.tags, '\n', 'user', task.owner)
+    })
   }
 }

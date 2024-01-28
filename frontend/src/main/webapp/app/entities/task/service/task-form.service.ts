@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {ITask, NewTask} from '../task.model';
 
@@ -25,7 +25,7 @@ type TaskFormGroupContent = {
   // categoryId: FormControl<ITask['categoryId']>;
   startedAt: FormControl<ITask['startedAt']>;
   finishedAt: FormControl<ITask['finishedAt']>;
-  // owner: FormControl<ITask['owner']>;
+  owner: FormControl<ITask['owner']>;
   category: FormControl<ITask['category']>;
   tags: FormControl<ITask['tags']>;
 };
@@ -54,7 +54,7 @@ export class TaskFormService {
       // categoryId: new FormControl(taskRawValue.categoryId),
       startedAt: new FormControl(taskRawValue.startedAt),
       finishedAt: new FormControl(taskRawValue.finishedAt),
-      // owner: new FormControl(taskRawValue.owner),
+      owner: new FormControl(taskRawValue.owner),
       category: new FormControl(taskRawValue.category),
       tags: new FormControl(taskRawValue.tags ?? []),
     });

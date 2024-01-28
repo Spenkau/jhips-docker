@@ -14,6 +14,7 @@ import {PriorityEnum, StatusEnum} from "../task.enums";
 import SharedModule from "../../../shared/shared.module";
 import {map} from "rxjs/operators";
 import {HttpResponse} from "@angular/common/http";
+import {AccountService} from "../../../core/auth/account.service";
 
 @Component({
   selector: 'jhi-create',
@@ -31,6 +32,7 @@ export class TaskCreateDialogComponent {
   protected readonly PriorityEnum = PriorityEnum;
   isSaving = false;
   task?: ITask | null = null;
+  owner?: IUser;
 
   usersSharedCollection: IUser[] = [];
   categoriesSharedCollection: ICategory[] = [];
@@ -45,6 +47,7 @@ export class TaskCreateDialogComponent {
     protected userService: UserService,
     protected categoryService: CategoryService,
     protected tagService: TagService,
+    protected accountService: AccountService,
   ) {
   }
 
@@ -56,12 +59,15 @@ export class TaskCreateDialogComponent {
 
   ngOnInit(): void {
     this.loadRelationshipsOptions();
+
+    this.userService.owner?.subscribe(data => this.owner = data)
   }
 
   save(): void {
     this.isSaving = true;
     const task = this.taskFormService.getTask(this.editForm) as NewTask;
     task.statusId = 1;
+    task.owner = this.owner;
 
     this.confirmCreate(task);
   }
