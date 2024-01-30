@@ -1,0 +1,11 @@
+{
+  "taskm": {
+    "sort": {
+      "title": "Сортировать по",
+      "byTitle": "Заголовку",
+      "byContent": "Контенту",
+      "byDateStart": "Дате начала",
+      "byDateFinish": "Дате завершения"
+    }
+  }
+}

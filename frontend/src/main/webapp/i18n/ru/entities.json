@@ -5,7 +5,8 @@
         "title": "Задачи от Java Hipster!",
         "refreshListLabel": "Обновить список",
         "createLabel": "Создать задачу",
-        "notFound": "Задачи не найдены"
+        "notFound": "Задачи не найдены",
+        "create": "Создать новую задачу"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить задачу?"
