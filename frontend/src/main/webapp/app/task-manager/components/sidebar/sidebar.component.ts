@@ -1,7 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AsyncPipe, NgForOf} from "@angular/common";
-import {ICategory} from "../../task-manager.model";
-import {CategoryService} from "../../services/category.service";
+import {CategoryService, EntityArrayResponseType} from "../../../entities/category/service/category.service";
+import {ICategory} from "../../../entities/category/category.model";
 
 @Component({
   selector: 'jhi-sidebar',
@@ -17,14 +17,17 @@ export class SidebarComponent implements OnInit {
 
   @Output() filters: EventEmitter<{ filterName: string, value: string }> = new EventEmitter();
   @Output() showSidebar = new EventEmitter();
-  categoriesList!: ICategory[];
+  categoriesList!: ICategory[] | null;
+
+  predicate = 'id';
+  ascending = true;
 
   constructor(private categoryService: CategoryService) {
   }
 
   ngOnInit(): void {
-    this.categoryService.categories().subscribe(res => {
-      this.categoriesList = res;
+    this.categoryService.query().subscribe((res: EntityArrayResponseType) => {
+      this.categoriesList = res.body;
     });
   }
 
