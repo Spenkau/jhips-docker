@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Data, ParamMap, Router, RouterModule} from '@angular/router';
 import {combineLatest, filter, Observable, switchMap, tap} from 'rxjs';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -70,7 +70,6 @@ export class TaskComponent implements OnInit {
   protected readonly PriorityEnum = PriorityEnum;
   showFilters = false;
 
-  @ViewChild('modalWrapper') modalWrapper!: TaskModalWrapperComponent
   tasks?: ITask[];
 
   categoriesSharedCollection: ICategory[] = [];
@@ -81,7 +80,7 @@ export class TaskComponent implements OnInit {
   isUserSettingsCollapsed = false;
   userName: string | undefined = '';
   showSidebar = false;
-  showSorting = false;
+
   filters: IFilterOptions = new FilterOptions();
 
   predicate = 'id';
@@ -89,6 +88,7 @@ export class TaskComponent implements OnInit {
   itemsPerPage = ITEMS_PER_PAGE;
   totalItems = 0;
   page = 1;
+
   protected readonly StatusEnum = StatusEnum;
 
 
@@ -97,8 +97,8 @@ export class TaskComponent implements OnInit {
   ngOnInit(): void {
     this.load();
 
-    this.accountService.identity().subscribe(account => {
-      this.userName = account?.login
+    this.userService.owner.subscribe(user => {
+      this.userName = user?.login
     });
 
     this.filters.filterChanges.subscribe(filterOptions => this.handleNavigation(1, this.predicate, this.ascending, filterOptions));
@@ -225,7 +225,6 @@ export class TaskComponent implements OnInit {
     };
 
     filterOptions?.forEach(filterOption => {
-      console.log(filterOption)
       queryParamsObj[filterOption.nameAsQueryParam()] = filterOption.values;
     });
 
