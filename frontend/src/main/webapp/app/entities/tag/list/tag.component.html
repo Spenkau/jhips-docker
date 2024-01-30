@@ -101,16 +101,19 @@
       <input class="w-100" placeholder="Поиск..." style="border: none; outline: none" type="text">
       <button class="btn btn-primary">Искать</button>
     </div>
-    <button (click)="isEditEnabled = !isEditEnabled; isDeleteEnabled = false" [ngClass]="isEditEnabled ? 'btn-secondary' : 'btn-primary'"
+    <button (click)="isEditEnabled = !isEditEnabled; isDeleteEnabled = false"
+            [ngClass]="isEditEnabled ? 'btn-secondary' : 'btn-primary'"
             class="btn">Edit
     </button>
-    <button (click)="isEditEnabled = false; isDeleteEnabled = !isDeleteEnabled" [ngClass]="isDeleteEnabled ? 'btn-secondary' : 'btn-danger'"
+    <button (click)="isEditEnabled = false; isDeleteEnabled = !isDeleteEnabled"
+            [ngClass]="isDeleteEnabled ? 'btn-secondary' : 'btn-danger'"
             class="btn">Delete
     </button>
   </div>
   <ul class="list-group list-group-horizontal flex-wrap">
-    <li *ngFor="let tag of tags" class="list-group-item">
-      <button (click)="showTasksByTag(tag.id)" class="btn">{{ tag.name }}</button>
+    <li *ngFor="let tag of tags; index as i" class="list-group-item">
+      <button (click)="showTasksByTag(tag.id)" [class.btn-danger]="activeTagId === tag.id" class="btn">{{ tag.name }}
+      </button>
       <a *ngIf="isEditEnabled" [routerLink]="['/tag', tag.id, 'edit']" class="btn btn-primary btn-sm">
         <fa-icon icon="pencil-alt"></fa-icon>
       </a>
@@ -121,4 +124,69 @@
       </button>
     </li>
   </ul>
+  @if (tasks && tasks.length > 0) {
+
+    <div class="tasks-list d-flex flex-column gap-3">
+      @for (task of tasks; track trackId) {
+
+        <div class="task-card p-3" style="border: 3px solid #2b2f32;">
+          <div class="task-header d-flex justify-content-between">
+            <span>
+              @if (task.startedAt) {
+                с {{ task.startedAt | formatMediumDate }}
+              }
+              @if (task.finishedAt) {
+                по {{ task.finishedAt | formatMediumDate }}
+              }
+            </span>
+            <p>{{ task.category | json }}</p>
+            @for (tag of task.tags; track $index; let last = $last) {
+              <button class="btn b--dark-blue">{{ tag.name }}</button>
+            }
+            <ul class="reactions-list list-unstyled d-flex gap-2">
+              <li>
+                <button class="btn" style="background-color: #28a745">:)</button>
+              </li>
+              <li>
+                <button class="btn btn-info" style="background-color: #ffc107">:/</button>
+              </li>
+              <li>
+                <button class="btn btn-info" style="background-color: #dc3545">:(</button>
+              </li>
+            </ul>
+          </div>
+          <div class="d-flex justify-content-between">
+            <div class="task-body justify-content-between">
+              <a [routerLink]="['/task', task.id, 'view']" class="text-lg-center">{{ task.title }}</a>
+              @if (task.content) {
+                <p>{{ task.content.length > 20 ? task.content.substring(0, 20) + '...' : task.content }}</p>
+              }
+            </div>
+            <ul class="list-unstyled">
+              <li>Приоритет:
+                {{
+                  (task.priorityId! >= 0) ? PriorityEnum[task.priorityId!]
+                    :
+                    'неопределен'
+                }}
+              </li>
+              <li>
+                Статус:
+                {{
+                  (task.statusId! >= 0) ? StatusEnum[task.statusId!]
+                    :
+                    'неопределен'
+                }}
+              </li>
+            </ul>
+          </div>
+          <!--          <div class="task-footer">-->
+          <!--            <button class="btn" (click)="delete(task)">Удалить задачу</button>-->
+          <!--            <button class="btn" (click)="postpone(task)">Отложить задачу</button>-->
+          <!--          </div>-->
+        </div>
+      }
+    </div>
+  }
+
 </div>

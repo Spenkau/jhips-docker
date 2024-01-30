@@ -14,6 +14,7 @@ import {EntityArrayResponseType, TagService} from '../service/tag.service';
 import {TagDeleteDialogComponent} from '../delete/tag-delete-dialog.component';
 import {ITask} from "../../task/task.model";
 import {TaskService} from "../../task/service/task.service";
+import {PriorityEnum, StatusEnum} from "../../task/task.enums";
 
 @Component({
   standalone: true,
@@ -36,6 +37,7 @@ export class TagComponent implements OnInit {
   isEditEnabled = false;
   isLoading = false;
   isDeleteEnabled = false;
+  activeTagId = 1;
 
   predicate = 'id';
   ascending = true;
@@ -60,13 +62,7 @@ export class TagComponent implements OnInit {
       console.log(res.body)
     })
   }
-
-  showTasksByTag(tagId: number): void {
-    this.taskService.query({field: 'tagId.equals', value: tagId}).subscribe(res => {
-      this.tasks = res.body;
-      console.log(this.tasks);
-    })
-  }
+  protected readonly StatusEnum = StatusEnum;
 
   delete(tag: ITag): void {
     const modalRef = this.modalService.open(TagDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
@@ -148,5 +144,15 @@ export class TagComponent implements OnInit {
     } else {
       return [predicate + ',' + ascendingQueryParam];
     }
+  }
+  protected readonly PriorityEnum = PriorityEnum;
+
+  showTasksByTag(tagId: number): void {
+    this.activeTagId = tagId;
+
+    this.taskService.query({field: 'tagId.equals', value: this.activeTagId}).subscribe(res => {
+      this.tasks = res.body;
+      console.log(this.tasks);
+    })
   }
 }

@@ -24,12 +24,6 @@
 
   <jhi-alert></jhi-alert>
 
-  <!--  @if (tasks?.length === 0) {-->
-  <!--    <div class="alert alert-warning" id="no-result">-->
-  <!--      <span jhiTranslate="jhipsTestApp.task.home.notFound">Tasks не найдено</span>-->
-  <!--    </div>-->
-  <!--  }-->
-
   @if (tasks && tasks.length > 0) {
     <div class="table-responsive table-entities" id="entities">
       <table class="table table-striped" aria-describedby="page-heading">
@@ -164,27 +158,20 @@
   }
 </div>
 
-<div class="header-panel d-flex justify-content-between mb-3">
+<div class="d-flex justify-content-between mb-3">
   <button class="btn" (click)="showSidebar = !showSidebar">Открыть сайдбар</button>
   <button type="button" class="btn btn-primary" (click)="create()">Новая задача</button>
-  <div class="user-panel relative">
-    <div class="d-flex gap-2">
-      <span>
-        Хорошего дня,
-        <a routerLink="/task-manager/user-page">{{ userName }}</a>
-      </span>
-      <button
-        type="button"
-        class="btn btn-info"
-        (click)="isUserSettingsCollapsed = !isUserSettingsCollapsed"
-      >
-        <fa-icon style="transform: rotate(180deg)"></fa-icon>
+  <div class="col-auto">
+    <br/>
+    <div ngbDropdown>
+      <button class="btn btn-warning" id="gfg" ngbDropdownToggle>
+        Хорошего дня, {{ userName }}
       </button>
+      <div ngbDropdownMenu="gfg">
+        <a [routerLink]="['/task/user-page']" ngbDropdownItem>Личный кабинет</a>
+        <a [routerLink]="['/']" ngbDropdownItem>В меню</a>
+      </div>
     </div>
-    <ul class="position-absolute list-unstyled" *ngIf="isUserSettingsCollapsed">
-      <li><a href="#">Личное</a></li>
-      <li><a routerLink="/">Выйти</a></li>
-    </ul>
   </div>
 </div>
 <div class="main-panel d-flex">
@@ -196,30 +183,52 @@
     }
 
     @if (tasks && tasks.length > 0) {
-      <div class="d-flex justify-content-between">
+      <div class="d-flex justify-content-between ">
         <h3>Ваши задачи</h3>
-        <!--        <jhi-filter [filters]="tasks"></jhi-filter>-->
-        <!--        <div class="shuffle-container">-->
-        <!--          <ul class="d-flex list-unstyled">-->
-        <!--            <li>-->
-        <!--              <button class="btn" (click)="showFilters">Фильтровать по \/</button>-->
-        <!--            </li>-->
-        <!--            <li>-->
-        <!--              <button class="btn" (click)="showSorting">Сортировать по \/</button>-->
-        <!--            </li>-->
-        <!--          </ul>-->
-        <!--          <form name="form" role="form" (ngSubmit)="applyFilters()"></form>-->
-        <!--        </div>-->
-        <div class="d-flex form-control" style="width: 400px; height: 60px">
-          <input #searchInput type="text" placeholder="Task name" class="form-control border-0">
-          <button class="btn btn-primary"
-                  (click)="applyFilter({filterName: 'title.contains', value: searchInput.value})">Искать
-          </button>
+        <div class="col-auto">
+          <br/>
+          <div ngbDropdown>
+            <button class="btn btn-info" id="sortItems" jhiTranslate="taskm.sort.title" ngbDropdownToggle>
+              Сортировать по
+            </button>
+            <div jhiSort [(predicate)]="predicate" [(ascending)]="ascending"
+                 (sortChange)="navigateToWithComponentValues()" ngbDropdownMenu="sortItems">
+              <div scope="col" jhiSortBy="title" class="d-flex">
+                <span jhiTranslate="jhipsTestApp.task.title">Заголовок</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+              <div scope="col" jhiSortBy="content" class="d-flex">
+                <span jhiTranslate="jhipsTestApp.task.content">Контент</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+              <div scope="col" jhiSortBy="startedAt" class="d-flex">
+                <span jhiTranslate="jhipsTestApp.task.startedAt">Дата начала</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+
+              <div scope="col" jhiSortBy="finishedAt" class="d-flex">
+                <span jhiTranslate="jhipsTestApp.task.finishedAt">Дата завершения</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+
+            </div>
+          </div>
         </div>
+        <form (ngSubmit)="applyFilter({filterName: 'title.contains', value: searchInput.value})"
+              class="d-flex form-control" style="width: 400px; height: 60px">
+          <input #searchInput type="text" placeholder="Task name" class="form-control border-0">
+          <button type="submit" class="btn btn-primary">Искать</button>
+        </form>
       </div>
       <div class="tasks-list d-flex flex-column gap-3">
-        <div *ngFor="let task of tasks" class="task-card p-3" style="border: 3px solid #2b2f32;">
-          <div class="task-header d-flex justify-content-between">
+        @for (task of tasks; track trackId) {
+
+          <div class="task-card p-3" style="border: 3px solid #2b2f32;">
+            <div class="task-header d-flex justify-content-between">
             <span>
               @if (task.startedAt) {
                 с {{ task.startedAt | formatMediumDate }}
@@ -228,53 +237,54 @@
                 по {{ task.finishedAt | formatMediumDate }}
               }
             </span>
-            <p>{{ task.category | json }}</p>
-            @for (tag of task.tags; track $index; let last = $last) {
-              <button class="btn b--dark-blue">{{ tag.name }}</button>
-            }
-            <ul class="reactions-list list-unstyled d-flex gap-2">
-              <li>
-                <button class="btn" style="background-color: #28a745">:)</button>
-              </li>
-              <li>
-                <button class="btn btn-info" style="background-color: #ffc107">:/</button>
-              </li>
-              <li>
-                <button class="btn btn-info" style="background-color: #dc3545">:(</button>
-              </li>
-            </ul>
-          </div>
-          <div class="d-flex justify-content-between">
-            <div class="task-body justify-content-between">
-              <a [routerLink]="['/task', task.id, 'view']" class="text-lg-center">{{ task.title }}</a>
-              @if (task.content) {
-                <p>{{ task.content.length > 20 ? task.content.substring(0, 20) + '...' : task.content }}</p>
+              <p>{{ task.category | json }}</p>
+              @for (tag of task.tags; track $index; let last = $last) {
+                <button class="btn b--dark-blue">{{ tag.name }}</button>
               }
+              <ul class="reactions-list list-unstyled d-flex gap-2">
+                <li>
+                  <button class="btn" style="background-color: #28a745">:)</button>
+                </li>
+                <li>
+                  <button class="btn btn-info" style="background-color: #ffc107">:/</button>
+                </li>
+                <li>
+                  <button class="btn btn-info" style="background-color: #dc3545">:(</button>
+                </li>
+              </ul>
             </div>
-            <ul class="list-unstyled">
-              <li>Приоритет:
-                {{
-                  (task.priorityId! >= 0) ? PriorityEnum[task.priorityId!]
-                    :
-                    'неопределен'
-                }}
-              </li>
-              <li>
-                Статус:
-                {{
-                  (task.statusId! >= 0) ? StatusEnum[task.statusId!]
-                    :
-                    'неопределен'
-                }}
-              </li>
-            </ul>
+            <div class="d-flex justify-content-between">
+              <div class="task-body justify-content-between">
+                <a [routerLink]="['/task', task.id, 'view']" class="text-lg-center">{{ task.title }}</a>
+                @if (task.content) {
+                  <p>{{ task.content.length > 20 ? task.content.substring(0, 20) + '...' : task.content }}</p>
+                }
+              </div>
+              <ul class="list-unstyled">
+                <li>Приоритет:
+                  {{
+                    (task.priorityId! >= 0) ? PriorityEnum[task.priorityId!]
+                      :
+                      'неопределен'
+                  }}
+                </li>
+                <li>
+                  Статус:
+                  {{
+                    (task.statusId! >= 0) ? StatusEnum[task.statusId!]
+                      :
+                      'неопределен'
+                  }}
+                </li>
+              </ul>
+            </div>
+            <div class="task-footer">
+              <button class="btn" (click)="delete(task)">Удалить задачу</button>
+              <button class="btn" (click)="postpone(task)">Отложить задачу</button>
+              <!--          <button class="btn" (click)="openModal(true)">Создать подзадачу</button>-->
+            </div>
           </div>
-          <div class="task-footer">
-            <button class="btn" (click)="delete(task)">Удалить задачу</button>
-            <button class="btn" (click)="postpone(task)">Отложить задачу</button>
-            <!--          <button class="btn" (click)="openModal(true)">Создать подзадачу</button>-->
-          </div>
-        </div>
+        }
       </div>
     }
     <div>
