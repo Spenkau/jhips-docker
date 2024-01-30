@@ -1,4 +1,6 @@
 import {
+  faArrowAltCircleDown,
+  faArrowDown,
   faArrowLeft,
   faAsterisk,
   faBan,
@@ -18,11 +20,12 @@ import {
   faLock,
   faPencilAlt,
   faPlus,
+  faQuestionCircle,
   faRoad,
   faSave,
   faSearch,
-  faSignOutAlt,
   faSignInAlt,
+  faSignOutAlt,
   faSort,
   faSortDown,
   faSortUp,
@@ -36,11 +39,13 @@ import {
   faUserPlus,
   faUsers,
   faUsersCog,
-  faWrench,
-  // jhipster-needle-add-icon-import
+  faWrench
 } from '@fortawesome/free-solid-svg-icons';
 
 export const fontAwesomeIcons = [
+  faQuestionCircle,
+  faArrowAltCircleDown,
+  faArrowDown,
   faArrowLeft,
   faAsterisk,
   faBan,
@@ -79,5 +84,6 @@ export const fontAwesomeIcons = [
   faUsers,
   faUsersCog,
   faWrench,
+
   // jhipster-needle-add-icon-import
 ];
