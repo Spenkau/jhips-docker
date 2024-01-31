@@ -5,12 +5,14 @@
     <button class="btn text-lg-center" (click)="closeSidebar()">x</button>
   </div>
   <div class="category-list">
-    @for (category of categoriesList; track $index) {
-      <div class="category" *ngFor="let category of categoriesList">
+    @for (category of categoriesList; track trackId) {
+      <div class="category">
         <button class="btn" (click)="applyCategoryFilter(category.id)">
-          {{ category.name }}
+          {{ category.id }} | {{ category.name }}
         </button>
       </div>
     }
+
+    <a [routerLink]="['/category']" class="btn btn-danger">Управлять категориями</a>
   </div>
 </div>
