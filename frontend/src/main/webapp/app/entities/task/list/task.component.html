@@ -117,14 +117,14 @@
               <td>
                 @if (task.category) {
                   <div>
-                    <a [routerLink]="['/category', task.category.id, 'view']">{{ task.category.id }}</a>
+                    <a [routerLink]="['/category', task.category.id, 'view']">{{ task.category.name }}</a>
                   </div>
                 }
               </td>
               <td>
                 @for (tags of task.tags; track $index; let last = $last) {
                   <span>
-                    <a class="form-control-static" [routerLink]="['/tag', tags.id, 'view']">{{ tags.id }}</a
+                    <a class="form-control-static" [routerLink]="['/tag', tags.id, 'view']">{{ tags.name }}</a
                     >{{ last ? '' : ', ' }}
                   </span>
                 }
@@ -237,9 +237,11 @@
                 по {{ task.finishedAt | formatMediumDate }}
               }
             </span>
-              <p>{{ task.category | json }}</p>
+              @if (task.category) {
+                <p>Category: {{ task.category.name }}</p>
+              }
               @for (tag of task.tags; track $index; let last = $last) {
-                <button class="btn b--dark-blue">{{ tag.name }}</button>
+                <a [routerLink]="['/tag']" class="btn b--dark-blue">{{ tag.name }}</a>
               }
               <ul class="reactions-list list-unstyled d-flex gap-2">
                 <li>
