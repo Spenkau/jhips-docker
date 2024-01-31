@@ -32,8 +32,7 @@ import {ICategory} from "../../category/category.model";
 import {ITag} from "../../tag/tag.model";
 import {UserService} from "../../user/user.service";
 import {TagService} from "../../tag/service/tag.service";
-import {HttpHeaders, HttpResponse} from "@angular/common/http";
-import {map} from "rxjs/operators";
+import {HttpHeaders} from "@angular/common/http";
 import FilterComponent from "../../../shared/filter/filter.component";
 import ItemCountComponent from "../../../shared/pagination/item-count.component";
 import {FilterOptions, IFilterOption, IFilterOptions} from "../../../shared/filter";
@@ -68,6 +67,8 @@ import {ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER} from "../../..
 })
 export class TaskComponent implements OnInit {
   protected readonly PriorityEnum = PriorityEnum;
+  protected readonly StatusEnum = StatusEnum;
+
   showFilters = false;
 
   tasks?: ITask[];
@@ -89,9 +90,6 @@ export class TaskComponent implements OnInit {
   totalItems = 0;
   page = 1;
 
-  protected readonly StatusEnum = StatusEnum;
-
-
   trackId = (_index: number, item: ITask): number => this.taskService.getTaskIdentifier(item);
 
   ngOnInit(): void {
@@ -107,6 +105,9 @@ export class TaskComponent implements OnInit {
     // TODO сделать подгрузку связей, чтобы отображалась в задаче категория
 
     this.loadRelationshipsOptions();
+    setTimeout(() => {
+      console.log(this.tasks)
+    }, 500)
   }
 
   constructor(
@@ -264,21 +265,18 @@ export class TaskComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
-    this.tasks?.map((task: ITask) => {
-      this.categoryService
-        .query()
-        .pipe(map((res: HttpResponse<ICategory[]>) => res.body ?? []))
-        .pipe(
-          map((categories: ICategory[]) => this.categoryService.addCategoryToCollectionIfMissing<ICategory>(categories, task?.category)),
-        )
-        .subscribe((categories: ICategory[]) => (this.categoriesSharedCollection = categories));
-
-      this.tagService
-        .query()
-        .pipe(map((res: HttpResponse<ITag[]>) => res.body ?? []))
-        .pipe(map((tags: ITag[]) => this.tagService.addTagToCollectionIfMissing<ITag>(tags, ...(task?.tags ?? []))))
-        .subscribe((tags: ITag[]) => (this.tagsSharedCollection = tags));
-      console.log('cat', task.category, '\n', 'tags', task.tags, '\n', 'user', task.owner)
-    })
+    //   this.categoryService
+    //     .query()
+    //     .pipe(map((res: HttpResponse<ICategory[]>) => res.body ?? []))
+    //     .pipe(
+    //       map((categories: ICategory[]) => this.categoryService.addCategoryToCollectionIfMissing<ICategory>(categories, task?.category)),
+    //     )
+    //     .subscribe((categories: ICategory[]) => (this.categoriesSharedCollection = categories));
+    //
+    //   this.tagService
+    //     .query()
+    //     .pipe(map((res: HttpResponse<ITag[]>) => res.body ?? []))
+    //     .pipe(map((tags: ITag[]) => this.tagService.addTagToCollectionIfMissing<ITag>(tags, ...(task?.tags ?? []))))
+    //     .subscribe((tags: ITag[]) => (this.tagsSharedCollection = tags));
   }
 }

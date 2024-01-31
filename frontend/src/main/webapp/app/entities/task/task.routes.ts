@@ -6,6 +6,7 @@ import {TaskComponent} from './list/task.component';
 import {TaskDetailComponent} from './detail/task-detail.component';
 import {TaskUpdateComponent} from './update/task-update.component';
 import TaskResolve from './route/task-routing-resolve.service';
+import {PublicComponent} from "./public/public.component";
 
 const taskRoute: Routes = [
   {
@@ -40,6 +41,11 @@ const taskRoute: Routes = [
     },
     canActivate: [UserRouteAccessService],
   },
+  {
+    path: 'public',
+    component: PublicComponent,
+    canActivate: [UserRouteAccessService],
+  }
 ];
 
 export default taskRoute;

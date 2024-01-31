@@ -32,6 +32,8 @@ import {PriorityEnum, StatusEnum} from "../../task/task.enums";
   ],
 })
 export class TagComponent implements OnInit {
+  protected readonly StatusEnum = StatusEnum;
+
   tasks?: ITask[] | null
   tags?: ITag[];
   isEditEnabled = false;
@@ -56,13 +58,8 @@ export class TagComponent implements OnInit {
   ngOnInit(): void {
     this.load();
 
-    this.tagService.query({
-      '.contains': 'd'
-    }).subscribe((res) => {
-      console.log(res.body)
-    })
+    this.showTasksByTag(this.activeTagId);
   }
-  protected readonly StatusEnum = StatusEnum;
 
   delete(tag: ITag): void {
     const modalRef = this.modalService.open(TagDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
@@ -150,9 +147,8 @@ export class TagComponent implements OnInit {
   showTasksByTag(tagId: number): void {
     this.activeTagId = tagId;
 
-    this.taskService.query({field: 'tagId.equals', value: this.activeTagId}).subscribe(res => {
+    this.taskService.query({['tags.contains']: this.activeTagId}).subscribe(res => {
       this.tasks = res.body;
-      console.log(this.tasks);
     })
   }
 }
