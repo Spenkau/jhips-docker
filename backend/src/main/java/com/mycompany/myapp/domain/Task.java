@@ -45,8 +45,8 @@ public class Task implements Serializable {
     private User owner;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "owner" }, allowSetters = true)
     private Category category;
+//    @JsonIgnoreProperties(value = { "owner" }, allowSetters = true)
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "rel_task__tags", joinColumns = @JoinColumn(name = "task_id"), inverseJoinColumns = @JoinColumn(name = "tags_id"))
