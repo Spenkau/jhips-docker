@@ -1,10 +1,7 @@
 package com.mycompany.myapp.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -18,7 +15,6 @@ import java.util.Set;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class Task implements Serializable {
 
-    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -48,9 +44,8 @@ public class Task implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     private User owner;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonBackReference
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = { "owner" }, allowSetters = true)
     private Category category;
 
     @ManyToMany(fetch = FetchType.LAZY)

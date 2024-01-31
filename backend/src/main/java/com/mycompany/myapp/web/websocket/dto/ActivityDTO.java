@@ -1,5 +1,6 @@
 package com.mycompany.myapp.web.websocket.dto;
 
+import com.mycompany.myapp.domain.Task;
 import java.time.Instant;
 
 /**
@@ -16,6 +17,8 @@ public class ActivityDTO {
     private String page;
 
     private Instant time;
+
+    private Task task;
 
     public String getSessionId() {
         return sessionId;
