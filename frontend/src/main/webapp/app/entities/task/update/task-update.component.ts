@@ -1,21 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import {Component, OnInit} from '@angular/core';
+import {HttpResponse} from '@angular/common/http';
+import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs';
+import {finalize, map} from 'rxjs/operators';
 
 import SharedModule from 'app/shared/shared.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import { IUser } from 'app/entities/user/user.model';
-import { UserService } from 'app/entities/user/user.service';
-import { ICategory } from 'app/entities/category/category.model';
-import { CategoryService } from 'app/entities/category/service/category.service';
-import { ITag } from 'app/entities/tag/tag.model';
-import { TagService } from 'app/entities/tag/service/tag.service';
-import { TaskService } from '../service/task.service';
-import { ITask } from '../task.model';
-import { TaskFormService, TaskFormGroup } from '../service/task-form.service';
+import {IUser} from 'app/entities/user/user.model';
+import {UserService} from 'app/entities/user/user.service';
+import {ICategory} from 'app/entities/category/category.model';
+import {CategoryService} from 'app/entities/category/service/category.service';
+import {ITag} from 'app/entities/tag/tag.model';
+import {TagService} from 'app/entities/tag/service/tag.service';
+import {TaskService} from '../service/task.service';
+import {ITask} from '../task.model';
+import {TaskFormGroup, TaskFormService} from '../service/task-form.service';
 
 @Component({
   standalone: true,
@@ -26,8 +26,8 @@ import { TaskFormService, TaskFormGroup } from '../service/task-form.service';
 export class TaskUpdateComponent implements OnInit {
   isSaving = false;
   task: ITask | null = null;
+  owner?: IUser;
 
-  usersSharedCollection: IUser[] = [];
   categoriesSharedCollection: ICategory[] = [];
   tagsSharedCollection: ITag[] = [];
 
@@ -42,7 +42,6 @@ export class TaskUpdateComponent implements OnInit {
     protected activatedRoute: ActivatedRoute,
   ) {}
 
-  compareUser = (o1: IUser | null, o2: IUser | null): boolean => this.userService.compareUser(o1, o2);
 
   compareCategory = (o1: ICategory | null, o2: ICategory | null): boolean => this.categoryService.compareCategory(o1, o2);
 
@@ -57,6 +56,8 @@ export class TaskUpdateComponent implements OnInit {
 
       this.loadRelationshipsOptions();
     });
+
+    this.userService.owner.subscribe(owner => this.owner = owner)
   }
 
   previousState(): void {
@@ -66,6 +67,7 @@ export class TaskUpdateComponent implements OnInit {
   save(): void {
     this.isSaving = true;
     const task = this.taskFormService.getTask(this.editForm);
+    if (task.owner) task.owner = this.owner
     if (task.id !== null) {
       this.subscribeToSaveResponse(this.taskService.update(task));
     } else {
@@ -96,7 +98,6 @@ export class TaskUpdateComponent implements OnInit {
     this.task = task;
     this.taskFormService.resetForm(this.editForm, task);
 
-    this.usersSharedCollection = this.userService.addUserToCollectionIfMissing<IUser>(this.usersSharedCollection, task.owner);
     this.categoriesSharedCollection = this.categoryService.addCategoryToCollectionIfMissing<ICategory>(
       this.categoriesSharedCollection,
       task.category,
@@ -105,12 +106,6 @@ export class TaskUpdateComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
-    this.userService
-      .query()
-      .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
-      .pipe(map((users: IUser[]) => this.userService.addUserToCollectionIfMissing<IUser>(users, this.task?.owner)))
-      .subscribe((users: IUser[]) => (this.usersSharedCollection = users));
-
     this.categoryService
       .query()
       .pipe(map((res: HttpResponse<ICategory[]>) => res.body ?? []))
