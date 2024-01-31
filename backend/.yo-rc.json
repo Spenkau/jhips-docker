@@ -5,20 +5,19 @@
     "baseName": "backend",
     "buildTool": "maven",
     "cacheProvider": "no",
-    "creationTimestamp": 1702588485753,
+    "creationTimestamp": 1706645070101,
     "databaseType": "sql",
     "devDatabaseType": "postgresql",
     "enableGradleEnterprise": null,
     "enableHibernateCache": false,
     "enableSwaggerCodegen": false,
-    "enableTranslation": true,
+    "enableTranslation": false,
     "entities": ["Task", "Category", "Tag", "Comment"],
     "feignClient": false,
     "gradleEnterpriseHost": null,
     "jhipsterVersion": "8.1.0",
-    "jwtSecretKey": "MzhmNTI2YjU5YjA0YTQ4ZjI2NWEzYzg3Yzg1Njc3OWE5MjQyZTI1ZjA4NWU1MjJkYzFlZGIyYmNiMjkzODY2OTZkMWJiZjE2Njk1Yzc1NTQ0ZmIzNjI4OTliMWJiMzhlNzYyZTZkYTViMzEzOTA1N2RkZjhhMjk0ZTIzZWI5OTM=",
-    "languages": ["ru"],
-    "lastLiquibaseTimestamp": 1702588725000,
+    "jwtSecretKey": "ZTJiMTM1Yjk2OWNkZTUyZWVhMjQyZjY4MzZjN2E3ODA1MzQ2NTQwM2IxMmI5Zjg4NzhjZmFmMzZjOWQ5ODZkYzNjMDQ0YmU4ODI4Nzc1ZjRiMDJhOWVmNWFkZmZiNTUyZGQ2ZjRlNGUxNjE2OThjOTI4ODBiOThjNGM2MmFiYWE=",
+    "lastLiquibaseTimestamp": 1706645310000,
     "messageBroker": false,
     "monorepository": true,
     "nativeLanguage": "ru",
@@ -27,11 +26,13 @@
     "reactive": false,
     "searchEngine": false,
     "serverPort": null,
-    "serverSideOptions": [],
+    "serverSideOptions": [
+      "websocket:spring-websocket"
+    ],
     "serviceDiscoveryType": false,
     "skipClient": true,
     "skipCommitHook": true,
     "testFrameworks": [],
-    "websocket": false
+    "websocket": "spring-websocket"
   }
 }

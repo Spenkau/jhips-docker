@@ -2,8 +2,12 @@ package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.domain.Category;
 import com.mycompany.myapp.repository.CategoryRepository;
+import com.mycompany.myapp.service.dto.CategoryDTO;
+import com.mycompany.myapp.service.mapper.CategoryMapper;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,51 +24,57 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    private final CategoryMapper categoryMapper;
+
+    public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
         this.categoryRepository = categoryRepository;
+        this.categoryMapper = categoryMapper;
     }
 
     /**
      * Save a category.
      *
-     * @param category the entity to save.
+     * @param categoryDTO the entity to save.
      * @return the persisted entity.
      */
-    public Category save(Category category) {
-        log.debug("Request to save Category : {}", category);
-        return categoryRepository.save(category);
+    public CategoryDTO save(CategoryDTO categoryDTO) {
+        log.debug("Request to save Category : {}", categoryDTO);
+        Category category = categoryMapper.toEntity(categoryDTO);
+        category = categoryRepository.save(category);
+        return categoryMapper.toDto(category);
     }
 
     /**
      * Update a category.
      *
-     * @param category the entity to save.
+     * @param categoryDTO the entity to save.
      * @return the persisted entity.
      */
-    public Category update(Category category) {
-        log.debug("Request to update Category : {}", category);
-        return categoryRepository.save(category);
+    public CategoryDTO update(CategoryDTO categoryDTO) {
+        log.debug("Request to update Category : {}", categoryDTO);
+        Category category = categoryMapper.toEntity(categoryDTO);
+        category = categoryRepository.save(category);
+        return categoryMapper.toDto(category);
     }
 
     /**
      * Partially update a category.
      *
-     * @param category the entity to update partially.
+     * @param categoryDTO the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<Category> partialUpdate(Category category) {
-        log.debug("Request to partially update Category : {}", category);
+    public Optional<CategoryDTO> partialUpdate(CategoryDTO categoryDTO) {
+        log.debug("Request to partially update Category : {}", categoryDTO);
 
         return categoryRepository
-            .findById(category.getId())
+            .findById(categoryDTO.getId())
             .map(existingCategory -> {
-                if (category.getName() != null) {
-                    existingCategory.setName(category.getName());
-                }
+                categoryMapper.partialUpdate(existingCategory, categoryDTO);
 
                 return existingCategory;
             })
-            .map(categoryRepository::save);
+            .map(categoryRepository::save)
+            .map(categoryMapper::toDto);
     }
 
     /**
@@ -73,9 +83,9 @@ public class CategoryService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<Category> findAll() {
+    public List<CategoryDTO> findAll() {
         log.debug("Request to get all Categories");
-        return categoryRepository.findAll();
+        return categoryRepository.findAll().stream().map(categoryMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     /**
@@ -85,9 +95,9 @@ public class CategoryService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<Category> findOne(Long id) {
+    public Optional<CategoryDTO> findOne(Long id) {
         log.debug("Request to get Category : {}", id);
-        return categoryRepository.findById(id);
+        return categoryRepository.findById(id).map(categoryMapper::toDto);
     }
 
     /**

@@ -1,8 +1,9 @@
 {
   "annotations": {
-    "changelogDate": "20231214211845"
+    "changelogDate": "20240130200830"
   },
   "applications": "*",
+  "dto": "mapstruct",
   "entityTableName": "comment",
   "fields": [
     {
@@ -30,5 +31,6 @@
       "relationshipWithBuiltInEntity": true
     }
   ],
-  "searchEngine": "no"
+  "searchEngine": "no",
+  "service": "serviceClass"
 }

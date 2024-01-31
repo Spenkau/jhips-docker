@@ -2,6 +2,8 @@ package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.domain.Task;
 import com.mycompany.myapp.repository.TaskRepository;
+import com.mycompany.myapp.service.dto.TaskDTO;
+import com.mycompany.myapp.service.mapper.TaskMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,66 +23,57 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
 
-    public TaskService(TaskRepository taskRepository) {
+    private final TaskMapper taskMapper;
+
+    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper) {
         this.taskRepository = taskRepository;
+        this.taskMapper = taskMapper;
     }
 
     /**
      * Save a task.
      *
-     * @param task the entity to save.
+     * @param taskDTO the entity to save.
      * @return the persisted entity.
      */
-    public Task save(Task task) {
-        log.debug("Request to save Task : {}", task);
-        return taskRepository.save(task);
+    public TaskDTO save(TaskDTO taskDTO) {
+        log.debug("Request to save Task : {}", taskDTO);
+        Task task = taskMapper.toEntity(taskDTO);
+        task = taskRepository.save(task);
+        return taskMapper.toDto(task);
     }
 
     /**
      * Update a task.
      *
-     * @param task the entity to save.
+     * @param taskDTO the entity to save.
      * @return the persisted entity.
      */
-    public Task update(Task task) {
-        log.debug("Request to update Task : {}", task);
-        return taskRepository.save(task);
+    public TaskDTO update(TaskDTO taskDTO) {
+        log.debug("Request to update Task : {}", taskDTO);
+        Task task = taskMapper.toEntity(taskDTO);
+        task = taskRepository.save(task);
+        return taskMapper.toDto(task);
     }
 
     /**
      * Partially update a task.
      *
-     * @param task the entity to update partially.
+     * @param taskDTO the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<Task> partialUpdate(Task task) {
-        log.debug("Request to partially update Task : {}", task);
+    public Optional<TaskDTO> partialUpdate(TaskDTO taskDTO) {
+        log.debug("Request to partially update Task : {}", taskDTO);
 
         return taskRepository
-            .findById(task.getId())
+            .findById(taskDTO.getId())
             .map(existingTask -> {
-                if (task.getTitle() != null) {
-                    existingTask.setTitle(task.getTitle());
-                }
-                if (task.getContent() != null) {
-                    existingTask.setContent(task.getContent());
-                }
-                if (task.getPriorityId() != null) {
-                    existingTask.setPriorityId(task.getPriorityId());
-                }
-                if (task.getStatusId() != null) {
-                    existingTask.setStatusId(task.getStatusId());
-                }
-                if (task.getStartedAt() != null) {
-                    existingTask.setStartedAt(task.getStartedAt());
-                }
-                if (task.getFinishedAt() != null) {
-                    existingTask.setFinishedAt(task.getFinishedAt());
-                }
+                taskMapper.partialUpdate(existingTask, taskDTO);
 
                 return existingTask;
             })
-            .map(taskRepository::save);
+            .map(taskRepository::save)
+            .map(taskMapper::toDto);
     }
 
     /**
@@ -90,9 +83,9 @@ public class TaskService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<Task> findAll(Pageable pageable) {
+    public Page<TaskDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Tasks");
-        return taskRepository.findAll(pageable);
+        return taskRepository.findAll(pageable).map(taskMapper::toDto);
     }
 
     /**
@@ -100,8 +93,8 @@ public class TaskService {
      *
      * @return the list of entities.
      */
-    public Page<Task> findAllWithEagerRelationships(Pageable pageable) {
-        return taskRepository.findAllWithEagerRelationships(pageable);
+    public Page<TaskDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return taskRepository.findAllWithEagerRelationships(pageable).map(taskMapper::toDto);
     }
 
     /**
@@ -111,9 +104,9 @@ public class TaskService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<Task> findOne(Long id) {
+    public Optional<TaskDTO> findOne(Long id) {
         log.debug("Request to get Task : {}", id);
-        return taskRepository.findOneWithEagerRelationships(id);
+        return taskRepository.findOneWithEagerRelationships(id).map(taskMapper::toDto);
     }
 
     /**

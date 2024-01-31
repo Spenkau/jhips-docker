@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.mycompany.myapp.IntegrationTest;
 import com.mycompany.myapp.domain.Comment;
 import com.mycompany.myapp.repository.CommentRepository;
+import com.mycompany.myapp.service.dto.CommentDTO;
+import com.mycompany.myapp.service.mapper.CommentMapper;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -45,6 +47,9 @@ class CommentResourceIT {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private CommentMapper commentMapper;
 
     @Autowired
     private EntityManager em;
@@ -86,8 +91,9 @@ class CommentResourceIT {
     void createComment() throws Exception {
         int databaseSizeBeforeCreate = commentRepository.findAll().size();
         // Create the Comment
+        CommentDTO commentDTO = commentMapper.toDto(comment);
         restCommentMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(comment)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(commentDTO)))
             .andExpect(status().isCreated());
 
         // Validate the Comment in the database
@@ -103,12 +109,13 @@ class CommentResourceIT {
     void createCommentWithExistingId() throws Exception {
         // Create the Comment with an existing ID
         comment.setId(1L);
+        CommentDTO commentDTO = commentMapper.toDto(comment);
 
         int databaseSizeBeforeCreate = commentRepository.findAll().size();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restCommentMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(comment)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(commentDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Comment in the database
@@ -168,12 +175,13 @@ class CommentResourceIT {
         // Disconnect from session so that the updates on updatedComment are not directly saved in db
         em.detach(updatedComment);
         updatedComment.content(UPDATED_CONTENT).createdAt(UPDATED_CREATED_AT);
+        CommentDTO commentDTO = commentMapper.toDto(updatedComment);
 
         restCommentMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, updatedComment.getId())
+                put(ENTITY_API_URL_ID, commentDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(updatedComment))
+                    .content(TestUtil.convertObjectToJsonBytes(commentDTO))
             )
             .andExpect(status().isOk());
 
@@ -191,12 +199,15 @@ class CommentResourceIT {
         int databaseSizeBeforeUpdate = commentRepository.findAll().size();
         comment.setId(longCount.incrementAndGet());
 
+        // Create the Comment
+        CommentDTO commentDTO = commentMapper.toDto(comment);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restCommentMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, comment.getId())
+                put(ENTITY_API_URL_ID, commentDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(comment))
+                    .content(TestUtil.convertObjectToJsonBytes(commentDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -211,12 +222,15 @@ class CommentResourceIT {
         int databaseSizeBeforeUpdate = commentRepository.findAll().size();
         comment.setId(longCount.incrementAndGet());
 
+        // Create the Comment
+        CommentDTO commentDTO = commentMapper.toDto(comment);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restCommentMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(comment))
+                    .content(TestUtil.convertObjectToJsonBytes(commentDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -231,9 +245,12 @@ class CommentResourceIT {
         int databaseSizeBeforeUpdate = commentRepository.findAll().size();
         comment.setId(longCount.incrementAndGet());
 
+        // Create the Comment
+        CommentDTO commentDTO = commentMapper.toDto(comment);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restCommentMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(comment)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(commentDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Comment in the database
@@ -307,12 +324,15 @@ class CommentResourceIT {
         int databaseSizeBeforeUpdate = commentRepository.findAll().size();
         comment.setId(longCount.incrementAndGet());
 
+        // Create the Comment
+        CommentDTO commentDTO = commentMapper.toDto(comment);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restCommentMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, comment.getId())
+                patch(ENTITY_API_URL_ID, commentDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(comment))
+                    .content(TestUtil.convertObjectToJsonBytes(commentDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -327,12 +347,15 @@ class CommentResourceIT {
         int databaseSizeBeforeUpdate = commentRepository.findAll().size();
         comment.setId(longCount.incrementAndGet());
 
+        // Create the Comment
+        CommentDTO commentDTO = commentMapper.toDto(comment);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restCommentMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(comment))
+                    .content(TestUtil.convertObjectToJsonBytes(commentDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -347,9 +370,14 @@ class CommentResourceIT {
         int databaseSizeBeforeUpdate = commentRepository.findAll().size();
         comment.setId(longCount.incrementAndGet());
 
+        // Create the Comment
+        CommentDTO commentDTO = commentMapper.toDto(comment);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restCommentMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(comment)))
+            .perform(
+                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(commentDTO))
+            )
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Comment in the database

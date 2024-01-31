@@ -4,6 +4,8 @@ import com.mycompany.myapp.domain.*; // for static metamodels
 import com.mycompany.myapp.domain.Task;
 import com.mycompany.myapp.repository.TaskRepository;
 import com.mycompany.myapp.service.criteria.TaskCriteria;
+import com.mycompany.myapp.service.dto.TaskDTO;
+import com.mycompany.myapp.service.mapper.TaskMapper;
 import jakarta.persistence.criteria.JoinType;
 import java.util.List;
 import org.slf4j.Logger;
@@ -19,7 +21,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link Task} entities in the database.
  * The main input is a {@link TaskCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link List} of {@link Task} or a {@link Page} of {@link Task} which fulfills the criteria.
+ * It returns a {@link List} of {@link TaskDTO} or a {@link Page} of {@link TaskDTO} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -29,33 +31,36 @@ public class TaskQueryService extends QueryService<Task> {
 
     private final TaskRepository taskRepository;
 
-    public TaskQueryService(TaskRepository taskRepository) {
+    private final TaskMapper taskMapper;
+
+    public TaskQueryService(TaskRepository taskRepository, TaskMapper taskMapper) {
         this.taskRepository = taskRepository;
+        this.taskMapper = taskMapper;
     }
 
     /**
-     * Return a {@link List} of {@link Task} which matches the criteria from the database.
+     * Return a {@link List} of {@link TaskDTO} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<Task> findByCriteria(TaskCriteria criteria) {
+    public List<TaskDTO> findByCriteria(TaskCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<Task> specification = createSpecification(criteria);
-        return taskRepository.findAll(specification);
+        return taskMapper.toDto(taskRepository.findAll(specification));
     }
 
     /**
-     * Return a {@link Page} of {@link Task} which matches the criteria from the database.
+     * Return a {@link Page} of {@link TaskDTO} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<Task> findByCriteria(TaskCriteria criteria, Pageable page) {
+    public Page<TaskDTO> findByCriteria(TaskCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Task> specification = createSpecification(criteria);
-        return taskRepository.findAll(specification, page);
+        return taskRepository.findAll(specification, page).map(taskMapper::toDto);
     }
 
     /**

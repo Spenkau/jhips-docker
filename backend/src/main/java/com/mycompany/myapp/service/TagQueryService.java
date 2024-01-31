@@ -4,6 +4,8 @@ import com.mycompany.myapp.domain.*; // for static metamodels
 import com.mycompany.myapp.domain.Tag;
 import com.mycompany.myapp.repository.TagRepository;
 import com.mycompany.myapp.service.criteria.TagCriteria;
+import com.mycompany.myapp.service.dto.TagDTO;
+import com.mycompany.myapp.service.mapper.TagMapper;
 import jakarta.persistence.criteria.JoinType;
 import java.util.List;
 import org.slf4j.Logger;
@@ -19,7 +21,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link Tag} entities in the database.
  * The main input is a {@link TagCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link List} of {@link Tag} or a {@link Page} of {@link Tag} which fulfills the criteria.
+ * It returns a {@link List} of {@link TagDTO} or a {@link Page} of {@link TagDTO} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -29,33 +31,36 @@ public class TagQueryService extends QueryService<Tag> {
 
     private final TagRepository tagRepository;
 
-    public TagQueryService(TagRepository tagRepository) {
+    private final TagMapper tagMapper;
+
+    public TagQueryService(TagRepository tagRepository, TagMapper tagMapper) {
         this.tagRepository = tagRepository;
+        this.tagMapper = tagMapper;
     }
 
     /**
-     * Return a {@link List} of {@link Tag} which matches the criteria from the database.
+     * Return a {@link List} of {@link TagDTO} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<Tag> findByCriteria(TagCriteria criteria) {
+    public List<TagDTO> findByCriteria(TagCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<Tag> specification = createSpecification(criteria);
-        return tagRepository.findAll(specification);
+        return tagMapper.toDto(tagRepository.findAll(specification));
     }
 
     /**
-     * Return a {@link Page} of {@link Tag} which matches the criteria from the database.
+     * Return a {@link Page} of {@link TagDTO} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<Tag> findByCriteria(TagCriteria criteria, Pageable page) {
+    public Page<TagDTO> findByCriteria(TagCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Tag> specification = createSpecification(criteria);
-        return tagRepository.findAll(specification, page);
+        return tagRepository.findAll(specification, page).map(tagMapper::toDto);
     }
 
     /**

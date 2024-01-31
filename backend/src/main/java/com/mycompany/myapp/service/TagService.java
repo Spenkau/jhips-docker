@@ -2,8 +2,12 @@ package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.domain.Tag;
 import com.mycompany.myapp.repository.TagRepository;
+import com.mycompany.myapp.service.dto.TagDTO;
+import com.mycompany.myapp.service.mapper.TagMapper;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,51 +24,57 @@ public class TagService {
 
     private final TagRepository tagRepository;
 
-    public TagService(TagRepository tagRepository) {
+    private final TagMapper tagMapper;
+
+    public TagService(TagRepository tagRepository, TagMapper tagMapper) {
         this.tagRepository = tagRepository;
+        this.tagMapper = tagMapper;
     }
 
     /**
      * Save a tag.
      *
-     * @param tag the entity to save.
+     * @param tagDTO the entity to save.
      * @return the persisted entity.
      */
-    public Tag save(Tag tag) {
-        log.debug("Request to save Tag : {}", tag);
-        return tagRepository.save(tag);
+    public TagDTO save(TagDTO tagDTO) {
+        log.debug("Request to save Tag : {}", tagDTO);
+        Tag tag = tagMapper.toEntity(tagDTO);
+        tag = tagRepository.save(tag);
+        return tagMapper.toDto(tag);
     }
 
     /**
      * Update a tag.
      *
-     * @param tag the entity to save.
+     * @param tagDTO the entity to save.
      * @return the persisted entity.
      */
-    public Tag update(Tag tag) {
-        log.debug("Request to update Tag : {}", tag);
-        return tagRepository.save(tag);
+    public TagDTO update(TagDTO tagDTO) {
+        log.debug("Request to update Tag : {}", tagDTO);
+        Tag tag = tagMapper.toEntity(tagDTO);
+        tag = tagRepository.save(tag);
+        return tagMapper.toDto(tag);
     }
 
     /**
      * Partially update a tag.
      *
-     * @param tag the entity to update partially.
+     * @param tagDTO the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<Tag> partialUpdate(Tag tag) {
-        log.debug("Request to partially update Tag : {}", tag);
+    public Optional<TagDTO> partialUpdate(TagDTO tagDTO) {
+        log.debug("Request to partially update Tag : {}", tagDTO);
 
         return tagRepository
-            .findById(tag.getId())
+            .findById(tagDTO.getId())
             .map(existingTag -> {
-                if (tag.getName() != null) {
-                    existingTag.setName(tag.getName());
-                }
+                tagMapper.partialUpdate(existingTag, tagDTO);
 
                 return existingTag;
             })
-            .map(tagRepository::save);
+            .map(tagRepository::save)
+            .map(tagMapper::toDto);
     }
 
     /**
@@ -73,9 +83,9 @@ public class TagService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<Tag> findAll() {
+    public List<TagDTO> findAll() {
         log.debug("Request to get all Tags");
-        return tagRepository.findAll();
+        return tagRepository.findAll().stream().map(tagMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     /**
@@ -85,9 +95,9 @@ public class TagService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<Tag> findOne(Long id) {
+    public Optional<TagDTO> findOne(Long id) {
         log.debug("Request to get Tag : {}", id);
-        return tagRepository.findById(id);
+        return tagRepository.findById(id).map(tagMapper::toDto);
     }
 
     /**

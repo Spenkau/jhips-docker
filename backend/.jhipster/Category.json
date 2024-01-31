@@ -1,8 +1,9 @@
 {
   "annotations": {
-    "changelogDate": "20231214211645"
+    "changelogDate": "20240130200630"
   },
   "applications": "*",
+  "dto": "mapstruct",
   "entityTableName": "category",
   "fields": [
     {

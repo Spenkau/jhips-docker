@@ -39,3 +39,6 @@ relationship ManyToMany {
 }
 
 filter * except Comment
+dto * with mapstruct
+service * with serviceClass
+paginate Task with pagination
