@@ -1,0 +1,27 @@
+<div>
+  <h2 id="tracker-page-heading">Активность пользователей в реальном времени</h2>
+
+  <div class="table-responsive">
+    <table aria-describedby="tracker-page-heading" class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">Пользователь</th>
+        <th scope="col">IP Адрес</th>
+        <th scope="col">Текущая страница</th>
+        <th scope="col">Время</th>
+        <th scope="col"></th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (activity of activities; track $index) {
+          <tr>
+            <td>{{ activity.userLogin }}</td>
+            <td>{{ activity.ipAddress }}</td>
+            <td>{{ activity.page }}</td>
+            <td>{{ activity.time | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
