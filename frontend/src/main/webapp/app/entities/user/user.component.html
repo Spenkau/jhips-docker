@@ -1,0 +1,20 @@
+<div class="d-flex justify-content-between">
+  <div class="d-flex gap-3">
+    <fa-icon icon="user-circle" size="3x"></fa-icon>
+    <div>
+      <h3>{{ user?.login }}</h3>
+      <small>{{ user?.email }}</small>
+    </div>
+  </div>
+  <div>
+    <p>{{ user?.firstName }} {{ user?.lastName }}</p>
+    <small>Created by: {{ user?.createdBy }}</small>
+    @if (user?.createdAt) {
+      <small>Created at: {{ user?.createdAt }}</small>
+    }
+  </div>
+</div>
+
+<div class="d-grid">
+  <jhi-task [parentData]="data"></jhi-task>
+</div>
