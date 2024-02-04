@@ -1,5 +1,6 @@
 package com.mycompany.myapp.repository;
 
+import com.mycompany.myapp.domain.PublicUser;
 import com.mycompany.myapp.domain.User;
 import java.time.Instant;
 import java.util.List;

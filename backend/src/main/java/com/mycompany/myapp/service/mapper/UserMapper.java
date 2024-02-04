@@ -89,6 +89,7 @@ public class UserMapper {
     @Named("id")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "login", source = "login")
     public UserDTO toDtoId(User user) {
         if (user == null) {
             return null;

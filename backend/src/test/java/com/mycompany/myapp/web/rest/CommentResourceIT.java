@@ -270,7 +270,7 @@ class CommentResourceIT {
         Comment partialUpdatedComment = new Comment();
         partialUpdatedComment.setId(comment.getId());
 
-        partialUpdatedComment.content(UPDATED_CONTENT).createdAt(UPDATED_CREATED_AT);
+        partialUpdatedComment.content(UPDATED_CONTENT);
 
         restCommentMockMvc
             .perform(
@@ -285,7 +285,7 @@ class CommentResourceIT {
         assertThat(commentList).hasSize(databaseSizeBeforeUpdate);
         Comment testComment = commentList.get(commentList.size() - 1);
         assertThat(testComment.getContent()).isEqualTo(UPDATED_CONTENT);
-        assertThat(testComment.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
+        assertThat(testComment.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
     }
 
     @Test
