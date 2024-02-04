@@ -6,6 +6,21 @@
       "byContent": "Контенту",
       "byDateStart": "Дате начала",
       "byDateFinish": "Дате завершения"
+    },
+    "priority": {
+      "title": "Приоритет",
+      "LOW": "низкий",
+      "MIDDLE": "средний",
+      "HIGH": "высокий",
+      "undefined": "не указан"
+    },
+    "status": {
+      "title": "Статус",
+      "PLANNED": "запланирована",
+      "ACTIVE": "активна",
+      "CANCELED": "отменена",
+      "FINISHED": "завершена",
+      "undefined": "не указан"
     }
   }
 }
