@@ -1,10 +1,13 @@
 package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.repository.TaskRepository;
+import com.mycompany.myapp.security.SecurityUtils;
 import com.mycompany.myapp.service.TaskQueryService;
 import com.mycompany.myapp.service.TaskService;
+import com.mycompany.myapp.service.UserService;
 import com.mycompany.myapp.service.criteria.TaskCriteria;
 import com.mycompany.myapp.service.dto.TaskDTO;
+import com.mycompany.myapp.service.dto.UserDTO;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -38,13 +41,16 @@ public class TaskResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final UserService userService;
+
     private final TaskService taskService;
 
     private final TaskRepository taskRepository;
 
     private final TaskQueryService taskQueryService;
 
-    public TaskResource(TaskService taskService, TaskRepository taskRepository, TaskQueryService taskQueryService) {
+    public TaskResource(TaskService taskService, TaskRepository taskRepository, TaskQueryService taskQueryService, UserService userService) {
+        this.userService = userService;
         this.taskService = taskService;
         this.taskRepository = taskRepository;
         this.taskQueryService = taskQueryService;
@@ -63,6 +69,7 @@ public class TaskResource {
         if (taskDTO.getId() != null) {
             throw new BadRequestAlertException("A new task cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
         TaskDTO result = taskService.save(taskDTO);
         return ResponseEntity
             .created(new URI("/api/tasks/" + result.getId()))
@@ -146,10 +153,10 @@ public class TaskResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tasks in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<TaskDTO>> getAllTasks(
+    public ResponseEntity<List<TaskDTO>> getUserTasks(
         TaskCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
-    ) {
+        ) {
         log.debug("REST request to get Tasks by criteria: {}", criteria);
 
         Page<TaskDTO> page = taskQueryService.findByCriteria(criteria, pageable);

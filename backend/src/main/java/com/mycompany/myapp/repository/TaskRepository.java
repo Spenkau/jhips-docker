@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TaskRepository extends TaskRepositoryWithBagRelationships, JpaRepository<Task, Long>, JpaSpecificationExecutor<Task> {
     @Query("select task from Task task where task.owner.login = ?#{authentication.name}")
-    List<Task> findByOwnerIsCurrentUser();
+    Page<Task> findByOwnerIsCurrentUser(Specification<Task> spec, Pageable pageable);
 
     default Optional<Task> findOneWithEagerRelationships(Long id) {
         return this.fetchBagRelationships(this.findById(id));
