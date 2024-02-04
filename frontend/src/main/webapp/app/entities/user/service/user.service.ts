@@ -6,14 +6,21 @@ import {ApplicationConfigService} from 'app/core/config/application-config.servi
 import {createRequestOption} from 'app/core/request/request-util';
 import {isPresent} from 'app/core/util/operators';
 import {Pagination} from 'app/core/request/request.model';
-import {getUserIdentifier, IUser} from './user.model';
-import {AccountService} from "../../core/auth/account.service";
+import {getUserIdentifier, IPrivateUser, IUser} from '../user.model';
 import {map} from "rxjs/operators";
+import {AccountService} from "../../../core/auth/account.service";
 
-@Injectable({ providedIn: 'root' })
+export type PartialUpdateCategory = Partial<IUser> & Pick<IUser, 'id'>;
+
+export type EntityResponseType = HttpResponse<IUser>;
+export type EntityArrayResponseType = HttpResponse<IUser[]>;
+
+@Injectable({providedIn: 'root'})
 export class UserService {
-  private resourceUrl = this.applicationConfigService.getEndpointFor('api/users');
   owner: Observable<IUser>;
+  private resourceUrl = this.applicationConfigService.getEndpointFor('api/users');
+
+  // private user?: IPrivateUser | IUser | null = null;
 
   constructor(
     private http: HttpClient,
@@ -28,10 +35,13 @@ export class UserService {
     );
   }
 
+  find(login: string) {
+    return this.http.get<IUser | IPrivateUser>(`${this.resourceUrl}/${login}`, {observe: 'response'})
+  }
 
   query(req?: Pagination): Observable<HttpResponse<IUser[]>> {
     const options = createRequestOption(req);
-    return this.http.get<IUser[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http.get<IUser[]>(this.resourceUrl, {params: options, observe: 'response'});
   }
 
   compareUser(o1: Pick<IUser, 'id'> | null, o2: Pick<IUser, 'id'> | null): boolean {

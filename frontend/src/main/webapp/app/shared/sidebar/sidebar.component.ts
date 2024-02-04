@@ -1,8 +1,8 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AsyncPipe, NgForOf} from "@angular/common";
-import {CategoryService, EntityArrayResponseType} from "../../../entities/category/service/category.service";
-import {ICategory} from "../../../entities/category/category.model";
 import {RouterLink} from "@angular/router";
+import {ICategory} from 'app/entities/category/category.model';
+import {CategoryService, EntityArrayResponseType} from "../../entities/category/service/category.service";
 
 @Component({
   selector: 'jhi-sidebar',
