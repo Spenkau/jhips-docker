@@ -1,13 +1,12 @@
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
 
-import { Authority } from 'app/config/authority.constants';
-import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
-import { errorRoute } from './layouts/error/error.route';
+import {Authority} from 'app/config/authority.constants';
+import {UserRouteAccessService} from 'app/core/auth/user-route-access.service';
+import {errorRoute} from './layouts/error/error.route';
 
 import NavbarComponent from './layouts/navbar/navbar.component';
 import LoginComponent from './login/login.component';
 import HomeComponent from "./home/home.component";
-import TmHomePageComponent from "./task-manager/tm-home-page/tm-home-page.component";
 
 const routes: Routes = [
   {
@@ -19,12 +18,6 @@ const routes: Routes = [
     path: '',
     component: NavbarComponent,
     outlet: 'navbar',
-  },
-  {
-    path: 'tasks',
-    component: TmHomePageComponent,
-    title: 'Your task manager',
-    loadChildren: () => import('./task-manager/task-manager.routes'),
   },
   {
     path: 'admin',
