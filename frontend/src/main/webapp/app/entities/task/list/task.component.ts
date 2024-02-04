@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute, Data, ParamMap, Router, RouterModule} from '@angular/router';
 import {combineLatest, filter, Observable, switchMap, tap} from 'rxjs';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -13,30 +13,23 @@ import {ITask} from '../task.model';
 import {EntityArrayResponseType, TaskService} from '../service/task.service';
 import {TaskDeleteDialogComponent} from '../delete/task-delete-dialog.component';
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
-import {ClockComponent} from "../../../task-manager/components/clock/clock.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {
-  NewTaskModalComponent
-} from "../../../task-manager/components/modal-window/new-task-modal/new-task-modal.component";
-import {SidebarComponent} from "../../../task-manager/components/sidebar/sidebar.component";
-import {TaskCardComponent} from "../../../task-manager/components/task-card/task-card.component";
-import {
-  TaskModalWrapperComponent
-} from "../../../task-manager/components/modal-window/task-modal-wrapper/task-modal-wrapper.component";
-import {AccountService} from "../../../core/auth/account.service";
+
 import {PriorityEnum, StatusEnum} from "../task.enums";
 import {TaskCreateDialogComponent} from "../create/task-create-dialog.component";
 import {CategoryService} from "../../category/service/category.service";
 import {TaskPostponeDialogComponent} from "../postpone/task-postpone-dialog.component";
 import {ICategory} from "../../category/category.model";
 import {ITag} from "../../tag/tag.model";
-import {UserService} from "../../user/user.service";
 import {TagService} from "../../tag/service/tag.service";
 import {HttpHeaders} from "@angular/common/http";
 import FilterComponent from "../../../shared/filter/filter.component";
 import ItemCountComponent from "../../../shared/pagination/item-count.component";
 import {FilterOptions, IFilterOption, IFilterOptions} from "../../../shared/filter";
 import {ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER} from "../../../config/pagination.constants";
+import {SidebarComponent} from "../../../shared/sidebar/sidebar.component";
+import {ClockComponent} from "../../../shared/clock/clock.component";
+import {UserService} from "../../user/service/user.service";
 
 @Component({
   standalone: true,
@@ -55,20 +48,18 @@ import {ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER} from "../../..
     AsyncPipe,
     ClockComponent,
     FaIconComponent,
-    NewTaskModalComponent,
     NgForOf,
     NgIf,
     SidebarComponent,
-    TaskCardComponent,
-    TaskModalWrapperComponent,
     FilterComponent,
     ItemCountComponent,
+    SidebarComponent,
+    ClockComponent,
   ],
 })
 export class TaskComponent implements OnInit {
-  protected readonly PriorityEnum = PriorityEnum;
-  protected readonly StatusEnum = StatusEnum;
 
+  @Input() parentData!: Data;
   showFilters = false;
 
   tasks?: ITask[];
@@ -90,13 +81,28 @@ export class TaskComponent implements OnInit {
   totalItems = 0;
   page = 1;
 
+  protected readonly PriorityEnum = PriorityEnum;
+  protected readonly StatusEnum = StatusEnum;
+
+  constructor(
+    protected taskService: TaskService,
+    protected userService: UserService,
+    protected categoryService: CategoryService,
+    protected tagService: TagService,
+    protected activatedRoute: ActivatedRoute,
+    public router: Router,
+    protected sortService: SortService,
+    protected modalService: NgbModal,
+  ) {
+  }
+
   trackId = (_index: number, item: ITask): number => this.taskService.getTaskIdentifier(item);
 
   ngOnInit(): void {
     this.load();
 
     this.userService.owner.subscribe(user => {
-      this.userName = user?.login
+      this.userName = user.login
     });
 
     this.filters.filterChanges.subscribe(filterOptions => this.handleNavigation(1, this.predicate, this.ascending, filterOptions));
@@ -110,18 +116,7 @@ export class TaskComponent implements OnInit {
     }, 500)
   }
 
-  constructor(
-    protected taskService: TaskService,
-    protected userService: UserService,
-    protected categoryService: CategoryService,
-    protected tagService: TagService,
-    protected activatedRoute: ActivatedRoute,
-    public router: Router,
-    protected sortService: SortService,
-    protected modalService: NgbModal,
-    private accountService: AccountService
-  ) {
-  }
+
 
   postpone(task: ITask): void {
     const modalRef = this.modalService.open(TaskPostponeDialogComponent, {size: 'lg'});
@@ -129,7 +124,7 @@ export class TaskComponent implements OnInit {
 
     modalRef.closed.subscribe(() => {
       const updatedTask = modalRef.componentInstance.task;
-      this.tasks = this.tasks?.map(task => task.id === updatedTask.id ? updatedTask : task)
+      this.tasks = this.tasks?.map((task) => task.id === updatedTask.id ? updatedTask : task)
     })
   }
 
@@ -152,8 +147,8 @@ export class TaskComponent implements OnInit {
     });
   }
 
-  applyFilter(filter: { filterName: string, value: string }): void {
-    this.filters.addFilter(filter.filterName, filter.value);
+  applyFilter(filterObj: { filterName: string, value: string }): void {
+    this.filters.addFilter(filterObj.filterName, filterObj.value);
   }
 
   navigateToWithComponentValues(): void {
@@ -174,7 +169,15 @@ export class TaskComponent implements OnInit {
   protected fillComponentAttributeFromRoute(params: ParamMap, data: Data): void {
     const page = params.get(PAGE_HEADER);
     this.page = +(page ?? 1);
-    const sort = (params.get(SORT) ?? data[DEFAULT_SORT_DATA]).split(',');
+
+    let sort;
+    if (params.get(SORT) ?? data[DEFAULT_SORT_DATA]) {
+      sort = params.get(SORT) ?? data[DEFAULT_SORT_DATA];
+    } else {
+      sort = this.parentData[DEFAULT_SORT_DATA]
+    }
+    sort = sort.split(',');
+
     this.predicate = sort[0];
     this.ascending = sort[1] === ASC;
     this.filters.initializeFromParams(params);

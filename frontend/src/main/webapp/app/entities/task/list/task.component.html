@@ -1,164 +1,4 @@
-<div>
-  <h2 id="page-heading" data-cy="TaskHeading">
-    <span jhiTranslate="jhipsTestApp.task.home.title">Tasks</span>
-
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
-        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-        <span jhiTranslate="jhipsTestApp.task.home.refreshListLabel">Обновить список</span>
-      </button>
-
-      <button
-        id="jh-create-entity"
-        data-cy="entityCreateButton"
-        class="btn btn-primary jh-create-entity create-task"
-        [routerLink]="['/task/new']"
-      >
-        <fa-icon icon="plus"></fa-icon>
-        <span jhiTranslate="jhipsTestApp.task.home.createLabel">Создать новый Task</span>
-      </button>
-    </div>
-  </h2>
-
-  <jhi-alert-error></jhi-alert-error>
-
-  <jhi-alert></jhi-alert>
-
-  @if (tasks && tasks.length > 0) {
-    <div class="table-responsive table-entities" id="entities">
-      <table class="table table-striped" aria-describedby="page-heading">
-        <thead>
-        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
-          <th scope="col" jhiSortBy="id">
-            <div class="d-flex">
-              <span jhiTranslate="global.field.id">ID</span>
-
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="title">
-            <div class="d-flex">
-              <span jhiTranslate="jhipsTestApp.task.title">Title</span>
-
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="content">
-            <div class="d-flex">
-              <span jhiTranslate="jhipsTestApp.task.content">Content</span>
-
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="priorityId">
-            <div class="d-flex">
-              <span jhiTranslate="jhipsTestApp.task.priorityId">Priority Id</span>
-
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="statusId">
-            <div class="d-flex">
-              <span jhiTranslate="jhipsTestApp.task.statusId">Status Id</span>
-
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="startedAt">
-            <div class="d-flex">
-              <span jhiTranslate="jhipsTestApp.task.startedAt">Started At</span>
-
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="finishedAt">
-            <div class="d-flex">
-              <span jhiTranslate="jhipsTestApp.task.finishedAt">Finished At</span>
-
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="owner.id">
-            <div class="d-flex">
-              <span jhiTranslate="jhipsTestApp.task.owner">Owner</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="category.id">
-            <div class="d-flex">
-              <span jhiTranslate="jhipsTestApp.task.category">Category</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="tags.id">
-            <div class="d-flex">
-              <span jhiTranslate="jhipsTestApp.task.tags">Tags</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col"></th>
-        </tr>
-        </thead>
-        <tbody>
-          @for (task of tasks; track trackId) {
-            <tr data-cy="entityTable">
-              <td>
-                <a [routerLink]="['/task', task.id, 'view']">{{ task.id }}</a>
-              </td>
-              <td>{{ task.title }}</td>
-              <td>{{ task.content }}</td>
-              <td>{{ task.priorityId }}</td>
-              <td>{{ task.statusId }}</td>
-              <td>{{ task.startedAt | formatMediumDate }}</td>
-              <td>{{ task.finishedAt | formatMediumDate }}</td>
-              <td>
-                {{ task.owner?.id }}
-              </td>
-              <td>
-                @if (task.category) {
-                  <div>
-                    <a [routerLink]="['/category', task.category.id, 'view']">{{ task.category.name }}</a>
-                  </div>
-                }
-              </td>
-              <td>
-                @for (tags of task.tags; track $index; let last = $last) {
-                  <span>
-                    <a class="form-control-static" [routerLink]="['/tag', tags.id, 'view']">{{ tags.name }}</a
-                    >{{ last ? '' : ', ' }}
-                  </span>
-                }
-              </td>
-              <td class="text-end">
-                <div class="btn-group">
-                  <a [routerLink]="['/task', task.id, 'view']" class="btn btn-info btn-sm"
-                     data-cy="entityDetailsButton">
-                    <fa-icon icon="eye"></fa-icon>
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Просмотр</span>
-                  </a>
-
-                  <a [routerLink]="['/task', task.id, 'edit']" class="btn btn-primary btn-sm"
-                     data-cy="entityEditButton">
-                    <fa-icon icon="pencil-alt"></fa-icon>
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Изменить</span>
-                  </a>
-
-                  <button type="submit" (click)="delete(task)" class="btn btn-danger btn-sm"
-                          data-cy="entityDeleteButton">
-                    <fa-icon icon="times"></fa-icon>
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Удалить</span>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  }
-</div>
-
-<div class="d-flex justify-content-between mb-3">
+<div *ngIf="!parentData" class="d-flex justify-content-between mb-3">
   <button class="btn" (click)="showSidebar = !showSidebar">Открыть сайдбар</button>
   <button type="button" class="btn btn-primary" (click)="create()">Новая задача</button>
   <div class="col-auto">
@@ -220,11 +60,11 @@
         </div>
         <form (ngSubmit)="applyFilter({filterName: 'title.contains', value: searchInput.value})"
               class="d-flex form-control" style="width: 400px; height: 60px">
-          <input #searchInput type="text" placeholder="Task name" class="form-control border-0">
+          <input #searchInput type="text" placeholder="Название задачи" class="form-control border-0">
           <button type="submit" class="btn btn-primary">Искать</button>
         </form>
       </div>
-      <div class="tasks-list d-flex flex-column gap-3">
+      <div class="tasks-list d-flex flex-column gap-3 mt-2">
         @for (task of tasks; track trackId) {
 
           <div class="task-card p-3" style="border: 3px solid #2b2f32;">
@@ -237,23 +77,18 @@
                 по {{ task.finishedAt | formatMediumDate }}
               }
             </span>
-              @if (task.category) {
-                <p>Category: {{ task.category.name }}</p>
-              }
-              @for (tag of task.tags; track $index; let last = $last) {
-                <a [routerLink]="['/tag']" class="btn b--dark-blue">{{ tag.name }}</a>
-              }
-              <ul class="reactions-list list-unstyled d-flex gap-2">
-                <li>
-                  <button class="btn" style="background-color: #28a745">:)</button>
-                </li>
-                <li>
-                  <button class="btn btn-info" style="background-color: #ffc107">:/</button>
-                </li>
-                <li>
-                  <button class="btn btn-info" style="background-color: #dc3545">:(</button>
-                </li>
-              </ul>
+              <div>
+                @if (task.category) {
+                  <span>{{ task.category.name }}</span>
+                }
+              </div>
+              <div>
+                @for (tag of task.tags; track $index; let last = $last) {
+                  <a [routerLink]="['/tag']" class="btn b--dark-blue">{{ tag.name }}</a>
+                }
+              </div>
+
+
             </div>
             <div class="d-flex justify-content-between">
               <div class="task-body justify-content-between">
@@ -263,27 +98,31 @@
                 }
               </div>
               <ul class="list-unstyled">
-                <li>Приоритет:
-                  {{
-                    (task.priorityId! >= 0) ? PriorityEnum[task.priorityId!]
-                      :
-                      'неопределен'
-                  }}
+                <li *ngIf="task.statusId">
+                  <span jhiTranslate="taskm.status.title">Статус</span>:
+                  <span [jhiTranslate]="'taskm.status.' + StatusEnum[task.statusId!]">
+                    {{
+                      (task.statusId! >= 0) ? StatusEnum[task.statusId!]
+                        :
+                        'неопределен'
+                    }}
+                  </span>
                 </li>
-                <li>
-                  Статус:
-                  {{
-                    (task.statusId! >= 0) ? StatusEnum[task.statusId!]
-                      :
-                      'неопределен'
-                  }}
+                <li *ngIf="task.priorityId">
+                  <span jhiTranslate="taskm.priority.title">Приоритет</span>:
+                  <span [jhiTranslate]="'taskm.priority.' + PriorityEnum[task.statusId!]">
+                    {{
+                      (task.priorityId! >= 0) ? PriorityEnum[task.priorityId!]
+                        :
+                        'неопределен'
+                    }}
+                  </span>
                 </li>
               </ul>
             </div>
-            <div class="task-footer">
+            <div class="task-footer" *ngIf="!parentData">
               <button class="btn" (click)="delete(task)">Удалить задачу</button>
               <button class="btn" (click)="postpone(task)">Отложить задачу</button>
-              <!--          <button class="btn" (click)="openModal(true)">Создать подзадачу</button>-->
             </div>
           </div>
         }
