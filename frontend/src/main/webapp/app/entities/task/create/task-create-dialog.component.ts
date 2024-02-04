@@ -7,7 +7,6 @@ import {IUser} from "../../user/user.model";
 import {ICategory} from "../../category/category.model";
 import {ITag} from "../../tag/tag.model";
 import {TaskFormGroup, TaskFormService} from "../service/task-form.service";
-import {UserService} from "../../user/user.service";
 import {CategoryService} from "../../category/service/category.service";
 import {TagService} from "../../tag/service/tag.service";
 import {PriorityEnum, StatusEnum} from "../task.enums";
@@ -15,6 +14,7 @@ import SharedModule from "../../../shared/shared.module";
 import {map} from "rxjs/operators";
 import {HttpResponse} from "@angular/common/http";
 import {AccountService} from "../../../core/auth/account.service";
+import {UserService} from "../../user/service/user.service";
 
 @Component({
   selector: 'jhi-create',
@@ -28,8 +28,7 @@ import {AccountService} from "../../../core/auth/account.service";
   styleUrl: './task-create-dialog.component.scss'
 })
 export class TaskCreateDialogComponent {
-  protected readonly StatusEnum = StatusEnum;
-  protected readonly PriorityEnum = PriorityEnum;
+
   isSaving = false;
   task?: ITask | null = null;
   owner?: IUser;
@@ -39,6 +38,8 @@ export class TaskCreateDialogComponent {
   tagsSharedCollection: ITag[] = [];
 
   editForm: TaskFormGroup = this.taskFormService.createTaskFormGroup();
+  protected readonly StatusEnum = StatusEnum;
+  protected readonly PriorityEnum = PriorityEnum;
 
   constructor(
     private taskService: TaskService,

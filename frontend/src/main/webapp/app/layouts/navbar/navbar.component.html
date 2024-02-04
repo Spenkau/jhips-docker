@@ -30,7 +30,7 @@
         <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
         @if (account !== null) {
           <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-            <a class="nav-link" routerLink="/tasks">
+            <a class="nav-link" routerLink="/task">
             <span>
               <fa-icon icon="th-list"></fa-icon>
               <span>Таск-менеджер</span>
@@ -97,6 +97,18 @@
                 >
                   <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
                   <span jhiTranslate="global.menu.entities.comment">Comment</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  routerLink="/users/admin"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="collapseNavbar()"
+                >
+                  <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                  <span>User</span>
                 </a>
               </li>
               <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->

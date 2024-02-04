@@ -8,7 +8,6 @@ import SharedModule from 'app/shared/shared.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {IUser} from 'app/entities/user/user.model';
-import {UserService} from 'app/entities/user/user.service';
 import {ICategory} from 'app/entities/category/category.model';
 import {CategoryService} from 'app/entities/category/service/category.service';
 import {ITag} from 'app/entities/tag/tag.model';
@@ -16,6 +15,7 @@ import {TagService} from 'app/entities/tag/service/tag.service';
 import {TaskService} from '../service/task.service';
 import {ITask} from '../task.model';
 import {TaskFormGroup, TaskFormService} from '../service/task-form.service';
+import {UserService} from "../../user/service/user.service";
 
 @Component({
   standalone: true,

@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Observable, timer} from "rxjs";
 import {map, shareReplay} from "rxjs/operators";
-import {AsyncPipe, DatePipe} from "@angular/common";
-import { registerLocaleData } from '@angular/common';
+import {AsyncPipe, DatePipe, registerLocaleData} from "@angular/common";
 import localeRu from '@angular/common/locales/ru';
 
 registerLocaleData(localeRu, 'ru');

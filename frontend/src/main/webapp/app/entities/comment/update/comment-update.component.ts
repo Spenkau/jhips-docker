@@ -1,19 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import {Component, OnInit} from '@angular/core';
+import {HttpResponse} from '@angular/common/http';
+import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs';
+import {finalize, map} from 'rxjs/operators';
 
 import SharedModule from 'app/shared/shared.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import { ITask } from 'app/entities/task/task.model';
-import { TaskService } from 'app/entities/task/service/task.service';
-import { IUser } from 'app/entities/user/user.model';
-import { UserService } from 'app/entities/user/user.service';
-import { CommentService } from '../service/comment.service';
-import { IComment } from '../comment.model';
-import { CommentFormService, CommentFormGroup } from './comment-form.service';
+import {ITask} from 'app/entities/task/task.model';
+import {TaskService} from 'app/entities/task/service/task.service';
+import {IUser} from 'app/entities/user/user.model';
+import {CommentService} from '../service/comment.service';
+import {IComment} from '../comment.model';
+import {CommentFormGroup, CommentFormService} from './comment-form.service';
+import {UserService} from "../../user/service/user.service";
 
 @Component({
   standalone: true,

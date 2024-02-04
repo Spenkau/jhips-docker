@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import {Component, OnInit} from '@angular/core';
+import {HttpResponse} from '@angular/common/http';
+import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs';
+import {finalize, map} from 'rxjs/operators';
 
 import SharedModule from 'app/shared/shared.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import { IUser } from 'app/entities/user/user.model';
-import { UserService } from 'app/entities/user/user.service';
-import { ICategory } from '../category.model';
-import { CategoryService } from '../service/category.service';
-import { CategoryFormService, CategoryFormGroup } from './category-form.service';
+import {IUser} from 'app/entities/user/user.model';
+import {ICategory} from '../category.model';
+import {CategoryService} from '../service/category.service';
+import {CategoryFormGroup, CategoryFormService} from './category-form.service';
+import {UserService} from "../../user/service/user.service";
 
 @Component({
   standalone: true,
