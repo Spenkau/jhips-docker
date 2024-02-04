@@ -16,6 +16,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
+import tech.jhipster.service.filter.LongFilter;
 
 /**
  * Service for executing complex queries for {@link Task} entities in the database.
@@ -39,18 +40,6 @@ public class TaskQueryService extends QueryService<Task> {
     }
 
     /**
-     * Return a {@link List} of {@link TaskDTO} which matches the criteria from the database.
-     * @param criteria The object which holds all the filters, which the entities should match.
-     * @return the matching entities.
-     */
-    @Transactional(readOnly = true)
-    public List<TaskDTO> findByCriteria(TaskCriteria criteria) {
-        log.debug("find by criteria : {}", criteria);
-        final Specification<Task> specification = createSpecification(criteria);
-        return taskMapper.toDto(taskRepository.findAll(specification));
-    }
-
-    /**
      * Return a {@link Page} of {@link TaskDTO} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
@@ -60,7 +49,8 @@ public class TaskQueryService extends QueryService<Task> {
     public Page<TaskDTO> findByCriteria(TaskCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Task> specification = createSpecification(criteria);
-        return taskRepository.findAll(specification, page).map(taskMapper::toDto);
+
+        return taskRepository.findByOwnerIsCurrentUser(specification, page).map(taskMapper::toDto);
     }
 
     /**
