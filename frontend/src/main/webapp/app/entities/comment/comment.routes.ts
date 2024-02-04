@@ -1,11 +1,12 @@
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
 
-import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
-import { ASC } from 'app/config/navigation.constants';
-import { CommentComponent } from './list/comment.component';
-import { CommentDetailComponent } from './detail/comment-detail.component';
-import { CommentUpdateComponent } from './update/comment-update.component';
+import {UserRouteAccessService} from 'app/core/auth/user-route-access.service';
+import {ASC} from 'app/config/navigation.constants';
+import {CommentComponent} from './list/comment.component';
+import {CommentDetailComponent} from './detail/comment-detail.component';
+import {CommentUpdateComponent} from './update/comment-update.component';
 import CommentResolve from './route/comment-routing-resolve.service';
+import {CommentEditResolver} from "./route/comment-edit-resolve.service";
 
 const commentRoute: Routes = [
   {
@@ -36,7 +37,7 @@ const commentRoute: Routes = [
     path: ':id/edit',
     component: CommentUpdateComponent,
     resolve: {
-      comment: CommentResolve,
+      comment: CommentEditResolver,
     },
     canActivate: [UserRouteAccessService],
   },

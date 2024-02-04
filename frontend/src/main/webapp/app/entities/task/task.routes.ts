@@ -6,7 +6,7 @@ import {TaskComponent} from './list/task.component';
 import {TaskDetailComponent} from './detail/task-detail.component';
 import {TaskUpdateComponent} from './update/task-update.component';
 import TaskResolve from './route/task-routing-resolve.service';
-import {PublicComponent} from "./public/public.component";
+import {TaskEditResolver} from "./route/task-edit-resolve.service";
 
 const taskRoute: Routes = [
   {
@@ -37,15 +37,10 @@ const taskRoute: Routes = [
     path: ':id/edit',
     component: TaskUpdateComponent,
     resolve: {
-      task: TaskResolve,
+      task: TaskEditResolver,
     },
     canActivate: [UserRouteAccessService],
   },
-  {
-    path: 'public',
-    component: PublicComponent,
-    canActivate: [UserRouteAccessService],
-  }
 ];
 
 export default taskRoute;
