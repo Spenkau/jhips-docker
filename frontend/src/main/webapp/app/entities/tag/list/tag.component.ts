@@ -15,6 +15,7 @@ import {TagDeleteDialogComponent} from '../delete/tag-delete-dialog.component';
 import {ITask} from "../../task/task.model";
 import {TaskService} from "../../task/service/task.service";
 import {PriorityEnum, StatusEnum} from "../../task/task.enums";
+import {TaskComponent} from "../../task/list/task.component";
 
 @Component({
   standalone: true,
@@ -29,11 +30,11 @@ import {PriorityEnum, StatusEnum} from "../../task/task.enums";
     DurationPipe,
     FormatMediumDatetimePipe,
     FormatMediumDatePipe,
+    TaskComponent,
   ],
 })
 export class TagComponent implements OnInit {
-  protected readonly StatusEnum = StatusEnum;
-
+  data!: Data;
   tasks?: ITask[] | null
   tags?: ITag[];
   isEditEnabled = false;
@@ -44,6 +45,9 @@ export class TagComponent implements OnInit {
   predicate = 'id';
   ascending = true;
 
+  protected readonly StatusEnum = StatusEnum;
+
+
   constructor(
     protected tagService: TagService,
     protected activatedRoute: ActivatedRoute,
@@ -51,6 +55,7 @@ export class TagComponent implements OnInit {
     public router: Router,
     protected sortService: SortService,
     protected modalService: NgbModal,
+    private route: ActivatedRoute
   ) {}
 
   trackId = (_index: number, item: ITag): number => this.tagService.getTagIdentifier(item);
@@ -59,6 +64,8 @@ export class TagComponent implements OnInit {
     this.load();
 
     this.showTasksByTag(this.activeTagId);
+
+    this.route.data.subscribe((data: Data) => this.data = data)
   }
 
   delete(tag: ITag): void {
