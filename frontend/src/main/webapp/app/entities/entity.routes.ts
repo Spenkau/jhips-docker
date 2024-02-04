@@ -1,4 +1,6 @@
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
+import {UserComponent} from "./user/user.component";
+import {ASC} from "../config/navigation.constants";
 
 const routes: Routes = [
   {
@@ -21,6 +23,15 @@ const routes: Routes = [
     data: { pageTitle: 'jhipsTestApp.comment.home.title' },
     loadChildren: () => import('./comment/comment.routes'),
   },
+  {
+    path: 'users/:login',
+    data: {
+      isChildren: true,
+      pageTitle: 'User tasks',
+      defaultSort: 'id,' + ASC,
+    },
+    component: UserComponent,
+  }
   /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
 ];
 
