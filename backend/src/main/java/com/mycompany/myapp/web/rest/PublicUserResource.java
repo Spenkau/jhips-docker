@@ -31,16 +31,18 @@ public class PublicUserResource {
     public ResponseEntity<?> getUserByLogin(@PathVariable("login") @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
         log.debug("REST request to get User : {}", login);
 
-        Optional<PublicUser> publicUser = publicUserService.getUserByLogin(login);
+        Optional<PublicUser> publicUserOptional = publicUserService.getUserByLogin(login);
 
-        if (publicUser.isEmpty()) {
+        if (publicUserOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
+        PublicUser publicUser = publicUserOptional.orElseThrow();
+
         if (publicUserService.isCurrentUser()) {
-            return ResponseUtil.wrapOrNotFound(publicUser);
+            return ResponseUtil.wrapOrNotFound(Optional.of(publicUser));
         } else {
-            PublicUserDTO publicUserDTO = new PublicUserDTO(publicUser.get());
+            PublicUserDTO publicUserDTO = new PublicUserDTO(publicUser);
             return ResponseUtil.wrapOrNotFound(Optional.of(publicUserDTO));
         }
     }
