@@ -5,7 +5,7 @@
     <br/>
     <div ngbDropdown>
       <button class="btn btn-warning" id="gfg" ngbDropdownToggle>
-        Хорошего дня, {{ userName }}
+        Хорошего дня, {{ login }}
       </button>
       <div ngbDropdownMenu="gfg">
         <a [routerLink]="['/task/public']" ngbDropdownItem>Личный кабинет</a>
@@ -58,9 +58,9 @@
             </div>
           </div>
         </div>
-        <form (ngSubmit)="applyFilter({filterName: 'title.contains', value: searchInput.value})"
+        <form (ngSubmit)="applyFilter({filterName: 'title.contains', value: searchControl.value})"
               class="d-flex form-control" style="width: 400px; height: 60px">
-          <input #searchInput type="text" placeholder="Название задачи" class="form-control border-0">
+          <input #searchControl type="text" placeholder="Название задачи" class="form-control border-0">
           <button type="submit" class="btn btn-primary">Искать</button>
         </form>
       </div>

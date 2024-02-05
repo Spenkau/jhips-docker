@@ -6,7 +6,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import SharedModule from 'app/shared/shared.module';
 import {SortByDirective, SortDirective} from 'app/shared/sort';
 import {DurationPipe, FormatMediumDatePipe, FormatMediumDatetimePipe} from 'app/shared/date';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ASC, DEFAULT_SORT_DATA, DESC, ITEM_DELETED_EVENT, SORT} from 'app/config/navigation.constants';
 import {SortService} from 'app/shared/sort/sort.service';
 import {ITask} from '../task.model';
@@ -55,6 +55,7 @@ import {UserService} from "../../user/service/user.service";
     ItemCountComponent,
     SidebarComponent,
     ClockComponent,
+    ReactiveFormsModule,
   ],
 })
 export class TaskComponent implements OnInit {
@@ -81,6 +82,9 @@ export class TaskComponent implements OnInit {
   totalItems = 0;
   page = 1;
 
+  login?: string;
+
+
   protected readonly PriorityEnum = PriorityEnum;
   protected readonly StatusEnum = StatusEnum;
 
@@ -94,6 +98,9 @@ export class TaskComponent implements OnInit {
     protected sortService: SortService,
     protected modalService: NgbModal,
   ) {
+    this.activatedRoute.params.subscribe(params => {
+      this.login = params['login'];
+    })
   }
 
   trackId = (_index: number, item: ITask): number => this.taskService.getTaskIdentifier(item);
@@ -107,16 +114,8 @@ export class TaskComponent implements OnInit {
 
     this.filters.filterChanges.subscribe(filterOptions => this.handleNavigation(1, this.predicate, this.ascending, filterOptions));
 
-
-    // TODO сделать подгрузку связей, чтобы отображалась в задаче категория
-
     this.loadRelationshipsOptions();
-    setTimeout(() => {
-      console.log(this.tasks)
-    }, 500)
   }
-
-
 
   postpone(task: ITask): void {
     const modalRef = this.modalService.open(TaskPostponeDialogComponent, {size: 'lg'});
@@ -124,7 +123,7 @@ export class TaskComponent implements OnInit {
 
     modalRef.closed.subscribe(() => {
       const updatedTask = modalRef.componentInstance.task;
-      this.tasks = this.tasks?.map((task) => task.id === updatedTask.id ? updatedTask : task)
+      this.tasks = this.tasks?.map((taskItem: ITask) => taskItem.id === updatedTask.id ? updatedTask : taskItem)
     })
   }
 
@@ -157,6 +156,26 @@ export class TaskComponent implements OnInit {
 
   navigateToPage(page = this.page): void {
     this.handleNavigation(page, this.predicate, this.ascending, this.filters.filterOptions);
+  }
+
+  closeSidebar(value: boolean): void {
+    this.showSidebar = value;
+  }
+
+  delete(task: ITask): void {
+    const modalRef = this.modalService.open(TaskDeleteDialogComponent, {size: 'lg', backdrop: 'static'});
+    modalRef.componentInstance.task = task;
+    // unsubscribe not needed because closed completes on modal close
+    modalRef.closed
+      .pipe(
+        filter(reason => reason === ITEM_DELETED_EVENT),
+        switchMap(() => this.loadFromBackendWithRouteInformations()),
+      )
+      .subscribe({
+        next: (res: EntityArrayResponseType) => {
+          this.onResponseSuccess(res);
+        },
+      });
   }
 
   protected loadFromBackendWithRouteInformations(): Observable<EntityArrayResponseType> {
@@ -201,6 +220,7 @@ export class TaskComponent implements OnInit {
     this.totalItems = Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER));
   }
 
+// TODO с separated бекенда приходит корретно - задачи конкретного пользователя. С хипс докера нет.
   protected queryBackend(
     page?: number,
     predicate?: string,
@@ -214,6 +234,7 @@ export class TaskComponent implements OnInit {
       size: this.itemsPerPage,
       eagerload: true,
       sort: this.getSortQueryParam(predicate, ascending),
+      // login: this.login
     };
     filterOptions?.forEach(filterOption => {
       queryObject[filterOption.name] = filterOption.values;
@@ -245,26 +266,6 @@ export class TaskComponent implements OnInit {
     } else {
       return [predicate + ',' + ascendingQueryParam];
     }
-  }
-
-  closeSidebar(value: boolean): void {
-    this.showSidebar = value;
-  }
-
-  delete(task: ITask): void {
-    const modalRef = this.modalService.open(TaskDeleteDialogComponent, {size: 'lg', backdrop: 'static'});
-    modalRef.componentInstance.task = task;
-    // unsubscribe not needed because closed completes on modal close
-    modalRef.closed
-      .pipe(
-        filter(reason => reason === ITEM_DELETED_EVENT),
-        switchMap(() => this.loadFromBackendWithRouteInformations()),
-      )
-      .subscribe({
-        next: (res: EntityArrayResponseType) => {
-          this.onResponseSuccess(res);
-        },
-      });
   }
 
   protected loadRelationshipsOptions(): void {
