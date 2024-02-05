@@ -37,6 +37,8 @@ public class TaskCriteria implements Serializable, Criteria {
 
     private LongFilter ownerId;
 
+    private StringFilter ownerLogin;
+
     private LongFilter categoryId;
 
     private LongFilter tagsId;
@@ -54,6 +56,7 @@ public class TaskCriteria implements Serializable, Criteria {
         this.startedAt = other.startedAt == null ? null : other.startedAt.copy();
         this.finishedAt = other.finishedAt == null ? null : other.finishedAt.copy();
         this.ownerId = other.ownerId == null ? null : other.ownerId.copy();
+        this.ownerLogin = other.ownerLogin == null ? null : other.ownerLogin.copy();
         this.categoryId = other.categoryId == null ? null : other.categoryId.copy();
         this.tagsId = other.tagsId == null ? null : other.tagsId.copy();
         this.distinct = other.distinct;
@@ -182,6 +185,18 @@ public class TaskCriteria implements Serializable, Criteria {
 
     public void setOwnerId(LongFilter ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public StringFilter getOwnerLogin() { return ownerLogin; }
+    public StringFilter ownerLogin() {
+        if (ownerLogin == null) {
+            ownerLogin = new StringFilter();
+        }
+        return ownerLogin;
+    }
+
+    public void setOwnerLogin(StringFilter ownerLogin) {
+        this.ownerLogin = ownerLogin;
     }
 
     public LongFilter getCategoryId() {

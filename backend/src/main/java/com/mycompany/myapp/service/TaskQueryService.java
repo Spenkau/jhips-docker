@@ -3,11 +3,14 @@ package com.mycompany.myapp.service;
 import com.mycompany.myapp.domain.*; // for static metamodels
 import com.mycompany.myapp.domain.Task;
 import com.mycompany.myapp.repository.TaskRepository;
+import com.mycompany.myapp.security.SecurityUtils;
 import com.mycompany.myapp.service.criteria.TaskCriteria;
 import com.mycompany.myapp.service.dto.TaskDTO;
 import com.mycompany.myapp.service.mapper.TaskMapper;
 import jakarta.persistence.criteria.JoinType;
 import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -16,7 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
-import tech.jhipster.service.filter.LongFilter;
+import tech.jhipster.service.filter.StringFilter;
 
 /**
  * Service for executing complex queries for {@link Task} entities in the database.
@@ -46,12 +49,27 @@ public class TaskQueryService extends QueryService<Task> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<TaskDTO> findByCriteria(TaskCriteria criteria, Pageable page) {
+    public Page<TaskDTO> findByCriteria(TaskCriteria criteria, Pageable page, String login) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
-        final Specification<Task> specification = createSpecification(criteria);
 
-        return taskRepository.findByOwnerIsCurrentUser(specification, page).map(taskMapper::toDto);
+        String resultLogin = getLogin(login);
+
+        StringFilter ownerLoginFilter = new StringFilter();
+        ownerLoginFilter.setEquals(resultLogin);
+        criteria.setOwnerLogin(ownerLoginFilter);
+
+        log.debug("ownerLogin {}", criteria.getOwnerLogin());
+        final Specification<Task> specification = (createSpecification(criteria));
+        return taskRepository.findAll(specification, page).map(taskMapper::toDto);
     }
+
+//    @Transactional(readOnly = true)
+//    public Page<TaskDTO> findByCriteria(TaskCriteria criteria, Pageable page) {
+//        log.debug("find by criteria : {}, page: {}", criteria, page);
+//        final Specification<Task> specification = createSpecification(criteria);
+//
+//        return taskRepository.findByOwnerIsCurrentUser(specification, page).map(taskMapper::toDto);
+//    }
 
     /**
      * Return the number of matching entities in the database.
@@ -63,6 +81,17 @@ public class TaskQueryService extends QueryService<Task> {
         log.debug("count by criteria : {}", criteria);
         final Specification<Task> specification = createSpecification(criteria);
         return taskRepository.count(specification);
+    }
+
+    protected String getLogin(String login) {
+        if (login == null) {
+            Optional<String> optionalLogin = SecurityUtils.getCurrentUserLogin();
+
+            return optionalLogin.orElse("-1");
+
+        } else {
+            return login;
+        }
     }
 
     /**
