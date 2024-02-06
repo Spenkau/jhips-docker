@@ -36,6 +36,7 @@ import {
   faTimes,
   faTrashAlt,
   faUser,
+  faUserCircle,
   faUserPlus,
   faUsers,
   faUsersCog,
@@ -84,6 +85,7 @@ export const fontAwesomeIcons = [
   faUsers,
   faUsersCog,
   faWrench,
+  faUserCircle,
 
   // jhipster-needle-add-icon-import
 ];

@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {Injectable} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 
-import { ITag, NewTag } from '../tag.model';
+import {ITag, NewTag} from '../tag.model';
 
 /**
  * A partial Type with required key is used as form input.
@@ -19,7 +19,6 @@ type TagFormDefaults = Pick<NewTag, 'id'>;
 type TagFormGroupContent = {
   id: FormControl<ITag['id'] | NewTag['id']>;
   name: FormControl<ITag['name']>;
-  owner: FormControl<ITag['owner']>;
 };
 
 export type TagFormGroup = FormGroup<TagFormGroupContent>;
@@ -40,7 +39,6 @@ export class TagFormService {
         },
       ),
       name: new FormControl(tagRawValue.name),
-      owner: new FormControl(tagRawValue.owner),
     });
   }
 

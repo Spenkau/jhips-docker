@@ -6,7 +6,8 @@
         "refreshListLabel": "Обновить список",
         "createLabel": "Создать задачу",
         "notFound": "Задачи не найдены",
-        "create": "Создать новую задачу"
+        "create": "Создать новую задачу",
+        "createOrEditLabel": "Обновить задачу"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить задачу?"
@@ -27,7 +28,8 @@
         "title": "Категории от Java Hipster!",
         "refreshListLabel": "Обновить список",
         "createLabel": "Создать категорию",
-        "notFound": "Категории не найдены"
+        "notFound": "Категории не найдены",
+        "createOrEditLabel": "Обновить категорию"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить категорию?"
@@ -40,7 +42,8 @@
         "title": "Теги от Java Hipster!",
         "refreshListLabel": "Обновить список",
         "createLabel": "Создать тег",
-        "notFound": "Теги не найдены"
+        "notFound": "Теги не найдены",
+        "createOrEditLabel": "Обновить тег"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить тег?"
@@ -53,7 +56,8 @@
         "title": "Комментарии от Java Hipster!",
         "refreshListLabel": "Обновить список",
         "createLabel": "Создать комментарий",
-        "notFound": "Комментарии не найдены"
+        "notFound": "Комментарии не найдены",
+        "createOrEditLabel": "Обновить комментарий"
       },
       "delete": {
         "question": "Вы уверены что хотите удалить комментарий?"
@@ -62,6 +66,12 @@
       "createdAt": "Создана",
       "task": "Присущая задача",
       "owner": "Владелец"
+    },
+    "owner": {
+      "home": {
+        "title": "Пользователи от Java Hipster!",
+        "search": "Искать"
+      }
     }
   }
 }

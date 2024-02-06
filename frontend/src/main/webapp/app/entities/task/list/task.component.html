@@ -23,8 +23,9 @@
     }
 
     @if (tasks && tasks.length > 0) {
-      <div class="d-flex justify-content-between ">
-        <h3>Ваши задачи</h3>
+      <div class="d-flex justify-content-between mt-3">
+        <h3 *ngIf="!parentData">Ваши задачи</h3>
+        <h3 *ngIf="parentData">Задачи</h3>
         <div class="col-auto">
           <br/>
           <div ngbDropdown>

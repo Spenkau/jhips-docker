@@ -3,8 +3,8 @@ function setupProxy({ tls }) {
   const conf = [
     {
       context: serverResources,
-      // target: `http${tls ? 's' : ''}://localhost:8080`,
-      target: `http://localhost:8080`,
+      // target: `http${tls ? 's' : ''}://backend:8080`, // FOR ACCESS TO SERVER IN DOCKER CONTAINER
+      target: `http://localhost:8080`, // FOR ACCESS TO SERVER AT LOCAL MACHINE
       secure: false,
       changeOrigin: tls,
     },

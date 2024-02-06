@@ -9,9 +9,10 @@
         "main": "Сущности",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)",
         "category": "Категории",
-        "task": "Задачи",
+        "task": "Мои задачи",
         "tag": "Теги",
-        "comment": "Комментарии"
+        "comment": "Комментарии",
+        "user": "Пользовательские задачи"
       },
       "account": {
         "main": "Профиль",

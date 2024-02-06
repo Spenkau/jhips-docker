@@ -7,8 +7,13 @@
     </div>
   </div>
   <div>
+    <input (focus)="showUsers()" class="form-control" placeholder="Искать пользователей" type="text">
+  </div>
+  <div>
     <p>{{ user?.firstName }} {{ user?.lastName }}</p>
-    <small>Created by: {{ user?.createdBy }}</small>
+    @if (user?.createdBy) {
+      <small>Created by: {{ user?.createdBy }}</small>
+    }
     @if (user?.createdAt) {
       <small>Created at: {{ user?.createdAt }}</small>
     }

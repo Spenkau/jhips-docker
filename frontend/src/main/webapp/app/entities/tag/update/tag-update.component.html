@@ -11,28 +11,27 @@
         @if (editForm.controls.id.value !== null) {
           <div class="mb-3">
             <label class="form-label" jhiTranslate="global.field.id" for="field_id">ID</label>
-            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id"
+                   [readonly]="true"/>
           </div>
         }
 
         <div class="mb-3">
           <label class="form-label" jhiTranslate="jhipsTestApp.tag.name" for="field_name">Name</label>
-          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+          <input class="form-control" data-cy="name" formControlName="name" id="field_name" name="name" type="text"/>
         </div>
 
         <div class="mb-3">
-          <label class="form-label" jhiTranslate="jhipsTestApp.tag.owner" for="field_owner">Owner</label>
-          <select class="form-control" id="field_owner" data-cy="owner" name="owner" formControlName="owner" [compareWith]="compareUser">
-            <option [ngValue]="null"></option>
-            @for (userOption of usersSharedCollection; track $index) {
-              <option [ngValue]="userOption">{{ userOption.id }}</option>
-            }
-          </select>
+          <p>
+            <span jhiTranslate="jhipsTestApp.tag.owner">Owner</span> -
+            {{ tag?.owner?.login }}
+          </p>
         </div>
       </div>
 
       <div>
-        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+        <button (click)="previousState()" class="btn btn-secondary" data-cy="entityCreateCancelButton" id="cancel-save"
+                type="button">
           <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Отмена</span>
         </button>
 
