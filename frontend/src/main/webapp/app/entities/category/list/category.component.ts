@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Data, ParamMap, Router, RouterModule } from '@angular/router';
-import { combineLatest, filter, Observable, switchMap, tap } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Data, ParamMap, Router, RouterModule} from '@angular/router';
+import {combineLatest, filter, Observable, switchMap, tap} from 'rxjs';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 import SharedModule from 'app/shared/shared.module';
-import { SortDirective, SortByDirective } from 'app/shared/sort';
-import { DurationPipe, FormatMediumDatetimePipe, FormatMediumDatePipe } from 'app/shared/date';
-import { FormsModule } from '@angular/forms';
-import { ASC, DESC, SORT, ITEM_DELETED_EVENT, DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
-import { SortService } from 'app/shared/sort/sort.service';
-import { ICategory } from '../category.model';
-import { EntityArrayResponseType, CategoryService } from '../service/category.service';
-import { CategoryDeleteDialogComponent } from '../delete/category-delete-dialog.component';
+import {SortByDirective, SortDirective} from 'app/shared/sort';
+import {DurationPipe, FormatMediumDatePipe, FormatMediumDatetimePipe} from 'app/shared/date';
+import {FormsModule} from '@angular/forms';
+import {ASC, DEFAULT_SORT_DATA, DESC, ITEM_DELETED_EVENT, SORT} from 'app/config/navigation.constants';
+import {SortService} from 'app/shared/sort/sort.service';
+import {ICategory} from '../category.model';
+import {CategoryService, EntityArrayResponseType} from '../service/category.service';
+import {CategoryDeleteDialogComponent} from '../delete/category-delete-dialog.component';
 
 @Component({
   standalone: true,
@@ -34,14 +34,18 @@ export class CategoryComponent implements OnInit {
 
   predicate = 'id';
   ascending = true;
-
+  login?: string;
   constructor(
     protected categoryService: CategoryService,
     protected activatedRoute: ActivatedRoute,
     public router: Router,
     protected sortService: SortService,
     protected modalService: NgbModal,
-  ) {}
+  ) {
+    this.activatedRoute.params.subscribe(params => {
+      this.login = params['login'];
+    })
+  }
 
   trackId = (_index: number, item: ICategory): number => this.categoryService.getCategoryIdentifier(item);
 
@@ -107,6 +111,7 @@ export class CategoryComponent implements OnInit {
     this.isLoading = true;
     const queryObject: any = {
       sort: this.getSortQueryParam(predicate, ascending),
+      login: this.login
     };
     return this.categoryService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
   }

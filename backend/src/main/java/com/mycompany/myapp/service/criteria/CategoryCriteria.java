@@ -27,6 +27,8 @@ public class CategoryCriteria implements Serializable, Criteria {
 
     private LongFilter ownerId;
 
+    private StringFilter ownerLogin;
+
     private Boolean distinct;
 
     public CategoryCriteria() {}
@@ -35,6 +37,7 @@ public class CategoryCriteria implements Serializable, Criteria {
         this.id = other.id == null ? null : other.id.copy();
         this.name = other.name == null ? null : other.name.copy();
         this.ownerId = other.ownerId == null ? null : other.ownerId.copy();
+        this.ownerLogin = other.ownerLogin == null ? null : other.ownerLogin.copy();
         this.distinct = other.distinct;
     }
 
@@ -95,6 +98,19 @@ public class CategoryCriteria implements Serializable, Criteria {
     public void setDistinct(Boolean distinct) {
         this.distinct = distinct;
     }
+
+    public StringFilter getOwnerLogin() { return ownerLogin; }
+    public StringFilter ownerLogin() {
+        if (ownerLogin == null) {
+            ownerLogin = new StringFilter();
+        }
+        return ownerLogin;
+    }
+
+    public void setOwnerLogin(StringFilter ownerLogin) {
+        this.ownerLogin = ownerLogin;
+    }
+
 
     @Override
     public boolean equals(Object o) {

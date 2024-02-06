@@ -138,10 +138,10 @@ public class TagResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tags in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<TagDTO>> getAllTags(TagCriteria criteria) {
+    public ResponseEntity<List<TagDTO>> getAllTags(TagCriteria criteria, String login) {
         log.debug("REST request to get Tags by criteria: {}", criteria);
 
-        List<TagDTO> entityList = tagQueryService.findByCriteria(criteria);
+        List<TagDTO> entityList = tagQueryService.findByCriteria(criteria, login);
         return ResponseEntity.ok().body(entityList);
     }
 

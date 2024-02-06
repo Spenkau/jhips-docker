@@ -3,11 +3,14 @@ package com.mycompany.myapp.service;
 import com.mycompany.myapp.domain.*; // for static metamodels
 import com.mycompany.myapp.domain.Category;
 import com.mycompany.myapp.repository.CategoryRepository;
+import com.mycompany.myapp.security.SecurityUtils;
 import com.mycompany.myapp.service.criteria.CategoryCriteria;
 import com.mycompany.myapp.service.dto.CategoryDTO;
 import com.mycompany.myapp.service.mapper.CategoryMapper;
 import jakarta.persistence.criteria.JoinType;
 import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -16,6 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
+import tech.jhipster.service.filter.StringFilter;
 
 /**
  * Service for executing complex queries for {@link Category} entities in the database.
@@ -53,14 +57,31 @@ public class CategoryQueryService extends QueryService<Category> {
     /**
      * Return a {@link Page} of {@link CategoryDTO} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
-     * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<CategoryDTO> findByCriteria(CategoryCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria, page);
+    public List<CategoryDTO> findByCriteria(CategoryCriteria criteria, String login) {
+        log.debug("find by criteria : {}", criteria);
+
+        String resultLogin = getLogin(login);
+
+        StringFilter ownerLoginFilter = new StringFilter();
+        ownerLoginFilter.setEquals(resultLogin);
+        criteria.setOwnerLogin(ownerLoginFilter);
+
         final Specification<Category> specification = createSpecification(criteria);
-        return categoryRepository.findAll(specification, page).map(categoryMapper::toDto);
+        return categoryMapper.toDto(categoryRepository.findAll(specification));
+    }
+
+    protected String getLogin(String login) {
+        if (login == null) {
+            Optional<String> optionalLogin = SecurityUtils.getCurrentUserLogin();
+
+            return optionalLogin.orElse("-1");
+
+        } else {
+            return login;
+        }
     }
 
     /**
@@ -97,6 +118,12 @@ public class CategoryQueryService extends QueryService<Category> {
                 specification =
                     specification.and(
                         buildSpecification(criteria.getOwnerId(), root -> root.join(Category_.owner, JoinType.LEFT).get(User_.id))
+                    );
+            }
+            if (criteria.getOwnerLogin() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getOwnerLogin(), root -> root.join(Category_.owner, JoinType.LEFT).get(User_.login))
                     );
             }
         }

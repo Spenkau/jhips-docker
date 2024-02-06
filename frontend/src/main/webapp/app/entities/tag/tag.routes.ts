@@ -6,7 +6,6 @@ import {TagComponent} from './list/tag.component';
 import {TagDetailComponent} from './detail/tag-detail.component';
 import {TagUpdateComponent} from './update/tag-update.component';
 import TagResolve from './route/tag-routing-resolve.service';
-import {TagEditResolver} from "./route/tag-edit-resolve.service";
 
 const tagRoute: Routes = [
   {
@@ -39,7 +38,7 @@ const tagRoute: Routes = [
     path: ':id/edit',
     component: TagUpdateComponent,
     resolve: {
-      tag: TagEditResolver,
+      tag: TagResolve,
     },
     canActivate: [UserRouteAccessService],
   },

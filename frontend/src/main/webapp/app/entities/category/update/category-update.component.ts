@@ -22,7 +22,7 @@ import {UserService} from "../../user/service/user.service";
 export class CategoryUpdateComponent implements OnInit {
   isSaving = false;
   category: ICategory | null = null;
-
+  owner?: IUser;
   usersSharedCollection: IUser[] = [];
 
   editForm: CategoryFormGroup = this.categoryFormService.createCategoryFormGroup();
@@ -43,6 +43,8 @@ export class CategoryUpdateComponent implements OnInit {
         this.updateForm(category);
       }
 
+      this.userService.owner.subscribe(data => this.owner = data)
+
       this.loadRelationshipsOptions();
     });
   }
@@ -54,6 +56,7 @@ export class CategoryUpdateComponent implements OnInit {
   save(): void {
     this.isSaving = true;
     const category = this.categoryFormService.getCategory(this.editForm);
+    category.owner = this.owner;
     if (category.id !== null) {
       this.subscribeToSaveResponse(this.categoryService.update(category));
     } else {

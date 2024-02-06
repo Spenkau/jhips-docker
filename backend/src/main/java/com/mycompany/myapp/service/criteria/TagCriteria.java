@@ -31,12 +31,15 @@ public class TagCriteria implements Serializable, Criteria {
 
     private Boolean distinct;
 
+    private StringFilter ownerLogin;
+
     public TagCriteria() {}
 
     public TagCriteria(TagCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.name = other.name == null ? null : other.name.copy();
         this.ownerId = other.ownerId == null ? null : other.ownerId.copy();
+        this.ownerLogin = other.ownerLogin == null ? null : other.ownerLogin.copy();
         this.tasksId = other.tasksId == null ? null : other.tasksId.copy();
         this.distinct = other.distinct;
     }
@@ -148,4 +151,17 @@ public class TagCriteria implements Serializable, Criteria {
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }
+
+    public StringFilter getOwnerLogin() { return ownerLogin; }
+    public StringFilter ownerLogin() {
+        if (ownerLogin == null) {
+            ownerLogin = new StringFilter();
+        }
+        return ownerLogin;
+    }
+
+    public void setOwnerLogin(StringFilter ownerLogin) {
+        this.ownerLogin = ownerLogin;
+    }
+
 }

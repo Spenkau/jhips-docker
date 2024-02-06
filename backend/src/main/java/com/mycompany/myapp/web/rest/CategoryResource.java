@@ -146,10 +146,10 @@ public class CategoryResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of categories in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<CategoryDTO>> getAllCategories(CategoryCriteria criteria) {
+    public ResponseEntity<List<CategoryDTO>> getAllCategories(CategoryCriteria criteria, String login) {
         log.debug("REST request to get Categories by criteria: {}", criteria);
 
-        List<CategoryDTO> entityList = categoryQueryService.findByCriteria(criteria);
+        List<CategoryDTO> entityList = categoryQueryService.findByCriteria(criteria, login);
         return ResponseEntity.ok().body(entityList);
     }
 

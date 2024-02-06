@@ -5,10 +5,10 @@
     <br/>
     <div ngbDropdown>
       <button class="btn btn-warning" id="gfg" ngbDropdownToggle>
-        Хорошего дня, {{ login }}
+        Хорошего дня, {{ userName }}
       </button>
       <div ngbDropdownMenu="gfg">
-        <a [routerLink]="['/task/public']" ngbDropdownItem>Личный кабинет</a>
+        <a [routerLink]="['/users/' + userName]" ngbDropdownItem>Личный кабинет</a>
         <a [routerLink]="['/']" ngbDropdownItem>В меню</a>
       </div>
     </div>

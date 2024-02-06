@@ -61,7 +61,7 @@ export class TaskCreateDialogComponent {
   ngOnInit(): void {
     this.loadRelationshipsOptions();
 
-    this.userService.owner?.subscribe(data => this.owner = data)
+    this.userService.owner.subscribe(data => this.owner = data)
   }
 
   save(): void {

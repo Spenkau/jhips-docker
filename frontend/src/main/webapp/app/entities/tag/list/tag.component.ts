@@ -16,6 +16,7 @@ import {ITask} from "../../task/task.model";
 import {TaskService} from "../../task/service/task.service";
 import {PriorityEnum, StatusEnum} from "../../task/task.enums";
 import {TaskComponent} from "../../task/list/task.component";
+import {UserService} from "../../user/service/user.service";
 
 @Component({
   standalone: true,
@@ -41,7 +42,7 @@ export class TagComponent implements OnInit {
   isLoading = false;
   isDeleteEnabled = false;
   activeTagId = 1;
-
+  login?: string;
   predicate = 'id';
   ascending = true;
 
@@ -55,8 +56,13 @@ export class TagComponent implements OnInit {
     public router: Router,
     protected sortService: SortService,
     protected modalService: NgbModal,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private userService: UserService
+  ) {
+    this.activatedRoute.params.subscribe(params => {
+      this.login = params['login'];
+    })
+  }
 
   trackId = (_index: number, item: ITag): number => this.tagService.getTagIdentifier(item);
 
@@ -65,7 +71,8 @@ export class TagComponent implements OnInit {
 
     this.showTasksByTag(this.activeTagId);
 
-    this.route.data.subscribe((data: Data) => this.data = data)
+    this.route.data.subscribe((data: Data) => this.data = data);
+
   }
 
   delete(tag: ITag): void {
@@ -122,12 +129,8 @@ export class TagComponent implements OnInit {
     return data ?? [];
   }
 
-  protected queryBackend(predicate?: string, ascending?: boolean): Observable<EntityArrayResponseType> {
-    this.isLoading = true;
-    const queryObject: any = {
-      sort: this.getSortQueryParam(predicate, ascending),
-    };
-    return this.tagService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
+  tagFilter(val: string): void {
+    this.tags = this.tags?.filter(item => item.name === val);
   }
 
   protected handleNavigation(predicate?: string, ascending?: boolean): void {
@@ -157,5 +160,14 @@ export class TagComponent implements OnInit {
     this.taskService.query({['tags.contains']: this.activeTagId}).subscribe(res => {
       this.tasks = res.body;
     })
+  }
+
+  protected queryBackend(predicate?: string, ascending?: boolean): Observable<EntityArrayResponseType> {
+    this.isLoading = true;
+    const queryObject: any = {
+      sort: this.getSortQueryParam(predicate, ascending),
+      login: this.login
+    };
+    return this.tagService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
   }
 }

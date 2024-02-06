@@ -34,11 +34,15 @@ public interface TaskMapper extends EntityMapper<TaskDTO, Task> {
     @Named("categoryId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "name", source = "name")
+    @Mapping(target = "owner", source = "owner")
     CategoryDTO toDtoCategoryId(Category category);
 
     @Named("tagId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "name", source = "name")
+    @Mapping(target = "owner", source = "owner")
     TagDTO toDtoTagId(Tag tag);
 
     @Named("tagIdSet")

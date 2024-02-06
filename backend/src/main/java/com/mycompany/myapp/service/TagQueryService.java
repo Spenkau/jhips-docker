@@ -3,11 +3,14 @@ package com.mycompany.myapp.service;
 import com.mycompany.myapp.domain.*; // for static metamodels
 import com.mycompany.myapp.domain.Tag;
 import com.mycompany.myapp.repository.TagRepository;
+import com.mycompany.myapp.security.SecurityUtils;
 import com.mycompany.myapp.service.criteria.TagCriteria;
 import com.mycompany.myapp.service.dto.TagDTO;
 import com.mycompany.myapp.service.mapper.TagMapper;
 import jakarta.persistence.criteria.JoinType;
 import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -16,6 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
+import tech.jhipster.service.filter.StringFilter;
 
 /**
  * Service for executing complex queries for {@link Tag} entities in the database.
@@ -44,10 +48,28 @@ public class TagQueryService extends QueryService<Tag> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<TagDTO> findByCriteria(TagCriteria criteria) {
+    public List<TagDTO> findByCriteria(TagCriteria criteria, String login) {
         log.debug("find by criteria : {}", criteria);
+
+        String resultLogin = getLogin(login);
+
+        StringFilter ownerLoginFilter = new StringFilter();
+        ownerLoginFilter.setEquals(resultLogin);
+        criteria.setOwnerLogin(ownerLoginFilter);
+
         final Specification<Tag> specification = createSpecification(criteria);
         return tagMapper.toDto(tagRepository.findAll(specification));
+    }
+
+    protected String getLogin(String login) {
+        if (login == null) {
+            Optional<String> optionalLogin = SecurityUtils.getCurrentUserLogin();
+
+            return optionalLogin.orElse("-1");
+
+        } else {
+            return login;
+        }
     }
 
     /**
@@ -97,6 +119,12 @@ public class TagQueryService extends QueryService<Tag> {
                 specification =
                     specification.and(
                         buildSpecification(criteria.getOwnerId(), root -> root.join(Tag_.owner, JoinType.LEFT).get(User_.id))
+                    );
+            }
+            if (criteria.getOwnerLogin() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getOwnerLogin(), root -> root.join(Tag_.owner, JoinType.LEFT).get(User_.login))
                     );
             }
             if (criteria.getTasksId() != null) {
