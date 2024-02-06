@@ -1,0 +1,21 @@
+<div class="d-flex justify-content-center flex-column p-3">
+  <form (ngSubmit)="load()" class="d-flex">
+    <input #searchInput class="form-control" placeholder="Ник-нейм пользователя" type="text">
+
+    <button class="btn btn-primary" type="submit">Искать</button>
+  </form>
+
+  <div class="mt-3 overflow-y-scroll" style="height: 400px">
+    <ul>
+      @for (user of users; track user.id) {
+        <li class="form-control d-flex justify-content-between">
+          <div class="d-flex">
+            <fa-icon icon="user-circle" size="1x"></fa-icon>
+            <p class="mx-2">{{ user.login }}</p>
+          </div>
+          <a (click)="navigateToUser(user.login)" class="link">Перейти</a>
+        </li>
+      }
+    </ul>
+  </div>
+</div>
