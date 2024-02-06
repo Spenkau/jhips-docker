@@ -21,6 +21,9 @@ public interface TaskRepository extends TaskRepositoryWithBagRelationships, JpaR
     @Query("select task from Task task where task.owner.login = ?#{authentication.name}")
     Page<Task> findByOwnerIsCurrentUser(Specification<Task> spec, Pageable pageable);
 
+//    @Query("select task from Task task where task.owner.id = ?#{}")
+//    Page<Task> findByOwnerId(Specification<Task> spec, Pageable pageable);
+
     default Optional<Task> findOneWithEagerRelationships(Long id) {
         return this.fetchBagRelationships(this.findById(id));
     }

@@ -199,6 +199,7 @@ public class TaskCriteria implements Serializable, Criteria {
         this.ownerLogin = ownerLogin;
     }
 
+
     public LongFilter getCategoryId() {
         return categoryId;
     }

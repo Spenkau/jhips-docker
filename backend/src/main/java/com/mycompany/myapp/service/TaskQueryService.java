@@ -44,8 +44,9 @@ public class TaskQueryService extends QueryService<Task> {
 
     /**
      * Return a {@link Page} of {@link TaskDTO} which matches the criteria from the database.
+     *
      * @param criteria The object which holds all the filters, which the entities should match.
-     * @param page The page, which should be returned.
+     * @param page     The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
@@ -62,14 +63,6 @@ public class TaskQueryService extends QueryService<Task> {
         final Specification<Task> specification = (createSpecification(criteria));
         return taskRepository.findAll(specification, page).map(taskMapper::toDto);
     }
-
-//    @Transactional(readOnly = true)
-//    public Page<TaskDTO> findByCriteria(TaskCriteria criteria, Pageable page) {
-//        log.debug("find by criteria : {}, page: {}", criteria, page);
-//        final Specification<Task> specification = createSpecification(criteria);
-//
-//        return taskRepository.findByOwnerIsCurrentUser(specification, page).map(taskMapper::toDto);
-//    }
 
     /**
      * Return the number of matching entities in the database.
@@ -99,7 +92,7 @@ public class TaskQueryService extends QueryService<Task> {
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching {@link Specification} of the entity.
      */
-    protected Specification<Task> createSpecification(TaskCriteria criteria) {
+    protected Specification<Task>createSpecification(TaskCriteria criteria) {
         Specification<Task> specification = Specification.where(null);
         if (criteria != null) {
             // This has to be called first, because the distinct method returns null
@@ -131,6 +124,12 @@ public class TaskQueryService extends QueryService<Task> {
                 specification =
                     specification.and(
                         buildSpecification(criteria.getOwnerId(), root -> root.join(Task_.owner, JoinType.LEFT).get(User_.id))
+                    );
+            }
+            if (criteria.getOwnerLogin() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getOwnerLogin(), root -> root.join(Task_.owner, JoinType.LEFT).get(User_.login))
                     );
             }
             if (criteria.getCategoryId() != null) {

@@ -156,13 +156,15 @@ public class TaskResource {
         TaskCriteria criteria,
         @ParameterObject Pageable pageable,
         String login
-    ) {
+        ) {
         log.debug("REST request to get Tasks by criteria: {}", criteria);
 
         Page<TaskDTO> page = taskQueryService.findByCriteria(criteria, pageable, login);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
+
+    // TODO с separated бекенда приходит корретно - задачи конкретного пользователя. С хипс докера нет.
 
     /**
      * {@code GET  /tasks/count} : count all the tasks.

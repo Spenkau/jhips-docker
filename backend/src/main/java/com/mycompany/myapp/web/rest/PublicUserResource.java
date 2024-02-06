@@ -2,6 +2,7 @@ package com.mycompany.myapp.web.rest;
 import com.mycompany.myapp.config.Constants;
 import com.mycompany.myapp.domain.PublicUser;
 import com.mycompany.myapp.service.PublicUserService;
+import com.mycompany.myapp.service.criteria.PublicUserCriteria;
 import com.mycompany.myapp.service.dto.PublicUserDTO;
 import jakarta.validation.constraints.Pattern;
 import org.slf4j.Logger;
@@ -33,10 +34,6 @@ public class PublicUserResource {
 
         Optional<PublicUser> publicUserOptional = publicUserService.getUserByLogin(login);
 
-        if (publicUserOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
         PublicUser publicUser = publicUserOptional.orElseThrow();
 
         if (publicUserService.isCurrentUser()) {
@@ -45,5 +42,12 @@ public class PublicUserResource {
             PublicUserDTO publicUserDTO = new PublicUserDTO(publicUser);
             return ResponseUtil.wrapOrNotFound(Optional.of(publicUserDTO));
         }
+    }
+
+    @GetMapping("")
+    public ResponseEntity<?> findByCriteria(PublicUserCriteria criteria) {
+        log.debug("REST request to get User[]: {}", criteria);
+
+        return ResponseUtil.wrapOrNotFound(Optional.of(publicUserService.findByCriteria(criteria)));
     }
 }
