@@ -48,13 +48,11 @@ export class TaskPostponeDialogComponent implements OnInit {
   }
 
   confirmPostpone(): void {
-    const dates = this.editForm;
     const task = this.task;
 
     const newTask = {
       ...task,
-      startedAt: dates.getRawValue().startedAt,
-      finishedAt: dates.getRawValue().finishedAt
+      statusId: 2,
     }
 
     this.taskService.update(newTask as ITask)

@@ -1,16 +1,18 @@
 <div>
+  <h2 style="margin-bottom: 30px">Управляйте вашими тегами</h2>
   <div class="d-flex align-items-center gap-3 mb-3">
     <div class="d-flex w-25 form-control">
       <input #inputElement class="w-100" placeholder="Поиск..." style="border: none; outline: none" type="text">
       <button (click)="tagFilter(inputElement.value)" class="btn btn-primary">Искать</button>
     </div>
+    <a routerLink="/tag/new" class="btn">Создать</a>
     <button (click)="isEditEnabled = !isEditEnabled; isDeleteEnabled = false"
             [ngClass]="isEditEnabled ? 'btn-secondary' : 'btn-primary'"
-            class="btn">Edit
+            class="btn">Править
     </button>
     <button (click)="isEditEnabled = false; isDeleteEnabled = !isDeleteEnabled"
             [ngClass]="isDeleteEnabled ? 'btn-secondary' : 'btn-danger'"
-            class="btn">Delete
+            class="btn">Удалить
     </button>
   </div>
   <ul class="list-group list-group-horizontal flex-wrap">
@@ -29,6 +31,6 @@
   </ul>
 </div>
 
-<div class="d-grid">
-  <jhi-task [parentData]="data"></jhi-task>
-</div>
+<!--<div class="d-grid">-->
+<!--  <jhi-task [parentData]="data"></jhi-task>-->
+<!--</div>-->

@@ -2,8 +2,7 @@
   <div class="container-fluid">
     <a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">
       <span class="logo-img"></span>
-      <span jhiTranslate="global.title" class="navbar-title">Frontend</span>
-      <span class="navbar-version">{{ version }}</span>
+      <span jhiTranslate="global.title" class="navbar-title">PostVi</span>
     </a>
     <a
       class="navbar-toggler d-lg-none"
@@ -19,21 +18,21 @@
     </a>
     <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <a class="nav-link" routerLink="/" (click)="collapseNavbar()">
-            <span>
-              <fa-icon icon="home"></fa-icon>
-              <span jhiTranslate="global.menu.home">Главная</span>
-            </span>
-          </a>
-        </li>
         <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
         @if (account !== null) {
           <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
             <a class="nav-link" routerLink="/task">
             <span>
               <fa-icon icon="th-list"></fa-icon>
-              <span>Таск-менеджер</span>
+              <span>Мои посты</span>
+            </span>
+            </a>
+          </li>
+          <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link" routerLink="/users/all">
+            <span>
+              <fa-icon icon="th-list"></fa-icon>
+              <span>Все посты</span>
             </span>
             </a>
           </li>

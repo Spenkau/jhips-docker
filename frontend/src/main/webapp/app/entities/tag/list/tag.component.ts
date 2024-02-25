@@ -130,7 +130,7 @@ export class TagComponent implements OnInit {
   }
 
   tagFilter(val: string): void {
-    this.tags = this.tags?.filter(item => item.name === val);
+    this.tags = this.tags?.filter(item => item.name?.includes(val));
   }
 
   protected handleNavigation(predicate?: string, ascending?: boolean): void {

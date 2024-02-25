@@ -2,10 +2,10 @@
   "jhipsTestApp": {
     "task": {
       "home": {
-        "title": "Задачи от Java Hipster!",
+        "title": "Посты от Java Hipster!",
         "refreshListLabel": "Обновить список",
         "createLabel": "Создать задачу",
-        "notFound": "Задачи не найдены",
+        "notFound": "Посты не найдены",
         "create": "Создать новую задачу",
         "createOrEditLabel": "Обновить задачу"
       },
@@ -25,7 +25,7 @@
     },
     "category": {
       "home": {
-        "title": "Категории от Java Hipster!",
+        "title": "Ваши категории",
         "refreshListLabel": "Обновить список",
         "createLabel": "Создать категорию",
         "notFound": "Категории не найдены",
@@ -39,7 +39,7 @@
     },
     "tag": {
       "home": {
-        "title": "Теги от Java Hipster!",
+        "title": "Ваши теги",
         "refreshListLabel": "Обновить список",
         "createLabel": "Создать тег",
         "notFound": "Теги не найдены",
@@ -53,7 +53,7 @@
     },
     "comment": {
       "home": {
-        "title": "Комментарии от Java Hipster!",
+        "title": "Ваши комментарии",
         "refreshListLabel": "Обновить список",
         "createLabel": "Создать комментарий",
         "notFound": "Комментарии не найдены",
@@ -64,7 +64,7 @@
       },
       "content": "Контент",
       "createdAt": "Создана",
-      "task": "Присущая задача",
+      "task": "Присущая пост",
       "owner": "Владелец"
     },
     "owner": {

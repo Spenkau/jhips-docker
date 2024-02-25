@@ -4,7 +4,7 @@
   </div>
 
   <div class="col-md-9">
-    <h1 class="display-4"><span jhiTranslate="home.title">Добро пожаловать, Java Hipster!</span> (Frontend)</h1>
+    <h1 class="display-4"><span>Добро пожаловать, странник!</span></h1>
 
     <p class="lead" jhiTranslate="home.subtitle">Это ваша домашняя страница</p>
 
@@ -23,7 +23,7 @@
           <a class="alert-link" (click)="login()" jhiTranslate="global.messages.info.authenticated.link">авторизироваться</a
           ><span jhiTranslate="global.messages.info.authenticated.suffix"
             >, вы можете попробовать аккаунты по умолчанию:<br />- Администратор (логин=&quot;admin&quot; и пароль=&quot;admin&quot;)
-            <br />- Пользователь (логин=&quot;user&quot; и пароль=&quot;user&quot;).</span
+            <br />- Пользователь (логин=&quot;user&quot; и пароль=&quot;user&quot;, либо любой другой).</span
           >
         </div>
 
@@ -33,50 +33,45 @@
         </div>
       }
     </div>
+    <ul class="d-flex ms-auto list-unstyled gap-5">
+      <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
+      @if (account !== null) {
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <a class="btn btn-primary text-white" routerLink="/task">
+            <span>
+              <fa-icon icon="th-list"></fa-icon>
+              <span>Мои посты</span>
+            </span>
+          </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <a class="btn btn-primary text-white" routerLink="/users/all">
+            <span>
+              <fa-icon icon="th-list"></fa-icon>
+              <span>Все посты</span>
+            </span>
+          </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <a class="btn btn-primary text-white" routerLink="/tag">
+            <span>
+              <fa-icon icon="th-list"></fa-icon>
+              <span>Мои теги</span>
+            </span>
+          </a>
+        </li>
 
-    <p jhiTranslate="home.question">Если у Вас возникли вопросы по JHipster:</p>
-
-    <ul>
-      <li>
-        <a href="https://www.jhipster.tech/" target="_blank" rel="noopener noreferrer" jhiTranslate="home.link.homepage"
-          >JHipster домашняя страница</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://stackoverflow.com/tags/jhipster/info"
-          target="_blank"
-          rel="noopener noreferrer"
-          jhiTranslate="home.link.stackoverflow"
-          >JHipster на Stack Overflow</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/jhipster/generator-jhipster/issues?state=open"
-          target="_blank"
-          rel="noopener noreferrer"
-          jhiTranslate="home.link.bugtracker"
-          >JHipster баг трекер</a
-        >
-      </li>
-      <li>
-        <a href="https://gitter.im/jhipster/generator-jhipster" target="_blank" rel="noopener noreferrer" jhiTranslate="home.link.chat"
-          >JHipster public chat room</a
-        >
-      </li>
-      <li>
-        <a href="https://twitter.com/jhipster" target="_blank" rel="noopener noreferrer" jhiTranslate="home.link.follow"
-          >пользователь &#64;jhipster в Twitter</a
-        >
-      </li>
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <a class="btn btn-primary text-white" routerLink="/category">
+            <span>
+              <fa-icon icon="th-list"></fa-icon>
+              <span>Мои категории</span>
+            </span>
+          </a>
+        </li>
+      }
     </ul>
 
-    <p>
-      <span jhiTranslate="home.like">Если вам нравится JHipster, не забудьте дать нам звёздочку на</span>
-      <a href="https://github.com/jhipster/generator-jhipster" target="_blank" rel="noopener noreferrer" jhiTranslate="home.github"
-        >GitHub</a
-      >!
-    </p>
+    <h1><---- Angelina</h1>
   </div>
 </div>

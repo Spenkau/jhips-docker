@@ -12,7 +12,7 @@ export interface ITask {
   // categoryId?: number | null;
   startedAt?: dayjs.Dayjs | null;
   finishedAt?: dayjs.Dayjs | null;
-  owner?: Pick<IUser, 'id'> | null;
+  owner?: IUser;
   category?: ICategory | null;
   tags?: ITag[] | null;
 }

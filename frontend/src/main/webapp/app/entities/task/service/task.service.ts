@@ -14,9 +14,8 @@ import {ITask, NewTask} from '../task.model';
 
 export type PartialUpdateTask = Partial<ITask> & Pick<ITask, 'id'>;
 
-type RestOf<T extends ITask | NewTask> = Omit<T, 'startedAt' | 'finishedAt'> & {
+type RestOf<T extends ITask | NewTask> = Omit<T, 'startedAt'> & {
   startedAt?: string | null;
-  finishedAt?: string | null;
 };
 
 export type RestTask = RestOf<ITask>;
@@ -117,7 +116,6 @@ export class TaskService {
     return {
       ...task,
       startedAt: task.startedAt?.format(DATE_FORMAT) ?? null,
-      finishedAt: task.finishedAt?.format(DATE_FORMAT) ?? null,
     };
   }
 
@@ -125,7 +123,6 @@ export class TaskService {
     return {
       ...restTask,
       startedAt: restTask.startedAt ? dayjs(restTask.startedAt) : undefined,
-      finishedAt: restTask.finishedAt ? dayjs(restTask.finishedAt) : undefined,
     };
   }
 

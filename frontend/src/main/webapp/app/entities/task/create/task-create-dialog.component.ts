@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 import {EntityResponseType, TaskService} from "../service/task.service";
 import {ITask, NewTask} from "../task.model";
@@ -15,6 +15,7 @@ import {map} from "rxjs/operators";
 import {HttpResponse} from "@angular/common/http";
 import {AccountService} from "../../../core/auth/account.service";
 import {UserService} from "../../user/service/user.service";
+import dayjs from "dayjs/esm";
 
 @Component({
   selector: 'jhi-create',
@@ -27,7 +28,7 @@ import {UserService} from "../../user/service/user.service";
   templateUrl: './task-create-dialog.component.html',
   styleUrl: './task-create-dialog.component.scss'
 })
-export class TaskCreateDialogComponent {
+export class TaskCreateDialogComponent implements OnInit {
 
   isSaving = false;
   task?: ITask | null = null;
@@ -69,7 +70,8 @@ export class TaskCreateDialogComponent {
     const task = this.taskFormService.getTask(this.editForm) as NewTask;
     task.statusId = 1;
     task.owner = this.owner;
-
+    task.startedAt = dayjs(new Date());
+    task.content = task.content?.replace(/\n/g, '<br>');
     this.confirmCreate(task);
   }
 

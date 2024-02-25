@@ -23,6 +23,8 @@ export class TagUpdateComponent implements OnInit {
   isSaving = false;
   tag: ITag | null = null;
 
+  owner?: IUser;
+
   usersSharedCollection: IUser[] = [];
 
   editForm: TagFormGroup = this.tagFormService.createTagFormGroup();
@@ -45,6 +47,8 @@ export class TagUpdateComponent implements OnInit {
 
       this.loadRelationshipsOptions();
     });
+
+    this.userService.owner.subscribe(data => this.owner = data)
   }
 
   previousState(): void {
@@ -54,6 +58,9 @@ export class TagUpdateComponent implements OnInit {
   save(): void {
     this.isSaving = true;
     const tag = this.tagFormService.getTag(this.editForm);
+
+    tag.owner = this.owner;
+
     if (tag.id !== null) {
       this.subscribeToSaveResponse(this.tagService.update(tag));
     } else {

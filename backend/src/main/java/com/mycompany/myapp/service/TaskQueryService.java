@@ -55,9 +55,11 @@ public class TaskQueryService extends QueryService<Task> {
 
         String resultLogin = getLogin(login);
 
-        StringFilter ownerLoginFilter = new StringFilter();
-        ownerLoginFilter.setEquals(resultLogin);
-        criteria.setOwnerLogin(ownerLoginFilter);
+        if (!resultLogin.equals("all")) {
+            StringFilter ownerLoginFilter = new StringFilter();
+            ownerLoginFilter.setEquals(resultLogin);
+            criteria.setOwnerLogin(ownerLoginFilter);
+        }
 
         log.debug("ownerLogin {}", criteria.getOwnerLogin());
         final Specification<Task> specification = (createSpecification(criteria));

@@ -20,51 +20,9 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" jhiTranslate="jhipsTestApp.task.priorityId" for="field_priorityId">Приоритет</label>
-          <select
-            class="form-control"
-            id="field_priorityId"
-            data-cy="priorityId"
-            name="priorityId"
-            formControlName="priorityId"
-          >
-            <option [ngValue]="PriorityEnum.LOW">Низкий</option>
-            <option [ngValue]="PriorityEnum.MIDDLE">Обычный</option>
-            <option [ngValue]="PriorityEnum.HIGH">Высокий</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label class="form-label" jhiTranslate="jhipsTestApp.task.startedAt" for="field_startedAt">Started At</label>
-          <div class="input-group">
-            <input
-              id="field_startedAt"
-              data-cy="startedAt"
-              type="text"
-              class="form-control"
-              name="startedAt"
-              ngbDatepicker
-              #startedAtDp="ngbDatepicker"
-              formControlName="startedAt"
-            />
-            <button type="button" class="btn btn-secondary" (click)="startedAtDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" jhiTranslate="jhipsTestApp.task.finishedAt" for="field_finishedAt">Finished At</label>
-          <div class="input-group">
-            <input
-              id="field_finishedAt"
-              data-cy="finishedAt"
-              type="text"
-              class="form-control"
-              name="finishedAt"
-              ngbDatepicker
-              #finishedAtDp="ngbDatepicker"
-              formControlName="finishedAt"
-            />
-            <button type="button" class="btn btn-secondary" (click)="finishedAtDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
-          </div>
+          <label class="form-label" for="field_image">Изображение</label>
+          <input class="form-control" data-cy="image" type="file" formControlName="content" id="field_image"
+                    name="content">
         </div>
 
         <div class="mb-3">

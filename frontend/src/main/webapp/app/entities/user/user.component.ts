@@ -24,7 +24,6 @@ export class UserComponent implements OnInit {
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
-    private router: Router,
     private modalService: NgbModal
   ) {
     // this.router.events.subscribe(() => {

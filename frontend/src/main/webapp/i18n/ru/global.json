@@ -1,6 +1,6 @@
 {
   "global": {
-    "title": "Frontend",
+    "title": "PostVi",
     "browsehappy": "Ваш браузер <strong>устарел</strong>. Пожалуйста <a href=\"http://browsehappy.com/?locale=ru\">обновите ваш браузер</a>.",
     "menu": {
       "home": "Главная",
@@ -9,10 +9,10 @@
         "main": "Сущности",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)",
         "category": "Категории",
-        "task": "Мои задачи",
+        "task": "Мои посты",
         "tag": "Теги",
         "comment": "Комментарии",
-        "user": "Пользовательские задачи"
+        "user": "Пользовательские посты"
       },
       "account": {
         "main": "Профиль",

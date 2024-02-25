@@ -114,6 +114,10 @@ export class TaskComponent implements OnInit {
 
     this.filters.filterChanges.subscribe(filterOptions => this.handleNavigation(1, this.predicate, this.ascending, filterOptions));
 
+    setTimeout(() => {
+        console.log(this.tasks)
+    }, 4000)
+
     this.loadRelationshipsOptions();
   }
 

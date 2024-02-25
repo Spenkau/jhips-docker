@@ -2,70 +2,27 @@
 
   <div class="col-8">
     <form (ngSubmit)="confirmPostpone()" [formGroup]="editForm" name="editForm" novalidate role="form">
-      <h2 data-cy="TaskCreateUpdateHeading" id="jhi-task-heading" jhiTranslate="jhipsTestApp.task.home.create">
-        Новая задача
-      </h2>
+      <div class="modal-header">
+        <h4 class="modal-title" data-cy="taskDeleteDialogHeading">Подтвердите операцию архивации</h4>
 
-      <div>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-hidden="true" (click)="cancel()">&times;</button>
+      </div>
+
+      <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
+        <p id="jhi-delete-task-heading">
+          Вы уверены что хотите удалить данный пост?
+        </p>
+      </div>
 
-        <h2>Изменить календарь задачи</h2>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Отмена</span>
+        </button>
 
-        <div class="mb-3">
-          <label class="form-label" for="field_startedAt" jhiTranslate="jhipsTestApp.task.startedAt">Started
-            At</label>
-          <div class="input-group">
-            <input
-              #startedAtDp="ngbDatepicker"
-              class="form-control"
-              data-cy="startedAt"
-              formControlName="startedAt"
-              id="field_startedAt"
-              name="startedAt"
-              ngbDatepicker
-              type="text"
-            />
-            <button (click)="startedAtDp.toggle()" class="btn btn-secondary" type="button">
-              <fa-icon icon="calendar-alt"></fa-icon>
-            </button>
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_finishedAt" jhiTranslate="jhipsTestApp.task.finishedAt">Finished
-            At</label>
-          <div class="input-group">
-            <input
-              #finishedAtDp="ngbDatepicker"
-              class="form-control"
-              data-cy="finishedAt"
-              formControlName="finishedAt"
-              id="field_finishedAt"
-              name="finishedAt"
-              ngbDatepicker
-              type="text"
-            />
-            <button (click)="finishedAtDp.toggle()" class="btn btn-secondary" type="button">
-              <fa-icon icon="calendar-alt"></fa-icon>
-            </button>
-          </div>
-        </div>
-        <div>
-          <button (click)="cancel()" class="btn btn-secondary" data-cy="entityCreateCancelButton" id="cancel-save"
-                  type="button">
-            <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Отмена</span>
-          </button>
-
-          <button
-            [disabled]="editForm.invalid || isSaving"
-            class="btn btn-primary"
-            data-cy="entityCreateSaveButton"
-            id="save-entity"
-            type="submit"
-          >
-            <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Сохранить</span>
-          </button>
-        </div>
+        <button id="jhi-confirm-delete-task" data-cy="entityConfirmDeleteButton" type="submit" class="btn btn-danger">
+          <fa-icon icon="times"></fa-icon>&nbsp;<span>Архивировать</span>
+        </button>
       </div>
     </form>
   </div>
