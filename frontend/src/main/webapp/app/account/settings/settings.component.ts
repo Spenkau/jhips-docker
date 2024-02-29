@@ -77,6 +77,7 @@ export default class SettingsComponent implements OnInit {
     const formData: FormData = new FormData();
     formData.append('image', file, file.name);
 
+    // @ts-ignore
     this.accountService.saveImage(formData).subscribe(res => {
       console.log(res);
     })

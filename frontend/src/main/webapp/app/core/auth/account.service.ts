@@ -23,6 +23,10 @@ export class AccountService {
     private applicationConfigService: ApplicationConfigService,
   ) {}
 
+  saveImage(image: any): Observable<any> {
+    return this.http.put(this.applicationConfigService.getEndpointFor('api/account'), image)
+  }
+
   save(account: Account): Observable<{}> {
     return this.http.post(this.applicationConfigService.getEndpointFor('api/account'), account);
   }
