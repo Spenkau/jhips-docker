@@ -2,9 +2,8 @@
   <div class="d-flex justify-content-center">
     <div class="col-md-8">
       @if (settingsForm.value.login) {
-        <h2 jhiTranslate="settings.title" [translateValues]="{ username: settingsForm.value.login }">
-          Настройки пользователя для [<strong>{{ settingsForm.value.login }}</strong
-          >]
+        <h2>
+          Настройки пользователя для <strong>{{ settingsForm.value.login }}</strong>
         </h2>
       }
 
@@ -14,6 +13,18 @@
 
       <jhi-alert-error></jhi-alert-error>
 
+      <div class="mb-3">
+        <label class="form-label" for="image">Изображение профиля</label>
+        <input
+          #imageInput
+          type="file"
+          class="form-control mb-3"
+          id="image"
+          name="image"
+          data-cy="image"
+        />
+        <button class="btn btn-primary" (click)="saveProfileImage(imageInput)">Сохранить изображение</button>
+      </div>
       @if (settingsForm.value.login) {
         <form name="form" role="form" (ngSubmit)="save()" [formGroup]="settingsForm" novalidate>
           <div class="mb-3">

@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
+import {Component, OnInit} from '@angular/core';
+import {FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {TranslateService} from '@ngx-translate/core';
 
 import SharedModule from 'app/shared/shared.module';
-import { AccountService } from 'app/core/auth/account.service';
-import { Account } from 'app/core/auth/account.model';
-import { LANGUAGES } from 'app/config/language.constants';
+import {AccountService} from 'app/core/auth/account.service';
+import {Account} from 'app/core/auth/account.model';
+import {LANGUAGES} from 'app/config/language.constants';
 
 const initialAccount: Account = {} as Account;
+
 
 @Component({
   selector: 'jhi-settings',
@@ -32,18 +33,19 @@ export default class SettingsComponent implements OnInit {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email],
     }),
-    langKey: new FormControl(initialAccount.langKey, { nonNullable: true }),
+    langKey: new FormControl(initialAccount.langKey, {nonNullable: true}),
 
-    activated: new FormControl(initialAccount.activated, { nonNullable: true }),
-    authorities: new FormControl(initialAccount.authorities, { nonNullable: true }),
-    imageUrl: new FormControl(initialAccount.imageUrl, { nonNullable: true }),
-    login: new FormControl(initialAccount.login, { nonNullable: true }),
+    activated: new FormControl(initialAccount.activated, {nonNullable: true}),
+    authorities: new FormControl(initialAccount.authorities, {nonNullable: true}),
+    imageUrl: new FormControl(initialAccount.imageUrl, {nonNullable: true}),
+    login: new FormControl(initialAccount.login, {nonNullable: true}),
   });
 
   constructor(
     private accountService: AccountService,
     private translateService: TranslateService,
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.accountService.identity().subscribe(account => {
@@ -66,5 +68,17 @@ export default class SettingsComponent implements OnInit {
         this.translateService.use(account.langKey);
       }
     });
+  }
+
+  saveProfileImage(imageInput: any): void {
+    if (imageInput.files.length === 0) {return}
+
+    const file: File = imageInput.files[0];
+    const formData: FormData = new FormData();
+    formData.append('image', file, file.name);
+
+    this.accountService.saveImage(formData).subscribe(res => {
+      console.log(res);
+    })
   }
 }
