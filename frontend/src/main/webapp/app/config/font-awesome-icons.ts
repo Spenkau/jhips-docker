@@ -38,7 +38,9 @@ import {
   faUser,
   faUserCircle,
   faUserPlus,
+  faBurger,
   faUsers,
+  faAlignRight,
   faUsersCog,
   faWrench
 } from '@fortawesome/free-solid-svg-icons';
@@ -47,9 +49,12 @@ export const fontAwesomeIcons = [
   faQuestionCircle,
   faArrowAltCircleDown,
   faArrowDown,
+  faAlignRight,
   faArrowLeft,
   faAsterisk,
   faBan,
+  faBurger,
+  faList,
   faBars,
   faBell,
   faBook,

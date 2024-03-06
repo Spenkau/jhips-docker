@@ -1,6 +1,6 @@
 <div>
-  <h2 id="page-heading" data-cy="CommentHeading">
-    <span jhiTranslate="jhipsTestApp.comment.home.title">Comments</span>
+  <div class="d-flex align-items-center justify-content-between" style="margin-bottom: 40px" id="page-heading" data-cy="CommentHeading">
+    <h2 jhiTranslate="jhipsTestApp.comment.home.title">Comments</h2>
 
     <div class="d-flex justify-content-end">
       <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
@@ -18,7 +18,7 @@
         <span jhiTranslate="jhipsTestApp.comment.home.createLabel">Создать новый Comment</span>
       </button>
     </div>
-  </h2>
+  </div>
 
   <jhi-alert-error></jhi-alert-error>
 

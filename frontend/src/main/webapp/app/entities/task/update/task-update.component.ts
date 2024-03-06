@@ -48,9 +48,14 @@ export class TaskUpdateComponent implements OnInit {
   compareTag = (o1: ITag | null, o2: ITag | null): boolean => this.tagService.compareTag(o1, o2);
 
   ngOnInit(): void {
+
     this.activatedRoute.data.subscribe(({ task }) => {
       this.task = task;
       if (task) {
+        task = {
+          ...this.task,
+          content: task.content?.replace(/<br>/g, "\n")
+        };
         this.updateForm(task);
       }
 
@@ -66,8 +71,12 @@ export class TaskUpdateComponent implements OnInit {
 
   save(): void {
     this.isSaving = true;
-    const task = this.taskFormService.getTask(this.editForm);
-    if (task.owner) task.owner = this.owner
+    let task = this.taskFormService.getTask(this.editForm);
+    task = {
+      ...task,
+      owner: this.owner,
+      content: task.content?.replace(/\n/g, "<br>")
+    }
     if (task.id !== null) {
       this.subscribeToSaveResponse(this.taskService.update(task));
     } else {

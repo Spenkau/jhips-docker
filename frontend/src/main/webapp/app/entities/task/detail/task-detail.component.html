@@ -12,18 +12,20 @@
           <div class="d-flex justify-content-between align-items-center">
             @if (task.category) {
               <div>
-                <span>{{ task.category.name }}</span>
+                <span>Категория - {{ task.category.name }}</span>
               </div>
             }
-            @if (task.tags!.length > 0) {
-              <span jhiTranslate="jhipsTestApp.task.tags">Tags</span>
-              @for (tags of task.tags; track $index; let last = $last) {
-                <span>
-                  <a [routerLink]="['/tag', tags.id, 'view']">{{ tags.id }}</a
+            <div>
+              @if (task.tags!.length > 0) {
+                <pre>Теги:</pre>
+                @for (tag of task.tags; track $index; let last = $last) {
+                  <span>
+                  <a [routerLink]="['/tag', tag.id, 'view']">{{ tag.name }}</a
                   >{{ last ? '' : ', ' }}
                 </span>
+                }
               }
-            }
+            </div>
           </div>
           <hr />
 
@@ -35,19 +37,42 @@
 
         <jhi-alert></jhi-alert>
 
-        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
-          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Назад</span>
-        </button>
+        <div class="d-flex gap-3">
+          <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+            <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Назад</span>
+          </button>
 
-        <div *ngIf="(owner$ | async) as owner">
-          @if (task.owner?.login !== owner.login) {
-            <button type="button" [routerLink]="['/task', task.id, 'edit']" class="btn btn-primary">
-              <fa-icon icon="pencil-alt"></fa-icon><span jhiTranslate="entity.action.edit">Изменить</span>
-            </button>
-          }
+          <div *ngIf="(owner$ | async) as owner">
+            @if (task.owner?.login === owner.login) {
+              <button type="button" [routerLink]="['/task', task.id, 'edit']" class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon><span jhiTranslate="entity.action.edit">Изменить</span>
+              </button>
+            }
+          </div>
         </div>
+
+      </div>
+      <div class="comment-block mt-5">
+        <div class="d-flex justify-content-between" style="width: 50%">
+          <p>Комментарии</p>
+          <form (ngSubmit)="addComment(inputComment)" class="mb-3">
+            <input #inputComment type="text" placeholder="Добавить комментарий" class="input-group w-80 mr-auto" />
+          </form>
+        </div>
+        <ul class="list-unstyled">
+          @for (comment of comments; track $index) {
+            <li>
+              <ng-container *ngIf="((owner$ | async)?.login) as ownerLogin">
+                <span [ngStyle]=" (comment.owner.login === ownerLogin) ? {'font-weight': 'bold'} : {}">{{ (comment.owner.login === ownerLogin) ? 'Вы' : comment.owner.login }}</span>
+              </ng-container>
+
+              <p>{{ comment.content }}</p>
+            </li>
+          }
+        </ul>
 
       </div>
     }
   </div>
+
 </div>

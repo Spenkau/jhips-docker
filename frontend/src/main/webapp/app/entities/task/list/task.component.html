@@ -1,6 +1,5 @@
-<div *ngIf="!parentData" class="d-flex justify-content-between mb-3">
-  <button class="btn" (click)="showSidebar = !showSidebar">Открыть сайдбар</button>
-  <button type="button" class="btn btn-primary" (click)="create()">Новый пост</button>
+<div *ngIf="!parentData" class="d-flex align-items-start justify-content-between mb-3">
+  <button class="btn" (click)="showSidebar = !showSidebar"><fa-icon size="2x" icon="align-right"></fa-icon></button>
   <div class="col-auto">
     <br/>
     <div ngbDropdown>
@@ -23,35 +22,29 @@
     }
 
     @if (tasks && tasks.length > 0) {
-      <div class="d-flex justify-content-between mt-3">
+      <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 *ngIf="!parentData">Ваши посты</h3>
         <h3 *ngIf="parentData">Все посты</h3>
-        <div class="col-auto">
-          <br/>
-          <div ngbDropdown>
-            <button class="btn btn-info" id="sortItems" jhiTranslate="taskm.sort.title" ngbDropdownToggle>
+        <button type="button" class="btn btn-primary" style="height: 60px; width: 150px;margin-left: 80px;font-size: 18px;" (click)="create()">Новый пост</button>
+        <div class="col-auto d-flex align-items-start" style="height: 100%">
+          <div ngbDropdown style="height: 100%">
+            <button class="btn btn-info" style="height: 60px; font-size: 18px;" id="sortItems" jhiTranslate="taskm.sort.title" ngbDropdownToggle>
               Сортировать по
             </button>
             <div jhiSort [(predicate)]="predicate" [(ascending)]="ascending"
-                 (sortChange)="navigateToWithComponentValues()" ngbDropdownMenu="sortItems">
-              <div scope="col" jhiSortBy="title" class="d-flex">
+                 (sortChange)="navigateToWithComponentValues()" ngbDropdownMenu="sortItems" class="px-2" style="width: 120px">
+              <div scope="col" jhiSortBy="title" class="d-flex align-items-center">
                 <span jhiTranslate="jhipsTestApp.task.title">Заголовок</span>
 
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
-              <div scope="col" jhiSortBy="content" class="d-flex">
+              <div scope="col" jhiSortBy="content" class="d-flex align-items-center">
                 <span jhiTranslate="jhipsTestApp.task.content">Контент</span>
 
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
-              <div scope="col" jhiSortBy="startedAt" class="d-flex">
-                <span jhiTranslate="jhipsTestApp.task.startedAt">Дата начала</span>
-
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-
-              <div scope="col" jhiSortBy="finishedAt" class="d-flex">
-                <span jhiTranslate="jhipsTestApp.task.finishedAt">Дата завершения</span>
+              <div scope="col" jhiSortBy="startedAt" class="d-flex align-items-center">
+                <span>Дата создания</span>
 
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
@@ -69,7 +62,7 @@
         @for (task of tasks; track trackId) {
           <hr>
           <div class="task-card p-3" >
-            <div class="task-header d-flex justify-content-between">
+            <div class="task-header d-flex align-items-start justify-content-between mb-3">
               <span>
                 @if (task.startedAt) {
                   {{ task.startedAt | formatMediumDate }}
@@ -80,24 +73,24 @@
                   <span>{{ task.category.name }}</span>
                 }
               </div>
-              <div>
+              <div style="height: 20px;" class="d-flex align-items-start">
                 @for (tag of task.tags; track $index; let last = $last) {
-                  <a [routerLink]="['/tag']" class="btn b--dark-blue">{{ tag.name }}</a>
+                  <a [routerLink]="['/tag']" class="btn b--dark-blue" style="height: 20px; padding: 0">{{ tag.name }}</a>
                 }
               </div>
-                <a [routerLink]="['/users/' + task.owner?.login]">
-                  {{ task.owner?.login }}
-                </a>
+              <a [routerLink]="['/users/' + task.owner?.login]">
+                {{ task.owner?.login }}
+              </a>
 
             </div>
             <div class="d-flex justify-content-between">
               <div class="task-body justify-content-between">
-                <a [routerLink]="['/task', task.id, 'view']" class="text-lg-center">{{ task.title }}</a>
+                <a style="padding-top: 10px; margin-bottom: 15px" [routerLink]="['/task', task.id, 'view']" class="text-lg-center">{{ task.title }}</a>
                 @if (task.content) {
                   <p [innerHTML]="[task.content.length > 20 ? task.content.substring(0, 20) + '...' : task.content]"></p>
                 }
               </div>
-              <ul class="list-unstyled" *ngIf="!parentData">
+              <ul class="list-unstyled mt-5" *ngIf="!parentData">
                 <li *ngIf="task.statusId">
                   <span jhiTranslate="taskm.status.title">Статус</span>:
                   <span [jhiTranslate]="'taskm.status.' + StatusEnum[task.statusId!]">
@@ -119,7 +112,7 @@
         }
       </div>
     }
-    <div>
+    <div style="margin-top: 80px">
       <div class="d-flex justify-content-center">
         <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
       </div>

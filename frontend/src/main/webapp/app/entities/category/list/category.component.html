@@ -1,6 +1,6 @@
 <div>
-  <h2 id="page-heading" data-cy="CategoryHeading">
-    <span jhiTranslate="jhipsTestApp.category.home.title">Categories</span>
+  <div id="page-heading" data-cy="CategoryHeading" class="d-flex align-items-center justify-content-between" style="margin-bottom: 40px">
+    <h2 jhiTranslate="jhipsTestApp.category.home.title">Categories</h2>
 
     <div class="d-flex justify-content-end">
       <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
@@ -18,7 +18,7 @@
         <span jhiTranslate="jhipsTestApp.category.home.createLabel">Создать новый Category</span>
       </button>
     </div>
-  </h2>
+  </div>
 
   <jhi-alert-error></jhi-alert-error>
 
@@ -51,10 +51,6 @@
               <td>{{ category.name }}</td>
               <td class="text-end">
                 <div class="btn-group">
-                  <a [routerLink]="['/category', category.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
-                    <fa-icon icon="eye"></fa-icon>
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Просмотр</span>
-                  </a>
 
                   <a [routerLink]="['/category', category.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
                     <fa-icon icon="pencil-alt"></fa-icon>
